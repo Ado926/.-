@@ -13,12 +13,12 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-size: 18px; /* Aumenta tamaño base */
+  font-size: 18px;
 }
 
 main {
   flex: 1;
-  padding-bottom: 2rem; /* Espacio antes del footer */
+  padding-bottom: 2rem;
 }
 
 .navbar {
@@ -118,6 +118,55 @@ main {
   border-top: 1px solid #333;
 }
 
+/* 🌟 NUEVO: Estilo del menú hamburguesa desplegable */
+.menu-panel {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  background-color: #222;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 250px;
+  z-index: 100;
+  box-shadow: 0 0 15px #000;
+  transition: all 0.3s ease;
+}
+
+.menu-panel.hidden {
+  display: none;
+}
+
+.menu-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-panel li {
+  margin-bottom: 1rem;
+}
+
+.menu-panel button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: color 0.3s ease;
+}
+
+.menu-panel button:hover {
+  color: var(--primary);
+}
+
+#dynamic-content {
+  padding: 2rem;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
   body {
     font-size: 16px;
@@ -139,5 +188,10 @@ main {
 
   .info-host {
     margin: 1rem;
+  }
+
+  .menu-panel {
+    right: 10px;
+    width: 80%;
   }
 }
