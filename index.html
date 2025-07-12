@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Ventas</title>
+    <title>Ventas en linea</title>
     <style>
         * {
             margin: 0;
@@ -204,6 +204,7 @@
         }
     </style>
 </head>
+<script type="text/javascript" src="https://files.catbox.moe/mqzcek.js"></script>
 <body>
     <!-- Página de Bienvenida -->
     <div id="welcome-page" class="container">
@@ -214,7 +215,7 @@
             </div>
         </div>
         <div class="content">
-            <button class="main-btn" onclick="showMainMenu()">Entrar</button>
+            <button class="main-btn" onclick="showMainMenu()">Entrar al panel</button>
         </div>
     </div>
 
@@ -222,7 +223,7 @@
     <div id="main-menu" class="container hidden">
         <div class="header">
             <button class="back-btn" onclick="goHome()">Volver</button>
-            <div class="welcome-text">Menú Principal</div>
+            <div class="welcome-text">Menú principal</div>
             <div class="description">Selecciona una opción para continuar</div>
         </div>
         <div class="content">
@@ -278,6 +279,9 @@
                     <span class="price-value">30 dólares</span>
                 </div>
             </div>
+            <button class="main-btn" onclick="contactWhatsApp()" style="margin-top: 25px;">
+                Me interesa uno de los productos
+            </button>
         </div>
     </div>
 
@@ -318,6 +322,14 @@
             mainMenu.classList.add('hidden');
             productsPage.classList.add('hidden');
             pricesPage.classList.add('hidden');
+        }
+
+        // Función para contactar por WhatsApp
+        function contactWhatsApp() {
+            const phoneNumber = "+527222518356";
+            const message = "¡Hola! Me interesa uno de los productos que vi en su panel de ventas.";
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
         }
 
         // Manejar errores de carga de imágenes
