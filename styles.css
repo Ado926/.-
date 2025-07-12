@@ -84,6 +84,28 @@ main {
   box-shadow: 0 0 10px #333;
 }
 
+.info-host {
+  padding: 2rem;
+  text-align: center;
+  background-color: #111;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+  margin: 0 1rem;
+  border-radius: 10px;
+}
+
+.info-host h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.info-host p {
+  font-size: 1rem;
+  color: #ccc;
+  line-height: 1.6;
+}
+
 .footer {
   background-color: #111;
   color: #aaa;
@@ -93,7 +115,6 @@ main {
   border-top: 1px solid #333;
 }
 
-/* 🧠 Diseño adaptado para móviles */
 @media (max-width: 768px) {
   .cards {
     flex-direction: column;
@@ -107,5 +128,9 @@ main {
   .navbar {
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .info-host {
+    margin: 1rem;
   }
 }
