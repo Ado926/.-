@@ -1,65 +1,16 @@
-:root {
-  --primary: #0ff;
-  --secondary: #f0f;
-  --accent: #ffa500;
-}
-
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #000;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  font-size: 20px; /* Aumentado aún más */
-}
-
-main {
-  flex: 1;
-  padding-bottom: 3rem;
-}
-
-.navbar {
-  background-color: #111;
-  padding: 2rem 3rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1.3rem;
-}
-
-.menu-icon {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 1.8rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.menu-icon:hover {
-  color: var(--accent);
-}
-
-.panel-title {
-  text-align: center;
-  margin-top: 2rem;
-  font-size: 3rem;
-  color: #fff;
-}
-
-.cards {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  padding: 3rem;
-  flex-wrap: wrap;
-}
-
 .card {
   background-color: #222;
   border: 1px solid #333;
-  padding: 2.5rem;
-  border-radius
+  padding: 2.5rem;             /* Más espacio interior */
+  border-radius: 14px;
+  width: 320px;                /* Más ancho */
+  text-align: center;
+  box-shadow: 0 0 15px #444;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;           /* Texto más grande */
+}
+
+.card:hover {
+  box-shadow: 0 0 20px var(--primary);
+  transform: translateY(-6px);
+}
