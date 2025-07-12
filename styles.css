@@ -13,26 +13,28 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  font-size: 18px; /* Aumenta tamaño base */
 }
 
 main {
   flex: 1;
+  padding-bottom: 2rem; /* Espacio antes del footer */
 }
 
 .navbar {
   background-color: #111;
-  padding: 1rem 2rem;
+  padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .menu-icon {
   background: transparent;
   border: none;
   color: #fff;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -43,15 +45,15 @@ main {
 
 .panel-title {
   text-align: center;
-  margin-top: 1.5rem;
-  font-size: 2rem;
+  margin-top: 2rem;
+  font-size: 2.5rem;
   color: #fff;
 }
 
 .cards {
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 2.5rem;
   padding: 2rem;
   flex-wrap: wrap;
 }
@@ -59,17 +61,17 @@ main {
 .card {
   background-color: #222;
   border: 1px solid #333;
-  padding: 1.5rem;
-  border-radius: 10px;
-  width: 200px;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 240px;
   text-align: center;
-  box-shadow: 0 0 10px #444;
+  box-shadow: 0 0 15px #444;
   transition: all 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: 0 0 15px var(--primary);
-  transform: translateY(-5px);
+  box-shadow: 0 0 18px var(--primary);
+  transform: translateY(-6px);
 }
 
 .motd {
@@ -79,9 +81,9 @@ main {
 
 .motd img {
   max-width: 100%;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-top: 1rem;
-  box-shadow: 0 0 10px #333;
+  box-shadow: 0 0 12px #333;
 }
 
 .info-host {
@@ -95,27 +97,32 @@ main {
 }
 
 .info-host h2 {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   margin-bottom: 1rem;
   color: var(--accent);
 }
 
 .info-host p {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #ccc;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .footer {
   background-color: #111;
   color: #aaa;
   text-align: center;
-  padding: 1rem 0;
-  font-size: 0.9rem;
+  padding: 2rem 0;
+  font-size: 1rem;
+  font-weight: bold;
   border-top: 1px solid #333;
 }
 
 @media (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
   .cards {
     flex-direction: column;
     align-items: center;
