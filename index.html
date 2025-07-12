@@ -15,6 +15,15 @@
     </nav>
   </header>
 
+  <!-- Menú hamburguesa desplegable -->
+  <div class="menu-panel hidden">
+    <ul>
+      <li><button onclick="showTerminal()">🖥️ Servidores</button></li>
+      <li><button onclick="showDatabase()">📦 Almacenar</button></li>
+      <li><button onclick="supportTicket()">🎟️ Ticket de soporte</button></li>
+    </ul>
+  </div>
+
   <main>
     <h1 class="panel-title">Panel</h1>
 
@@ -39,6 +48,9 @@
       <p>Maki Host es un servicio especializado en alojamiento para servidores virtuales, enfocado en rendimiento, seguridad y experiencia del usuario.</p>
       <p>Nos caracterizamos por ofrecer soluciones flexibles y soporte personalizado para gamers, desarrolladores y creadores.</p>
     </section>
+
+    <!-- Contenido dinámico -->
+    <div id="dynamic-content"></div>
   </main>
 
   <footer class="footer">
