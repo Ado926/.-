@@ -118,7 +118,7 @@ main {
   border-top: 1px solid #333;
 }
 
-/* 🌟 NUEVO: Estilo del menú hamburguesa desplegable */
+/* Menú hamburguesa desplegable */
 .menu-panel {
   position: absolute;
   top: 80px;
