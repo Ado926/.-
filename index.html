@@ -1,1 +1,111 @@
-page 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SkyUltra Hosting Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --bg: #121212;
+      --fg: #fff;
+      --panel: #1f1f2e;
+      --accent: #2a2a3f;
+    }
+    body.light {
+      --bg: #f2f2f2;
+      --fg: #111;
+      --panel: #ddd;
+      --accent: #ccc;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      height: 100vh;
+      display: flex;
+    }
+    #login {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      width: 250px;
+      border-radius: 5px;
+      border: none;
+    }
+    button { background: var(--accent); color: var(--fg); cursor: pointer; }
+    .error { color: red; }
+    #panel {
+      display: none;
+      width: 100%;
+      height: 100%;
+      flex-direction: row;
+    }
+    .sidebar {
+      width: 250px;
+      background: var(--panel);
+      padding: 20px;
+    }
+    .sidebar button {
+      width: 100%;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .sidebar i {
+      margin-right: 10px;
+    }
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      background: var(--panel);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .section {
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+      display: none;
+    }
+    .section.active { display: block; }
+    .terminal {
+      background: black;
+      color: lime;
+      font-family: monospace;
+      padding: 20px;
+      height: 250px;
+      overflow-y: auto;
+      border-radius: 8px;
+    }
+    .user-list li {
+      background: var(--accent);
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="login">
+  <h2>🔐 Iniciar sesión</h2>
+  <input id="email" type="email" placeholder="Correo">
+  <input id="pass" type="password" placeholder="Contraseña">
+  <button onclick="login()">Entrar</button>
+  <p class="error" id="loginError"></p>
+</div>
+
+<div id="panel">
+  <
