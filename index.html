@@ -1,17 +1,52 @@
-# Paneles de hosting 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel de Ventas</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; }
+    .section { padding: 20px; }
+    .button { padding: 10px 20px; background-color: #008CBA; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 10px; }
+    .img-section img { width: 200px; height: auto; margin: 10px; }
+    #volver { position: absolute; top: 20px; left: 20px; background-color: crimson; }
+  </style>
+</head>
+<body>
 
-</details>
+  <div id="inicio" class="section">
+    <h1>¡Hola! Bienvenido a este panel de ventas.</h1>
+    <p>Nos complace brindarte nuestros productos para que los disfrutes con provecho.</p>
+    <button class="button" onclick="mostrarSeccion('menu')">Entrar</button>
+  </div>
 
----
+  <div id="menu" class="section" style="display:none;">
+    <button id="volver" class="button" onclick="mostrarSeccion('inicio')">Volver</button><br><br>
+    <button class="button" onclick="mostrarSeccion('productos')">Productos</button>
+    <button class="button" onclick="mostrarSeccion('precios')">Precios</button>
+  </div>
 
-## Hola, Soy félix, y en está cuenta te brindaré paneles hosting comfiables para que alojes tus hosting sin necesidad de pagar dinero.
+  <div id="productos" class="section" style="display:none;">
+    <button id="volver" class="button" onclick="mostrarSeccion('menu')">Volver</button><br><br>
+    <div class="img-section">
+      <img src="https://qu.ax/bXinP.jpg" alt="Denji Bot MD"><p>Denji Bot MD</p>
+      <img src="https://qu.ax/caXVr.jpg" alt="Makima MD"><p>Makima MD</p>
+    </div>
+  </div>
 
-</details><h1>Pronto traeré mas paneles por aqui les estaré informando todo</h1>
+  <div id="precios" class="section" style="display:none;">
+    <button id="volver" class="button" onclick="mostrarSeccion('menu')">Volver</button><br><br>
+    <p>Producto #1: 1 dólar por semana</p>
+    <p>Producto #2: 3 dólares por semana</p>
+    <p>Producto #1 Prox: 20 dólares</p>
+    <p>Producto #2 Prox: 30 dólares</p>
+  </div>
 
-</summary><h1>🛠️Dejame una estrella</h1>
+  <script>
+    function mostrarSeccion(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
 
-</details>
-
----
-
->  © 2025 Paneles Host
+</body>
+</html>
