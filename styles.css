@@ -1,29 +1,58 @@
 body {
-  font-family: sans-serif;
-  background: #f0f2f5;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #000;
+  color: #fff;
   margin: 0;
   padding: 0;
 }
-header nav {
-  background: #222;
-  color: #fff;
-  padding: 1rem;
+
+.navbar {
+  background-color: #111;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 1.1rem;
 }
+
+.menu-icon {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.panel-title {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 2rem;
+  color: #fff;
+}
+
 .cards {
   display: flex;
-  gap: 1rem;
-  padding: 1rem;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
 }
+
 .card {
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  flex: 1;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #222;
+  border: 1px solid #333;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 0 10px #444;
 }
+
 .motd {
-  padding: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.motd img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 1rem;
 }
