@@ -1,10 +1,10 @@
-// Ingreso directo
+// 🔐 Login directo
 function enterAsGuest() {
   document.getElementById("login-screen").style.display = "none";
   document.getElementById("panel-akirax").style.display = "block";
 }
 
-// Menú hamburguesa
+// 🍔 Menú hamburguesa
 const menuBtn = document.querySelector('.menu-icon');
 const menuPanel = document.querySelector('.menu-panel');
 const contentBox = document.getElementById('dynamic-content');
@@ -25,6 +25,7 @@ function goBackToMain() {
   menuPanel.classList.add('hidden');
 }
 
+// 🖥️ Panel terminal
 function showTerminal() {
   hideMainContent();
   contentBox.innerHTML = `
@@ -40,6 +41,7 @@ function showTerminal() {
   menuPanel.classList.add('hidden');
 }
 
+// 📦 Base de datos
 function showDatabase() {
   hideMainContent();
   contentBox.innerHTML = `
@@ -52,11 +54,12 @@ function showDatabase() {
   menuPanel.classList.add('hidden');
 }
 
+// 🎟️ Ticket soporte
 function supportTicket() {
   window.location.href = "tel:+18293142989";
 }
 
-// Console
+// 💻 Consola con input
 function showConsole() {
   contentBox.innerHTML = `
     <h2>🖥️ Consola del servidor</h2>
@@ -90,13 +93,4 @@ function executeCommand() {
   if (command) {
     output.innerHTML += `\nroot@akirax:~$ ${command}\nEl código "${command}" no existe o no está registrado en el host\n`;
     input.value = '';
-    output.scrollTop = output.scrollHeight;
-  }
-}
-
-// Files
-function showFiles() {
-  contentBox.innerHTML = `
-    <h2>📂 Archivos</h2>
-    <textarea rows="8" cols="40" style="width:100%; max-width:500px; background:#000; color:#fff; border:1px solid #444; border-radius:10px; padding:1rem;">
-Puedes escribir cualquier disparate que se
+    output.scrollTop =
