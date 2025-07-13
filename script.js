@@ -1,10 +1,10 @@
-// 🔐 Login directo
+// 🔐 Ingreso directo sin validación
 function enterAsGuest() {
   document.getElementById("login-screen").style.display = "none";
   document.getElementById("panel-akirax").style.display = "block";
 }
 
-// 🍔 Menú hamburguesa
+// 🍔 Menú hamburguesa y navegación
 const menuBtn = document.querySelector('.menu-icon');
 const menuPanel = document.querySelector('.menu-panel');
 const contentBox = document.getElementById('dynamic-content');
@@ -25,7 +25,7 @@ function goBackToMain() {
   menuPanel.classList.add('hidden');
 }
 
-// 🖥️ Panel terminal
+// 🖥️ Panel de terminal con submenú
 function showTerminal() {
   hideMainContent();
   contentBox.innerHTML = `
@@ -41,7 +41,7 @@ function showTerminal() {
   menuPanel.classList.add('hidden');
 }
 
-// 📦 Base de datos
+// 📦 Simulación de base de datos
 function showDatabase() {
   hideMainContent();
   contentBox.innerHTML = `
@@ -54,22 +54,22 @@ function showDatabase() {
   menuPanel.classList.add('hidden');
 }
 
-// 🎟️ Ticket soporte
+// 🎟️ Soporte con redirección telefónica
 function supportTicket() {
   window.location.href = "tel:+18293142989";
 }
 
-// 💻 Consola con input
+// 💻 Console con input interactivo
 function showConsole() {
   contentBox.innerHTML = `
     <h2>🖥️ Consola del servidor</h2>
-    <div style="color:#0ff; font-family:monospace; background:#111; padding:1rem; border-radius:10px;">
+    <div style="color:#0ff; font-family:monospace; background:#111; padding:1rem; border-radius:10px; margin-bottom:1rem;">
       CPU Load: 0.13%<br>
       Memory: 512MiB<br>
       Network: 1 Byte ↑ / 0 Bytes ↓
     </div>
 
-    <pre id="terminal-output" style="background-color:#000; color:#0ff; padding:1rem; margin:1rem 0; border-radius:10px; font-family:monospace;">
+    <pre id="terminal-output" style="background-color:#000; color:#0ff; padding:1rem; margin-bottom:1rem; border-radius:10px; font-family:monospace;">
 root@akirax:~$ node index.js
 Starting server...
 Server running at port 25565
@@ -93,4 +93,98 @@ function executeCommand() {
   if (command) {
     output.innerHTML += `\nroot@akirax:~$ ${command}\nEl código "${command}" no existe o no está registrado en el host\n`;
     input.value = '';
-    output.scrollTop =
+    output.scrollTop = output.scrollHeight;
+  }
+}
+
+// 📂 Files con textarea editable
+function showFiles() {
+  contentBox.innerHTML = `
+    <h2>📂 Archivos</h2>
+    <textarea rows="8" cols="40" style="width:100%; max-width:500px; background:#000; color:#fff; border:1px solid #444; border-radius:10px; padding:1rem;">
+Puedes escribir cualquier disparate que se te ocurra...
+    </textarea>
+  `;
+}
+
+// ⚙️ Startup simulando clonación
+function showStartup() {
+  contentBox.innerHTML = `
+    <h2>⚙️ Inicio de proyecto</h2>
+    <pre style="background:#111; color:#0f0; padding:1rem; border-radius:10px;">
+git clone https://github.com/akirax/panel.git
+Cloning into 'panel'...
+remote: Enumerating objects...
+remote: Counting objects...
+Receiving objects: 100% ✔
+Panel iniciado correctamente
+    </pre>
+  `;
+}
+
+// 🔧 Settings con opción de reinstalar
+function showSettings() {
+  contentBox.innerHTML = `
+    <h2>⚙️ Configuración del servidor</h2>
+    <button onclick="reinstallServer()" style="padding:1rem 2rem; background:var(--accent); color:#000; font-weight:bold; border:none; border-radius:10px;">
+      Reinstalar servidor
+    </button>
+  `;
+}
+
+// ⚡ Reinstalación con pantalla completa
+function reinstallServer() {
+  document.body.innerHTML = `
+    <div style="height:100vh; background:#000; color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:2rem;">
+      <p>🔁 REINSTALANDO SERVER</p>
+      <p>⏳ ESPERA UN MOMENTO...</p>
+    </div>
+  `;
+}
+
+// 🛠️ Power con mensaje de mantenimiento
+function showPower() {
+  contentBox.innerHTML = `
+    <h2>🛠️ MANTENIMIENTO</h2>
+    <p style="font-size:1.2rem;">• Estamos consiguiendo una interfaz lista para esta función del hosting.</p>
+  `;
+}
+
+// 🛠️ Panel de administración
+function openAdminPanel() {
+  document.getElementById('panel-akirax').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+
+  document.getElementById('admin-username').value = localStorage.getItem('username') || 'User';
+  document.getElementById('admin-coins').value = localStorage.getItem('coins') || '0.00';
+}
+
+function saveAdminChanges() {
+  const username = document.getElementById('admin-username').value;
+  const coins = document.getElementById('admin-coins').value;
+
+  localStorage.setItem('username', username);
+  localStorage.setItem('coins', coins);
+
+  document.querySelector('.username').textContent = `👤 ${username}`;
+  document.querySelector('.coin-balance').textContent = `💰 ${parseFloat(coins).toFixed(2)}`;
+  alert('✅ Cambios guardados correctamente');
+}
+
+function goBackFromAdmin() {
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('panel-akirax').style.display = 'block';
+}
+
+// 🧠 Aplicar cambios guardados al cargar
+window.addEventListener('DOMContentLoaded', () => {
+  const savedUsername = localStorage.getItem('username');
+  const savedCoins = localStorage.getItem('coins');
+
+  if (savedUsername) {
+    document.querySelector('.username').textContent = `👤 ${savedUsername}`;
+  }
+  if (savedCoins) {
+    document.querySelector('.coin-balance').textContent = `💰 ${parseFloat(savedCoins).toFixed(2)}`;
+  }
+});
