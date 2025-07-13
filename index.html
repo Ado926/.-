@@ -2,21 +2,19 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Panel Nuevo Makima Host</title>
+  <title>Panel Akirax</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Login falso -->
+  <!-- Pantalla de login -->
   <div id="login-screen">
-    <h1>🔐 Bienvenido a Maki Host</h1>
+    <h1>🔐 Bienvenido a Akirax</h1>
     <input type="text" id="login-user" placeholder="Correo o usuario" />
     <input type="password" id="login-pass" placeholder="Contraseña" />
-    <button onclick="validateLogin()">Entrar</button>
-    <p id="login-message"></p>
-    <p class="guest-link" onclick="enterAsGuest()">¿No tienes cuenta? <span>ENTRAR COMO INVITADO</span></p>
+    <button onclick="enterAsGuest()">Entrar</button>
   </div>
 
-  <!-- Panel Akirax -->
+  <!-- Panel Akirax completo -->
   <div id="panel-akirax" style="display:none;">
     <header>
       <nav class="navbar">
@@ -37,18 +35,26 @@
 
     <main id="main-content">
       <h1 class="panel-title">Panel</h1>
+
       <section class="cards">
         <div class="card"><h2>🖥️ Servidores</h2><p>0</p></div>
         <div class="card"><h2>💸 Maki coins</h2><p>0,00</p></div>
       </section>
+
       <section class="motd">
         <h2>Anfitrión de Maki Host</h2>
         <img src="https://qu.ax/caXVr.jpg" alt="Imagen MOTD" />
       </section>
+
       <section class="info-host">
         <h2>🌐 Información sobre Maki Host</h2>
         <p>Maki Host es un servicio especializado en alojamiento para servidores virtuales, enfocado en rendimiento, seguridad y experiencia del usuario.</p>
         <p>Nos caracterizamos por ofrecer soluciones flexibles y soporte personalizado para gamers, desarrolladores y creadores.</p>
+      </section>
+
+      <!-- Imagen final extra -->
+      <section class="extra-image">
+        <img src="https://qu.ax/wYXEt.jpg" alt="Imagen extra" />
       </section>
     </main>
 
