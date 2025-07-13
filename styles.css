@@ -118,7 +118,6 @@ main {
   border-top: 1px solid #333;
 }
 
-/* Menú hamburguesa desplegable */
 .menu-panel {
   position: absolute;
   top: 80px;
@@ -167,7 +166,31 @@ main {
   text-align: center;
 }
 
-/* 🔁 Estilo responsivo para menú grande en móviles */
+/* Submenú de terminal */
+.sub-menu {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.sub-menu button {
+  background-color: var(--accent);
+  border: none;
+  color: #000;
+  font-weight: bold;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.sub-menu button:hover {
+  transform: scale(1.05);
+}
+
 @media (max-width: 768px) {
   body {
     font-size: 16px;
