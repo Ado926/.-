@@ -1,21 +1,32 @@
-// Elementos principales
+// Login falso
+function validateLogin() {
+  const user = document.getElementById("login-user").value;
+  const pass = document.getElementById("login-pass").value;
+  const message = document.getElementById("login-message");
+  message.textContent = `❌ Credenciales incorrectas`;
+}
+
+function enterAsGuest() {
+  document.getElementById("login-screen").style.display = "none";
+  document.getElementById("panel-akirax").style.display = "block";
+}
+
+// Menu hamburguesa
 const menuBtn = document.querySelector('.menu-icon');
 const menuPanel = document.querySelector('.menu-panel');
 const contentBox = document.getElementById('dynamic-content');
 const mainContent = document.getElementById('main-content');
 
-// Activar menú hamburguesa
 menuBtn.addEventListener('click', () => {
   menuPanel.classList.toggle('hidden');
 });
 
-// Ocultar contenido principal y mostrar zona dinámica
 function hideMainContent() {
   mainContent.style.display = 'none';
   contentBox.style.display = 'block';
 }
 
-// SERVIDORES – Panel principal de terminal
+// Menú principal
 function showTerminal() {
   hideMainContent();
   contentBox.innerHTML = `
@@ -31,12 +42,11 @@ function showTerminal() {
   menuPanel.classList.add('hidden');
 }
 
-// ALMACENAR – Simulación de base de datos
 function showDatabase() {
   hideMainContent();
   contentBox.innerHTML = `
     <h2>📦 Crear Base de Datos</h2>
-    <p>Esta es una base de datos, está en proceso.</p>
+    <p>Esta es una simulación para crear bases de datos.</p>
     <button style="padding:0.7rem 1.2rem; background:var(--accent); border:none; border-radius:8px;">
       Crear nueva base
     </button>
@@ -44,12 +54,11 @@ function showDatabase() {
   menuPanel.classList.add('hidden');
 }
 
-// SOPORTE – Llamada telefónica
 function supportTicket() {
-  window.location.href = "tel:18293142989";
+  window.location.href = "tel:+18293142989";
 }
 
-// TERMINAL – Console con input y respuesta simulada
+// Submenús terminal
 function showConsole() {
   contentBox.innerHTML = `
     <h2>🖥️ Consola del servidor</h2>
@@ -75,20 +84,18 @@ Server running at port 25565
   `;
 }
 
-// Lógica del input de comando
 function executeCommand() {
   const input = document.getElementById('command-input');
   const output = document.getElementById('terminal-output');
   const command = input.value.trim();
 
   if (command) {
-    output.innerHTML += `\nroot@makima:~$ ${command}\nEl código "${command}" no existe o no está registrado en el host\n`;
+    output.innerHTML += `\nroot@akirax:~$ ${command}\nEl código "${command}" no existe o no está registrado en el host\n`;
     input.value = '';
     output.scrollTop = output.scrollHeight;
   }
 }
 
-// TERMINAL – Files con textarea editable
 function showFiles() {
   contentBox.innerHTML = `
     <h2>📂 Archivos</h2>
@@ -98,12 +105,11 @@ Puedes escribir cualquier disparate que se te ocurra...
   `;
 }
 
-// TERMINAL – Startup simulando clonación de GitHub
 function showStartup() {
   contentBox.innerHTML = `
     <h2>⚙️ Inicio de proyecto</h2>
     <pre style="background:#111; color:#0f0; padding:1rem; border-radius:10px;">
-git clone https://github.com/makima/panel.git
+git clone https://github.com/akirax/panel.git
 Cloning into 'panel'...
 remote: Enumerating objects...
 remote: Counting objects...
@@ -113,7 +119,6 @@ Panel iniciado correctamente
   `;
 }
 
-// TERMINAL – Settings con reinstalación
 function showSettings() {
   contentBox.innerHTML = `
     <h2>⚙️ Configuración del servidor</h2>
@@ -123,20 +128,6 @@ function showSettings() {
   `;
 }
 
-// Reinstalación con pantalla completa
 function reinstallServer() {
   document.body.innerHTML = `
-    <div style="height:100vh; background:#000; color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:2rem;">
-      <p>🔁 REINSTALANDO SERVER</p>
-      <p>⏳ ESPERA UN MOMENTO...</p>
-    </div>
-  `;
-}
-
-// TERMINAL – Power con mensaje de mantenimiento
-function showPower() {
-  contentBox.innerHTML = `
-    <h2>🛠️ MANTENIMIENTO</h2>
-    <p style="font-size:1.2rem;">• Estamos consiguiendo una interfaz lista para esta función del hosting.</p>
-  `;
-}
+    <div style="height:100vh; background:#000; color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:
