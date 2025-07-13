@@ -12,29 +12,4 @@ function hideMainContent() {
 }
 
 function showTerminal() {
-  hideMainContent();
-  contentBox.innerHTML = `
-    <h2>Terminal Simulada</h2>
-    <div style="background-color:#111; padding:1rem; border-radius:8px; color:#0ff; font-family:monospace;">
-      <p>root@akirax:~$ echo "Bienvenido a tu servidor virtual"</p>
-      <p>Bienvenido a tu servidor virtual</p>
-    </div>
-  `;
-  menuPanel.classList.add('hidden');
-}
-
-function showDatabase() {
-  hideMainContent();
-  contentBox.innerHTML = `
-    <h2>Crear Base de Datos</h2>
-    <p>📁 Esta es una sección simulada para la creación de bases de datos.</p>
-    <button style="padding:0.5rem 1rem; border:none; background-color:var(--accent); color:#000; font-weight:bold;">
-      Crear nueva base
-    </button>
-  `;
-  menuPanel.classList.add('hidden');
-}
-
-function supportTicket() {
-  window.location.href = "tel:+18293142989";
-}
+  hideMain
