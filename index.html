@@ -2,54 +2,59 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Maki prueba panel host</title>
+  <title>Panel Nuevo Makima Host</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <nav class="navbar">
-      <button class="menu-icon">☰</button>
-      <span class="coin-balance">💰 0,00</span>
-      <span class="username">👤 User</span>
-      <span class="notification">💠</span>
-    </nav>
-  </header>
-
-  <div class="menu-panel hidden">
-    <ul>
-      <li><button onclick="showTerminal()">🖥️ Servidores</button></li>
-      <li><button onclick="showDatabase()">📦 Almacenar</button></li>
-      <li><button onclick="supportTicket()">🎟️ Ticket de soporte</button></li>
-    </ul>
+  <!-- Login falso -->
+  <div id="login-screen">
+    <h1>🔐 Bienvenido a Maki Host</h1>
+    <input type="text" id="login-user" placeholder="Correo o usuario" />
+    <input type="password" id="login-pass" placeholder="Contraseña" />
+    <button onclick="validateLogin()">Entrar</button>
+    <p id="login-message"></p>
+    <p class="guest-link" onclick="enterAsGuest()">¿No tienes cuenta? <span>ENTRAR COMO INVITADO</span></p>
   </div>
 
-  <main id="main-content">
-    <h1 class="panel-title">Panel</h1>
+  <!-- Panel Akirax -->
+  <div id="panel-akirax" style="display:none;">
+    <header>
+      <nav class="navbar">
+        <button class="menu-icon">☰</button>
+        <span class="coin-balance">💰 0,00</span>
+        <span class="username">👤 User</span>
+        <span class="notification">💠</span>
+      </nav>
+    </header>
 
-    <section class="cards">
-      <div class="card">
-        <h2>🖥️ Servidores</h2>
-        <p>0</p>
-      </div>
-      <div class="card">
-        <h2>💸 Maki coins</h2>
-        <p>0,00</p>
-      </div>
-    </section>
+    <div class="menu-panel hidden">
+      <ul>
+        <li><button onclick="showTerminal()">🖥️ Servidores</button></li>
+        <li><button onclick="showDatabase()">📦 Almacenar</button></li>
+        <li><button onclick="supportTicket()">🎟️ Ticket de soporte</button></li>
+      </ul>
+    </div>
 
-    <section class="motd">
-      <h2>Anfitrión de Maki Host</h2>
-      <img src="https://qu.ax/caXVr.jpg" alt="Imagen MOTD" />
-    </section>
+    <main id="main-content">
+      <h1 class="panel-title">Panel</h1>
+      <section class="cards">
+        <div class="card"><h2>🖥️ Servidores</h2><p>0</p></div>
+        <div class="card"><h2>💸 Maki coins</h2><p>0,00</p></div>
+      </section>
+      <section class="motd">
+        <h2>Anfitrión de Maki Host</h2>
+        <img src="https://qu.ax/caXVr.jpg" alt="Imagen MOTD" />
+      </section>
+      <section class="info-host">
+        <h2>🌐 Información sobre Maki Host</h2>
+        <p>Maki Host es un servicio especializado en alojamiento para servidores virtuales, enfocado en rendimiento, seguridad y experiencia del usuario.</p>
+        <p>Nos caracterizamos por ofrecer soluciones flexibles y soporte personalizado para gamers, desarrolladores y creadores.</p>
+      </section>
+    </main>
 
-    <section class="info-host">
-      <h2>🌐 Información sobre Maki Host</h2>
-      <p>Maki Host es un servicio especializado en alojamiento para servidores virtuales, enfocado en rendimiento, seguridad y experiencia del usuario.</p>
-      <p>Nos caracterizamos por ofrecer soluciones flexibles y soporte personalizado para gamers, desarrolladores y creadores.</p>
-    </section>
-  </main>
-
-  <div id="dynamic-content" style="display: none;"></div>
+    <div id="dynamic-content" style="display: none;"></div>
+    <footer class="footer"><p>© 2025 Maki Host. Todos los derechos reservados.</p></footer>
+  </div>
 
   <script src="script.js"></script>
 </body>
