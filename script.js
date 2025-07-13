@@ -53,6 +53,13 @@ function supportTicket() {
   window.location.href = "tel:+18293142989";
 }
 
+// 🔙 Volver al panel principal
+function goBackToMain() {
+  document.getElementById("dynamic-content").style.display = "none";
+  mainContent.style.display = "block";
+  menuPanel.classList.add('hidden');
+}
+
 // 💻 Console con input de comandos
 function showConsole() {
   contentBox.innerHTML = `
@@ -126,7 +133,7 @@ function showSettings() {
   `;
 }
 
-// ⚡ Acción de reinstalación con pantalla completa
+// ⚡ Reinstalación con pantalla completa
 function reinstallServer() {
   document.body.innerHTML = `
     <div style="height:100vh; background:#000; color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:2rem;">
