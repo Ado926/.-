@@ -2,19 +2,19 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Panel Maki</title>
+  <title>Panel Maki Host</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <!-- Pantalla de login -->
   <div id="login-screen">
-    <h1>🔐 Bienvenido a Maki Host, regístrate para continuar. Cualquier correo es válido.</h1>
+    <h1>🔐 Bienvenido a Maki Hos, este host está en constante actualización pero puedes ir usándola. Ingresa tu cuenta, cualquier credencial es aceptada.</h1>
     <input type="text" id="login-user" placeholder="Correo o usuario" />
     <input type="password" id="login-pass" placeholder="Contraseña" />
     <button onclick="enterAsGuest()">Entrar</button>
   </div>
 
-  <!-- Panel Akirax completo -->
+  <!-- Panel principal -->
   <div id="panel-akirax" style="display:none;">
     <header>
       <nav class="navbar">
@@ -25,14 +25,17 @@
       </nav>
     </header>
 
+    <!-- Menú hamburguesa -->
     <div class="menu-panel hidden">
       <ul>
         <li><button onclick="showTerminal()">🖥️ Servidores</button></li>
         <li><button onclick="showDatabase()">📦 Almacenar</button></li>
         <li><button onclick="supportTicket()">🎟️ Ticket de soporte</button></li>
+        <li><button onclick="goBackToMain()">🔙 Volver</button></li>
       </ul>
     </div>
 
+    <!-- Contenido principal -->
     <main id="main-content">
       <h1 class="panel-title">Panel</h1>
 
@@ -52,14 +55,34 @@
         <p>Nos caracterizamos por ofrecer soluciones flexibles y soporte personalizado para gamers, desarrolladores y creadores.</p>
       </section>
 
-      <!-- Imagen final extra -->
       <section class="extra-image">
-        <img src="https://qu.ax/lBbGl.jpg" alt="Imagen extra" />
+        <img src="https://qu.ax/wYXEt.jpg" alt="Imagen decorativa final" />
+      </section>
+
+      <section class="admin-access">
+        <button onclick="openAdminPanel()">Administración</button>
       </section>
     </main>
 
+    <!-- Contenido dinámico -->
     <div id="dynamic-content" style="display: none;"></div>
+
     <footer class="footer"><p>© 2025 Maki Host. Todos los derechos reservados.</p></footer>
+  </div>
+
+  <!-- Panel de administración -->
+  <div id="admin-panel" style="display:none; padding:2rem; text-align:center;">
+    <h2>🛠️ Panel de administración</h2>
+    <label>Nombre de usuario:<br>
+      <input type="text" id="admin-username" />
+    </label><br><br>
+
+    <label>Maki Coins:<br>
+      <input type="number" id="admin-coins" step="0.01" />
+    </label><br><br>
+
+    <button onclick="saveAdminChanges()">Guardar cambios</button>
+    <button onclick="goBackFromAdmin()" style="margin-left:1rem;">Volver al Panel</button>
   </div>
 
   <script src="script.js"></script>
