@@ -1,17 +1,10 @@
-// Login falso
-function validateLogin() {
-  const user = document.getElementById("login-user").value;
-  const pass = document.getElementById("login-pass").value;
-  const message = document.getElementById("login-message");
-  message.textContent = `❌ Credenciales incorrectas`;
-}
-
+// 🔐 Ingreso directo sin validación
 function enterAsGuest() {
   document.getElementById("login-screen").style.display = "none";
   document.getElementById("panel-akirax").style.display = "block";
 }
 
-// Menu hamburguesa
+// 🍔 Menú hamburguesa y navegación
 const menuBtn = document.querySelector('.menu-icon');
 const menuPanel = document.querySelector('.menu-panel');
 const contentBox = document.getElementById('dynamic-content');
@@ -26,7 +19,7 @@ function hideMainContent() {
   contentBox.style.display = 'block';
 }
 
-// Menú principal
+// 🖥️ Panel de terminal con submenú
 function showTerminal() {
   hideMainContent();
   contentBox.innerHTML = `
@@ -42,6 +35,7 @@ function showTerminal() {
   menuPanel.classList.add('hidden');
 }
 
+// 📦 Simulación de base de datos
 function showDatabase() {
   hideMainContent();
   contentBox.innerHTML = `
@@ -54,11 +48,12 @@ function showDatabase() {
   menuPanel.classList.add('hidden');
 }
 
+// 🎟️ Soporte con redirección telefónica
 function supportTicket() {
   window.location.href = "tel:+18293142989";
 }
 
-// Submenús terminal
+// 💻 Console con input de comandos
 function showConsole() {
   contentBox.innerHTML = `
     <h2>🖥️ Consola del servidor</h2>
@@ -74,7 +69,7 @@ Starting server...
 Server running at port 25565
     </pre>
 
-    <input id="command-input" type="text" placeholder="Escribe un comando..." 
+    <input id="command-input" type="text" placeholder="Escribe un comando..."
       style="padding:0.8rem; width:100%; max-width:500px; border-radius:8px; background:#111; color:#fff; border:1px solid #444;">
 
     <button onclick="executeCommand()" 
@@ -96,6 +91,7 @@ function executeCommand() {
   }
 }
 
+// 📝 Files con textarea editable
 function showFiles() {
   contentBox.innerHTML = `
     <h2>📂 Archivos</h2>
@@ -105,6 +101,7 @@ Puedes escribir cualquier disparate que se te ocurra...
   `;
 }
 
+// ⚙️ Startup simulando clonación
 function showStartup() {
   contentBox.innerHTML = `
     <h2>⚙️ Inicio de proyecto</h2>
@@ -119,6 +116,7 @@ Panel iniciado correctamente
   `;
 }
 
+// 🔧 Settings con opción de reinstalar
 function showSettings() {
   contentBox.innerHTML = `
     <h2>⚙️ Configuración del servidor</h2>
@@ -128,6 +126,20 @@ function showSettings() {
   `;
 }
 
+// ⚡ Acción de reinstalación con pantalla completa
 function reinstallServer() {
   document.body.innerHTML = `
-    <div style="height:100vh; background:#000; color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:
+    <div style="height:100vh; background:#000; color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:2rem;">
+      <p>🔁 REINSTALANDO SERVER</p>
+      <p>⏳ ESPERA UN MOMENTO...</p>
+    </div>
+  `;
+}
+
+// 🛠️ Mensaje de mantenimiento en Power
+function showPower() {
+  contentBox.innerHTML = `
+    <h2>🛠️ MANTENIMIENTO</h2>
+    <p style="font-size:1.2rem;">• Estamos consiguiendo una interfaz lista para esta función del hosting.</p>
+  `;
+}
