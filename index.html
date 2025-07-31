@@ -1,173 +1,56 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Venta de Paneles de Hosting</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-  <style>
-    :root {
-      --main-blue: #0e1734;
-      --accent: #00fff7;
-      --orange: #ff8800;
-      --card-bg: #181d2b;
-      --text: #e2e8f0;
-      --muted: #b4bcd0;
-    }
-    html, body { height:100%; margin:0; padding:0; font-family:'Inter',sans-serif; background:linear-gradient(120deg,#0e1734 0%,#1e293b 100%);}
-    body { color:var(--text); }
-    a { color:inherit; text-decoration:none; }
-    .navbar {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:22px 32px 18px 32px; background:rgba(14,23,52,0.92); position:relative; z-index:10;
-    }
-    .navbar .logo { font-size:1.5em; font-weight:700; color:var(--accent); letter-spacing:1px; }
-    .navbar nav { display:flex; gap:32px;}
-    .navbar nav a { font-size:1.05em; color:var(--text); opacity:.92; padding:6px 0; transition:.18s; border-bottom:2px solid transparent;}
-    .navbar nav a.active, .navbar nav a:hover { color:var(--accent); border-bottom:2px solid var(--accent);}
-    .navbar .btn-acceder {
-      background:var(--orange); color:#fff; font-weight:bold; padding:10px 26px; border-radius:7px;
-      margin-left:18px; border:none; font-size:1.07em; box-shadow:0 2px 14px #ff88004a;
-      letter-spacing:1px; cursor:pointer; transition:.18s;
-    }
-    .navbar .btn-acceder:hover { background:#ffae00; }
-    .hero {
-      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
-      padding:44px 32px 0 32px; min-height:420px; margin-bottom:64px;
-    }
-    .hero-content { max-width:500px; }
-    .hero-title {
-      font-size:2.6em; font-weight:800; letter-spacing:1px; line-height:1.16; margin-bottom:14px;
-      background:linear-gradient(90deg,#fff 40%,var(--accent) 100%);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    }
-    .hero-sub { font-size:1.21em; color:var(--muted); margin-bottom:32px; }
-    .hero-btn {
-      background:var(--accent); color:#131a26; font-size:1.15em; font-weight:bold; padding:15px 44px;
-      border-radius:10px; box-shadow:0 2px 24px #00fff733; border:none; letter-spacing:1px; cursor:pointer;
-      transition:.18s; margin-bottom:40px;
-    }
-    .hero-btn:hover { background:#18d8cc; color:#fff; }
-    .hero-img {
-      flex:1; display:flex; align-items:center; justify-content:center;
-      min-width:280px; min-height:240px;
-    }
-    .hero-img svg { width:95%; max-width:370px; height:auto; }
-    .planes-section {
-      background:rgba(24,29,43,.93); border-top:2px solid #232c44;
-      padding:64px 0 54px 0; margin-top:0;
-    }
-    .planes-title {
-      text-align:center; font-size:2em; color:var(--accent); font-weight:700; margin-bottom:36px; letter-spacing:1px;
-    }
-    .planes-cards {
-      display:flex; gap:36px; justify-content:center; flex-wrap:wrap; max-width:1060px; margin:auto;
-    }
-    .plan-card {
-      background:var(--card-bg); border-radius:18px; box-shadow:0 4px 38px #00fff75a;
-      min-width:240px; max-width:310px; flex:1 1 260px; padding:38px 28px 32px 28px;
-      display:flex; flex-direction:column; align-items:center; text-align:center;
-      border:2.2px solid transparent; transition:.16s;
-    }
-    .plan-card.featured { border:2.2px solid var(--accent); box-shadow:0 8px 44px #00fff7cc;}
-    .plan-name { font-size:1.17em; font-weight:700; color:#fff; margin-bottom:6px;}
-    .plan-price { font-size:2em; color:var(--accent); font-weight:800; margin-bottom:10px; }
-    .plan-desc { color:var(--muted); font-size:1.08em; margin-bottom:20px;}
-    .plan-list { text-align:left; margin-bottom:20px; }
-    .plan-list li { color:#fff; margin-bottom:5px; font-size:1.06em; display:flex; align-items:center;}
-    .plan-list li i { color:var(--accent); margin-right:7px; }
-    .plan-btn {
-      background:var(--orange); color:#fff; font-weight:bold; padding:11px 34px; border-radius:8px; border:none;
-      font-size:1.15em; box-shadow:0 2px 14px #ff88004a; cursor:pointer; letter-spacing:1px; transition:.18s;
-    }
-    .plan-btn:hover { background:#ffae00; }
-    .footer {
-      width:100%; background:#181818 !important; color:#ff8800 !important; padding:18px 0 10px 0;
-      text-align:center; font-size:1.05em; position:relative; left:0; bottom:0; z-index:2; letter-spacing:1px; margin-top:42px;
-    }
-    @media (max-width:900px) {
-      .hero { flex-direction:column; gap:36px; align-items:flex-start; padding:40px 8vw 0 8vw;}
-      .hero-img { justify-content:flex-end; width:100%; }
-      .planes-cards { flex-direction:column; gap:26px;}
-    }
-    @media (max-width:600px) {
-      .navbar { flex-direction:column; gap:16px; padding:16px 7vw 12px 7vw;}
-      .hero { padding:34px 5vw 0 5vw; min-height:350px;}
-      .planes-section { padding:38px 0 34px 0;}
-      .footer { font-size:0.97em; }
-    }
-  </style>
+	<title>Mantenimiento</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #007bff; /* Azul brillante */
+			text-align: center;
+			color: #ffffff; /* Texto blanco */
+		}
+		
+		.mensaje {
+			font-size: 48px;
+			font-weight: bold;
+			margin-top: 20%;
+		}
+		
+		.detalle {
+			font-size: 24px;
+			margin-top: 20px;
+		}
+		
+		.boton {
+			background-color: #ffffff; /* Fondo blanco */
+			color: #007bff; /* Texto azul */
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 18px;
+			margin-top: 20px;
+		}
+		
+		.boton:hover {
+			background-color: #f2f2f2; /* Fondo gris claro al pasar el mouse */
+		}
+		
+		.footer {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			padding: 10px;
+			background-color: #0069d9; /* Azul más oscuro */
+			color: #ffffff; /* Texto blanco */
+			font-size: 14px;
+		}
+	</style>
 </head>
 <body>
-  <!-- Navbar -->
-  <div class="navbar">
-    <span class="logo"> Planes de Paneles</span>
-    <nav>
-      <a href="#" class="active">Inicio</a>
-      <a href="#planes">Planes</a>
-      <button class="btn-acceder">Acceder</button>
-    </nav>
-  </div>
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-title">Paneles de hosting para tus clientes</div>
-      <div class="hero-sub">Vende o gestiona tus propios servicios de hosting: paneles listos para usar y administrar hasta decenas de servidores. ¡Escala tu negocio con nuestra plataforma!</div>
-    </div>
-    <div class="hero-img">
-      <!-- SVG decorativo reemplaza tu imagen -->
-      <svg viewBox="0 0 400 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="200" cy="205" rx="190" ry="55" fill="#00fff744"/>
-        <rect x="60" y="40" width="280" height="110" rx="20" fill="#101820" stroke="#00fff7" stroke-width="4"/>
-        <rect x="90" y="80" width="220" height="50" rx="12" fill="#1e293b"/>
-        <circle cx="110" cy="105" r="9" fill="#00fff7"/>
-        <rect x="130" y="97" width="120" height="16" rx="6" fill="#282f44"/>
-        <rect x="260" y="97" width="38" height="16" rx="7" fill="#282f44"/>
-        <rect x="60" y="160" width="280" height="38" rx="15" fill="#232c44"/>
-        <rect x="70" y="170" width="100" height="16" rx="7" fill="#282f44"/>
-        <rect x="230" y="170" width="70" height="16" rx="7" fill="#282f44"/>
-      </svg>
-    </div>
-  </section>
-  <!-- Planes -->
-  <section class="planes-section" id="planes">
-    <div class="planes-title">Nuestros Planes de Panel Hosting</div>
-    <div class="planes-cards">
-      <div class="plan-card">
-        <div class="plan-name">Panel Lite</div>
-        <div class="plan-price">$4.99<span style="font-size:.52em; color:var(--muted);">/mes</span></div>
-        <div class="plan-desc">Idealri-check-line"></i> Fácil gestión de clientes</li>
-        </ul>
-        <button class="plan-btn">Comprar</button>
-      </div>
-      <div class="plan-card featured">
-        <div class="plan-name">Panel Pro</div>
-        <div class="plan-price">$9.99<span style="font-size:.52em; color:var(--muted);">/mes</span></div>
-        <div class="plan-desc">Para empresas y negocios en crecimiento.</div>
-        <ul class="plan-list">
-          <li><i class="ri-check-line"></i> Hasta 50 servidores</li>
-          <li><i class="ri-check-line"></i> Panel marca blanca</li>
-          <li><i class="ri-check-line"></i> Soporte prioritario</li>
-          <li><i class="ri-check-line"></i> Multi-usuario</li>
-        </ul>
-        <button class="plan-btn">Comprar</button>
-      </div>
-      <div class="plan-card">
-        <div class="plan-name">Panel Max</div>
-        <div class="plan-price">$19.99<span style="font-size:.52em; color:var(--muted);">/mes</span></div>
-        <div class="plan-desc">Para grandes proveedores o plataformas SaaS.</div>
-        <ul class="plan-list">
-          <li><i class="ri-check-line"></i> Servidores ilimitados</li>
-          <li><i class="ri-check-line"></i> Personalización avanzada</li>
-          <li><i class="ri-check-line"></i> Soporte premium 24/7</li>
-          <li><i class="ri-check-line"></i> Integraciones API</li>
-        </ul>
-        <button class="plan-btn">Comprar</button>
-      </div>
-    </div>
-  </section>
-  <!-- Soporte (solo ancla, puedes personalizar) -->
-  <div id="soporte"></div>
-  <div class="footer">© Maki Hosting | Todos los derechos reservados</div>
+	<div class="mensaje">🛠️ MANTENIMIENTO</div>
+	<div class="detalle">El hosting está recibiendo un arduo mantenimiento debido a un fallo que hubo en el nodo.</div>
+	<button class="boton" onclick="alert('Este panel está protegido por derechos de autor.')">Ver proceso</button>
+	<div class="footer">&copy; 2025 - Maki Host | Todos los derechos reservados</div>
 </body>
 </html>
