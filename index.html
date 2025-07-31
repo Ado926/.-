@@ -61,6 +61,62 @@
     .server-tab-btn.active, .server-tab-btn:hover {background:#ff88001a; color:#fff;}
     /* Responsive */
     @media (max-width:650px){ .card-grid{grid-template-columns:1fr;} .sidebar{width:56px;min-width:56px;} .sidebar .logo{font-size:1.2em;} .main{margin-bottom:54px;} .topbar{height:54px;} .topbar .title{font-size:1.1em;} }
+
+    /* NUEVO: Estilos para tarjeta vacía de servidores */
+    .empty-server-card {
+      background: #23272f;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px #00fff74a;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 54px 32px 44px 32px;
+      margin: 60px auto 0 auto;
+      max-width: 390px;
+      min-height: 340px;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      animation: fadeIn 0.5s;
+    }
+    .empty-server-icon {
+      font-size: 3.7em;
+      color: #00fff7;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 6px 32px #00fff799);
+    }
+    .empty-server-title {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .empty-server-subtitle {
+      font-size: 1.08em;
+      color: #b4bcd0;
+      margin-bottom: 22px;
+    }
+    .empty-server-btn {
+      font-size: 1.15em !important;
+      padding: 11px 26px !important;
+      background: #00fff7 !important;
+      color: #101820 !important;
+      border-radius: 8px !important;
+      box-shadow: 0 2px 16px #00fff77a !important;
+      font-weight: bold !important;
+      letter-spacing: 1px;
+      transition: background 0.18s, color 0.18s;
+    }
+    .empty-server-btn:hover {
+      background: #18d8cc !important;
+      color: #fff !important;
+    }
+    @keyframes fadeIn {
+      from { opacity:0; transform: translateY(30px);}
+      to   { opacity:1; transform: translateY(0);}
+    }
   </style>
 </head>
 <body>
@@ -276,10 +332,23 @@ function renderDashboard() {
   `;
 }
 
+// NUEVA FUNCION ACTUALIZADA renderServers()
 function renderServers() {
+  // Si el usuario NO tiene servidores
+  if (!currentUser.servidores.length) {
+    document.getElementById("serversPanel").innerHTML = `
+      <div class="empty-server-card">
+        <div class="empty-server-icon"><i class="ri-server-line"></i></div>
+        <div class="empty-server-title">No tienes servidores</div>
+        <div class="empty-server-subtitle">¡Crea tu primer servidor para empezar a usar el panel!</div>
+        <button class="panel-btn empty-server-btn" onclick="createServer()">+ Crear servidor</button>
+      </div>
+    `;
+    return;
+  }
+  // Si el usuario tiene servidores
   let html = `<div class="card panel-card">
     <h3><i class="ri-server-line"></i> Servidores</h3>`;
-  if (!currentUser.servidores.length) html += `<div style="margin-bottom:8px;">No tienes servidores.</div>`;
   currentUser.servidores.forEach((srv,i)=>{
     html += `<div style="background:#222;color:#ff8800;border-radius:7px;padding:8px 12px;margin-bottom:6px;">
       <b>${srv.nombre}</b> (${srv.coins} coins) <button class="panel-btn" onclick="openServerModal(${i})">Abrir</button>
@@ -292,7 +361,6 @@ function renderServers() {
   document.getElementById("serversPanel").innerHTML = html;
 }
 
-// Modal servidor (console, files, startup, settings)
 function openServerModal(idx) {
   let srv = currentUser.servidores[idx];
   let html = `
@@ -458,8 +526,8 @@ function renderStore() {
     <h3><i class="ri-shopping-cart-line"></i> Tienda</h3>
     <b>Plan 1: 200 coins</b> <button class="panel-btn" onclick="buyPlan(200,'MAK28')">Comprar</button><br>
     <b>Plan 2: 400 coins</b> <button class="panel-btn" onclick="buyPlan(400,'MAK29')">Comprar</button><br>
-    <b>Plan 3: 200 coins</b> <button class="panel-btn" onclick="buyPlan(200,'MAK30')">Comprar</button><br>
-    <b>Plan 4: 400 coins</b> <button class="panel-btn" onclick="buyPlan(400,'MAK21')">Comprar</button><br>
+    <b>Plan 3: 800 coins</b> <button class="panel-btn" onclick="buyPlan(800,'MAK30')">Comprar</button><br>
+    <b>Plan 4: 1600 coins</b> <button class="panel-btn" onclick="buyPlan(1600,'MAK21')">Comprar</button><br>
     <div id="storeMsg" style="color:#ff8800;margin-top:10px;"></div>
   </div>`;
   document.getElementById("storePanel").innerHTML = html;
