@@ -318,3 +318,638 @@
 </div>
 <div class="footer">© Maki Host | Todos los derechos reservados</div>
 <!-- El JS va en el siguiente bloque -->
+<script>
+// ==================== Datos Iniciales, Utilidades y Estado ====================
+const STORAGE_KEY = "panel_sim_host_v3";
+function getInitialData() {
+  return {
+    users: [
+      { user:"admin", pass:"admin", correo:"admin@host.com", role:"admin", coinsUsed:0, coinsTotal:1000, servidores:[], bases:[], maxServers:3 },
+      { user:"editor", pass:"editor", correo:"editor@host.com", role:"editor", coinsUsed:0, coinsTotal:300, servidores:[], bases:[], maxServers:2 },
+    ],
+    announcement: "",
+    plans: [
+      // Planes iniciales (puedes dejar vacío si quieres que se creen solo desde el admin)
+      {name:"Plan 1", cost:100, code:"MAK28"},
+      {name:"Plan 2", cost:400, code:"MAK29"},
+      {name:"Plan 3", cost:1000, code:"MAK30"},
+      {name:"Plan 4", cost:1200, code:"MAK21"},
+    ]
+  };
+}
+function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(panelData)); }
+function loadData() {
+  let d = localStorage.getItem(STORAGE_KEY);
+  if (d) return JSON.parse(d);
+  return getInitialData();
+}
+let panelData = loadData();
+let currentUser = null;
+let editUserIdx = null;
+
+// ==================== Paneles y Navegación ====================
+const panels = ["dashboardPanel","serversPanel","ticketsPanel","storePanel"];
+["btn-dashboard","btn-servers","btn-tickets","btn-store"].forEach((id,i)=>{
+  document.getElementById(id).onclick = ()=>showPanel(i);
+});
+function showPanel(idx) {
+  panels.forEach((id,i)=>{
+    document.getElementById(id).style.display = (i===idx)?"grid":"none";
+  });
+  renderAll();
+}
+
+// ==================== Autenticación ====================
+function renderAuthPanels() {
+  let html = '';
+  html += `<div class="auth-panel" id="loginPanel">
+    <h2>Iniciar Sesión</h2>
+    <input id="loginUser" placeholder="Usuario" autocomplete="username" />
+    <input id="loginPass" placeholder="Contraseña" type="password" autocomplete="current-password" />
+    <button onclick="login()">Entrar</button>
+    <div id="loginMsg"></div>
+    <div class="extra">¿No tienes cuenta?
+      <button onclick="showRegister()" class="secondary">Crear cuenta nueva</button>
+    </div>
+  </div>
+  <div class="auth-panel" id="registerPanel" style="display:none">
+    <h2>Crear Cuenta Nueva</h2>
+    <input id="regUser" placeholder="Usuario" autocomplete="username" />
+    <input id="regPass" placeholder="Contraseña" type="password" autocomplete="new-password" />
+    <input id="regCorreo" placeholder="Correo" autocomplete="email" />
+    <button onclick="register()">Registrar</button>
+    <button onclick="showLogin()" class="secondary">Volver</button>
+    <div id="regMsg"></div>
+  </div>`;
+  document.getElementById("authPanels").innerHTML = html;
+}
+function showLogin() {
+  document.getElementById("loginPanel").style.display = "block";
+  document.getElementById("registerPanel").style.display = "none";
+  document.getElementById("loginMsg").textContent = "";
+}
+function showRegister() {
+  document.getElementById("loginPanel").style.display = "none";
+  document.getElementById("registerPanel").style.display = "block";
+  document.getElementById("regMsg").textContent = "";
+}
+function register() {
+  const regUser = document.getElementById("regUser").value.trim();
+  const regPass = document.getElementById("regPass").value.trim();
+  const regCorreo = document.getElementById("regCorreo").value.trim();
+  if (!regUser || !regPass || !regCorreo) {
+    document.getElementById("regMsg").textContent = "Todos los campos son obligatorios.";
+    return;
+  }
+  if (panelData.users.find(u => u.user === regUser)) {
+    document.getElementById("regMsg").textContent = "Ese usuario ya existe.";
+    return;
+  }
+  const newUser = {
+    user: regUser, pass: regPass, correo: regCorreo, role: "lector",
+    coinsUsed:0, coinsTotal:0, servidores:[], bases:[], maxServers:1
+  };
+  panelData.users.push(newUser);
+  saveData();
+  document.getElementById("regMsg").textContent = "Cuenta creada, ahora puedes iniciar sesión.";
+  setTimeout(() => { showLogin(); document.getElementById("loginUser").value = regUser; }, 1000);
+}
+function login() {
+  const u = document.getElementById("loginUser").value;
+  const p = document.getElementById("loginPass").value;
+  const found = panelData.users.find(x => x.user === u && x.pass === p);
+  if (found) {
+    currentUser = found;
+    document.getElementById("authPanels").style.display = "none";
+    document.getElementById("container").style.display = "flex";
+    showPanel(0);
+    updateSidebarState();
+  } else {
+    document.getElementById("loginMsg").textContent = "Usuario o contraseña incorrectos";
+  }
+}
+function logout() {
+  currentUser = null;
+  document.getElementById("authPanels").style.display = "block";
+  document.getElementById("container").style.display = "none";
+  renderAuthPanels();
+  showLogin();
+}
+
+// ==================== Render General ====================
+function renderAll() {
+  renderDashboard();
+  renderServers();
+  renderTickets();
+  renderStore();
+  updateSidebarState();
+  renderUserMenu();
+}
+function updateSidebarState() {
+  document.getElementById("btn-admin").style.display = ["admin","editor"].includes(currentUser.role) ? "block" : "none";
+}
+
+// ==================== Menú Usuario ====================
+function openUserMenu() {
+  renderUserMenu();
+  document.getElementById("userMenu").style.display = "flex";
+}
+function closeUserMenu() {
+  document.getElementById("userMenu").style.display = "none";
+}
+function renderUserMenu() {
+  let html = `<button onclick="closeUserMenu()" class="close-menu"><i class="ri-close-line"></i></button>
+    <button onclick="showPanel(0);closeUserMenu();">Principal</button>
+    <button onclick="showPanel(1);closeUserMenu();">Servidores</button>
+    <button onclick="showPanel(2);closeUserMenu();">Tickets</button>
+    <button onclick="showPanel(3);closeUserMenu();">Tienda</button>`;
+  document.getElementById("userMenu").innerHTML = html;
+}
+
+// ==================== Dashboard ====================
+function renderDashboard() {
+  let anuncio = panelData.announcement ? `<div style="background:#222;color:#ff8800;border-radius:7px;padding:8px 12px;font-weight:bold;margin-bottom:10px;">
+    🛠️Anuncio de admins<br>${panelData.announcement}</div>` : "";
+  document.getElementById("dashboardPanel").innerHTML = `
+    <div class="card panel-card" style="">
+      ${anuncio}
+      <h3><i class="ri-coins-line"></i> Coins en uso</h3>
+      <div class="coin-value" id="coinsUsed">${currentUser?.coinsUsed?.toFixed(2) ?? "0,00"}</div>
+    </div>
+    <div class="card panel-card" style="">
+      <h3><i class="ri-copper-coin-line"></i> Coins totales</h3>
+      <div class="coin-value" id="coinsTotal">${currentUser?.coinsTotal?.toFixed(2) ?? "0,00"}</div>
+    </div>
+    <div class="card panel-card" style="grid-column:span 2;">
+      <h3><i class="ri-user-line"></i> Información de usuario</h3>
+      <b>Usuario:</b> ${currentUser.user}<br>
+      <b>Correo:</b> ${currentUser.correo}<br>
+      <b>Rol:</b> ${currentUser.role}<br>
+      <b>Servidores permitidos:</b> ${currentUser.maxServers ?? 1}
+    </div>
+  `;
+}
+
+// ==================== SERVIDORES ====================
+function renderServers() {
+  if (!currentUser.servidores.length) {
+    document.getElementById("serversPanel").innerHTML = `
+      <div class="empty-server-card">
+        <div class="empty-server-icon"><i class="ri-server-line"></i></div>
+        <div class="empty-server-title">No tienes servidores</div>
+        <div class="empty-server-subtitle">¡Crea tu primer servidor para empezar a usar el panel!</div>
+        <button class="panel-btn empty-server-btn" onclick="openServerCreateModal()">+ Crear servidor</button>
+      </div>
+    `;
+    return;
+  }
+  let html = `<div class="card panel-card">
+    <h3><i class="ri-server-line"></i> Servidores</h3>`;
+  currentUser.servidores.forEach((srv,i)=>{
+    html += `<div style="background:#222;color:#ff8800;border-radius:7px;padding:8px 12px;margin-bottom:6px;">
+      <b>${srv.nombre}</b> (${srv.coins} coins) <button class="panel-btn" onclick="openServerModal(${i})">Abrir</button>
+    </div>`;
+  });
+  let allowCreate = (currentUser.servidores.length < (currentUser.maxServers || 1));
+  html += `<button class="card-btn panel-btn" onclick="openServerCreateModal()" ${allowCreate?"":"disabled"}>+ Crear servidor</button>
+    ${!allowCreate?'<div style="color:#ff4444;margin-top:8px;">Has alcanzado el límite de servidores permitidos.</div>':''}
+    </div>`;
+  document.getElementById("serversPanel").innerHTML = html;
+}
+
+// ================ MODAL CREAR SERVIDOR (MULTIPASO) =================
+let serverCreateState = {};
+function openServerCreateModal() {
+  // Paso 1: Formulario
+  serverCreateState = {};
+  let html = `
+    <h2 style="color:#00fff7;text-align:center;margin-bottom:20px;">Crear servidor</h2>
+    <label>Nombre:</label>
+    <input id="srvName" maxlength="32" placeholder="Nombre del servidor">
+    <label>Descripción:</label>
+    <textarea id="srvDesc" maxlength="80" rows="2" placeholder="¿Para qué es este servidor?"></textarea>
+    <label>¿Qué bot/app es?</label>
+    <input id="srvTipo" maxlength="32" placeholder="Tipo (ej: WhatsApp Bot)">
+    <label>Versión:</label>
+    <input id="srvVer" maxlength="16" placeholder="v1.0, 2.2, etc.">
+    <label>Repositorio (opcional):</label>
+    <input id="srvRepo" maxlength="80" placeholder="https://github.com/user/repo">
+    <button class="next-btn" onclick="serverCreateNextPlans()">Siguiente</button>
+    <button class="modal-close-btn panel-btn" onclick="closeServerCreateModal()" style="background:#ff4444 !important;margin-top:10px;">Cancelar</button>
+  `;
+  document.getElementById("serverCreateModalContent").innerHTML = html;
+  document.getElementById("serverCreateModal").style.display = "flex";
+}
+function closeServerCreateModal() {
+  document.getElementById("serverCreateModal").style.display = "none";
+}
+function serverCreateNextPlans() {
+  let name = document.getElementById("srvName").value.trim();
+  let desc = document.getElementById("srvDesc").value.trim();
+  let tipo = document.getElementById("srvTipo").value.trim();
+  let ver = document.getElementById("srvVer").value.trim();
+  let repo = document.getElementById("srvRepo").value.trim();
+  if(!name || !desc || !tipo || !ver) {
+    alert("Completa todos los campos obligatorios.");
+    return;
+  }
+  serverCreateState = { nombre:name, descripcion:desc, tipo, ver, repo, coins:0, consola:"", files:[], startupRepo:repo };
+  // Paso 2: Elegir plan
+  let plans = [
+    {name:"Plan 1",cost:100},
+    {name:"Plan 2",cost:400},
+    {name:"Plan 3",cost:1000}
+  ];
+  let html = `<h2 style="color:#00fff7;text-align:center;margin-bottom:20px;">Selecciona un plan</h2>
+    <div class="plan-list">`;
+  plans.forEach((p,i)=>{
+    html += `<div class="plan-option" id="planOpt${i}" onclick="selectServerPlan(${i})">
+      <div class="plan-name">${p.name}</div>
+      <div class="plan-cost">${p.cost} coins</div>
+    </div>`;
+  });
+  html += `</div>
+    <button id="confirmServerBtn" class="confirm-btn" style="display:none;margin-top:18px;" onclick="confirmServerPurchase()">Confirmar compra</button>
+    <button class="modal-close-btn panel-btn" onclick="closeServerCreateModal()" style="background:#ff4444 !important;margin-top:10px;">Cancelar</button>
+    <div id="serverCreateMsg" class="server-create-success"></div>
+  `;
+  document.getElementById("serverCreateModalContent").innerHTML = html;
+  serverCreateState.plans = plans;
+  serverCreateState.selectedPlan = null;
+}
+function selectServerPlan(i) {
+  serverCreateState.selectedPlan = serverCreateState.plans[i];
+  for(let x=0;x<3;x++) {
+    let el = document.getElementById("planOpt"+x);
+    if(el) el.classList.toggle("selected", x==i);
+  }
+  document.getElementById("confirmServerBtn").style.display = "block";
+}
+function confirmServerPurchase() {
+  let plan = serverCreateState.selectedPlan;
+  if(!plan) return;
+  if(currentUser.coinsTotal < plan.cost) {
+    document.getElementById("serverCreateMsg").textContent = "No tienes suficientes coins.";
+    return;
+  }
+  serverCreateState.coins = plan.cost;
+  currentUser.coinsTotal -= plan.cost;
+  currentUser.servidores.push({...serverCreateState});
+  saveData();
+  document.getElementById("serverCreateMsg").textContent = "¡Servidor creado exitosamente!";
+  setTimeout(()=>{
+    closeServerCreateModal();
+    renderServers();
+  },1200);
+}
+
+// =============== SERVIDOR INDIVIDUAL ===============
+function openServerModal(idx) {
+  let srv = currentUser.servidores[idx];
+  let html = `
+    <button onclick="closeServerModal()" class="close-menu" style="position:absolute;top:16px;right:20px;">✖</button>
+    <div class="server-tabs">
+      <button onclick="showServerTab('consola')" id="tabConsola" class="server-tab-btn">Console</button>
+      <button onclick="showServerTab('files')" id="tabFiles" class="server-tab-btn">Files</button>
+      <button onclick="showServerTab('startup')" id="tabStartup" class="server-tab-btn">Startup</button>
+      <button onclick="showServerTab('settings')" id="tabSettings" class="server-tab-btn">Settings</button>
+    </div>
+    <div id="serverTabContent"></div>
+  `;
+  showModal(html, "Servidor: " + srv.nombre);
+  showServerTab('consola', srv);
+  window.currentServerIdx = idx;
+}
+function showServerTab(tab, srv) {
+  let idx = window.currentServerIdx;
+  srv = srv || currentUser.servidores[idx];
+  let html = "";
+  // Reset active
+  ["tabConsola","tabFiles","tabStartup","tabSettings"].forEach(el=>{
+    let btn = document.getElementById(el);
+    if(btn) btn.classList.remove("active");
+  });
+  let activeBtn = document.getElementById("tab"+tab.charAt(0).toUpperCase()+tab.slice(1));
+  if(activeBtn) activeBtn.classList.add("active");
+  if (tab==="consola") {
+    html = `<div class="console-area" id="consoleOutput">${srv.consola||""}</div>
+            <div class="console-input-row">
+              <input class="console-input" id="consoleCmdInput" placeholder="Comando..." autocomplete="off">
+              <button class="console-send-btn panel-btn" onclick="sendServerCmd(${idx})">Enviar</button>
+            </div>`;
+  } else if (tab==="files") {
+    html = `<div><b>Archivos:</b></div>
+      <ul class="list-ul" id="serverFileList">${(srv.files||[]).map(f=>`<li>${f}</li>`).join("")}</ul>
+      <input id="newServerFile" class="panel-input" placeholder="Subir archivo (nombre)" />
+      <button onclick="addServerFile(${idx})" class="card-btn panel-btn">Subir</button>`;
+  } else if (tab==="startup") {
+    html = `<div><b>Startup (repositorio GitHub):</b></div>
+      <input id="startupRepo" class="panel-input" placeholder="URL o nombre del repo" value="${srv.startupRepo||""}">
+      <button onclick="saveStartupRepo(${idx})" class="card-btn panel-btn">Guardar</button>
+      <div style="margin-top:10px;color:#ff8800;">Ejemplo: user/repo o https://github.com/user/repo</div>`;
+  } else if (tab==="settings") {
+    html = `<div>
+      <label>Nombre del servidor:</label>
+      <input id="editSrvName" class="panel-input" value="${srv.nombre}" />
+      <button onclick="saveSrvName(${idx})" class="panel-btn">Guardar</button>
+      <button onclick="deleteServer(${idx})" class="panel-btn" style="background:#ff4444;">Eliminar servidor</button>
+    </div>`;
+  }
+  document.getElementById("serverTabContent").innerHTML = html;
+}
+function closeServerModal() { closeModal(); }
+function sendServerCmd(idx) {
+  let cmd = document.getElementById("consoleCmdInput").value;
+  if (!cmd) return;
+  let srv = currentUser.servidores[idx];
+  let out = srv.consola||"";
+  out += `\n$ <span class="cmd-info">${cmd}</span>`;
+  if (cmd.includes("git clone") || cmd.includes("startup") || cmd.includes("npm install")) {
+    out += '\n<span class="cmd-info">Instalando repositorio...</span>';
+    animateConsole(idx, out, [
+      "Descargando archivos...",
+      "Instalando dependencias...",
+      "Compilando...",
+      "Preparando entorno...",
+      "ERROR: Dependencias incompatibles. Instalación fallida."
+    ]);
+  } else if (cmd.includes("run bot")) {
+    out += '\n<span class="cmd-success">Bot de WhatsApp iniciado!</span>';
+    srv.consola = out;
+    saveData();
+    showServerTab('consola', srv);
+    scrollConsole();
+  } else {
+    out += '\n<span class="cmd-success">Comando ejecutado: ' + cmd + '</span>';
+    srv.consola = out;
+    saveData();
+    showServerTab('consola', srv);
+    scrollConsole();
+  }
+  document.getElementById("consoleCmdInput").value = "";
+}
+function animateConsole(idx, baseOut, steps, i=0) {
+  let srv = currentUser.servidores[idx];
+  if(i < steps.length) {
+    srv.consola = baseOut + steps.slice(0,i+1).map((step,j)=>{
+      if(j===steps.length-1) return `<span class="cmd-error">${step}</span>`;
+      return `<span class="cmd-info">${step}</span>`;
+    }).join("\n");
+    saveData();
+    showServerTab('consola', srv);
+    scrollConsole();
+    setTimeout(()=>animateConsole(idx,baseOut,steps,i+1), 900);
+  }
+}
+function scrollConsole() {
+  let out = document.getElementById("consoleOutput");
+  if(out) out.scrollTop = out.scrollHeight;
+}
+function addServerFile(idx) {
+  let f = document.getElementById("newServerFile").value.trim();
+  if (!f) return;
+  let srv = currentUser.servidores[idx];
+  if (!srv.files) srv.files = [];
+  srv.files.push(f);
+  saveData();
+  showServerTab('files', srv);
+  document.getElementById("newServerFile").value = "";
+}
+function saveStartupRepo(idx) {
+  let repo = document.getElementById("startupRepo").value.trim();
+  let srv = currentUser.servidores[idx];
+  srv.startupRepo = repo;
+  saveData();
+  showServerTab('startup', srv);
+}
+function saveSrvName(idx) {
+  let name = document.getElementById("editSrvName").value.trim();
+  if(!name) return;
+  let srv = currentUser.servidores[idx];
+  srv.nombre = name;
+  saveData();
+  showServerTab('settings', srv);
+}
+function deleteServer(idx) {
+  if(confirm("¿Seguro que quieres eliminar este servidor?")) {
+    currentUser.servidores.splice(idx,1);
+    saveData();
+    closeServerModal();
+    renderServers();
+  }
+}
+
+// ==================== TICKETS ====================
+function renderTickets() {
+  document.getElementById("ticketsPanel").innerHTML = `<div class="card panel-card">
+    <h3><i class="ri-question-line"></i> Tickets</h3>
+    <div>No hay tickets aún.</div>
+  </div>`;
+}
+
+// ==================== TIENDA ====================
+function renderStore() {
+  let isAdmin = ["admin","editor"].includes(currentUser.role);
+  let html = `<div class="store-panel-header">
+    <span style="font-size:1.18em;color:#00fff7;font-weight:bold;">Planes disponibles</span>`;
+  if(isAdmin) html += `<button class="store-create-btn" onclick="openCreatePlanModal()">Crear plan</button>`;
+  html += `</div>`;
+  if(!panelData.plans.length)
+    html += `<div class="empty-server-card" style="margin-top:8px;"><div class="empty-server-title">No hay planes disponibles</div></div>`;
+  else
+    panelData.plans.forEach((plan, i) => {
+      html += `<div class="plan-card">
+        <div class="plan-title">${plan.name}</div>
+        <div class="plan-cost">${plan.cost} coins</div>
+        <div class="plan-code">Código: <b>${plan.code}</b></div>
+        <button class="plan-buy-btn" onclick="buyPlanPrompt(${i})">Comprar</button>
+        <div id="planMsg${i}" style="color:#ff8800;margin-top:7px;"></div>
+      </div>`;
+    });
+  document.getElementById("storePanel").innerHTML = html;
+}
+function buyPlanPrompt(idx) {
+  let plan = panelData.plans[idx];
+  let code = prompt("Introduce el código de canje:");
+  if (!code || code.trim().toUpperCase() !== plan.code.toUpperCase()) {
+    document.getElementById("planMsg"+idx).textContent = "Código incorrecto.";
+    return;
+  }
+  if(currentUser.coinsTotal < plan.cost) {
+    document.getElementById("planMsg"+idx).textContent = "No tienes suficientes coins.";
+    return;
+  }
+  currentUser.coinsTotal += plan.cost; // Aquí puedes cambiar a: currentUser.coinsTotal += plan.beneficio; si el plan da algo especial
+  currentUser.coinsTotal -= plan.cost; // Se descuenta el costo (o puedes sumar beneficios)
+  saveData();
+  document.getElementById("planMsg"+idx).textContent = "¡Compra exitosa! Coins añadidos.";
+  renderDashboard();
+  setTimeout(()=>document.getElementById("planMsg"+idx).textContent = "", 2000);
+}
+function openCreatePlanModal() {
+  document.getElementById("planNameInput").value = "";
+  let max = panelData.plans.reduce((a,b)=>b.cost>a?b.cost:a,0);
+  document.getElementById("planCostInput").value = max ? (max+200) : 1400;
+  document.getElementById("planCodeInput").value = "";
+  document.getElementById("planCreateMsg").textContent = "";
+  document.getElementById("createPlanModal").style.display = "flex";
+}
+function closeCreatePlanModal() {
+  document.getElementById("createPlanModal").style.display = "none";
+}
+function saveNewPlan() {
+  let n = document.getElementById("planNameInput").value.trim();
+  let c = parseInt(document.getElementById("planCostInput").value);
+  let code = document.getElementById("planCodeInput").value.trim().toUpperCase();
+  if(!n || !c || !code) {
+    document.getElementById("planCreateMsg").textContent = "Completa todos los campos.";
+    return;
+  }
+  if(panelData.plans.find(p=>p.code===code)) {
+    document.getElementById("planCreateMsg").textContent = "Ese código ya existe.";
+    return;
+  }
+  panelData.plans.push({name:n, cost:c, code});
+  saveData();
+  document.getElementById("planCreateMsg").textContent = "Plan creado exitosamente.";
+  renderStore();
+  setTimeout(()=>closeCreatePlanModal(),1200);
+}
+
+// =========== ADMINISTRAR PLANES Y CÓDIGOS DE CANJE ==========
+function showAdminPlansModal() {
+  let html = "";
+  if(!panelData.plans.length) html = `<div style="margin-bottom:8px;">No hay planes/códigos de canje.</div>`;
+  else panelData.plans.forEach((p,i)=>{
+    html += `<div style="background:#181818;border-radius:7px;padding:7px 12px;margin-bottom:10px;">
+      <b>${p.name}</b> (${p.cost} coins) <span style="color:#00fff7;font-weight:bold;">${p.code}</span>
+      <button onclick="deletePlan(${i})" class="panel-btn" style="background:#ff4444;margin-left:8px;font-size:0.98em;">Eliminar</button>
+    </div>`;
+  });
+  document.getElementById("adminPlansList").innerHTML = html;
+  document.getElementById("adminPlansModal").style.display = "flex";
+}
+function closeAdminPlansModal() {
+  document.getElementById("adminPlansModal").style.display = "none";
+}
+function deletePlan(idx) {
+  if(confirm("¿Eliminar este plan/código de canje?")) {
+    panelData.plans.splice(idx,1);
+    saveData();
+    showAdminPlansModal();
+    renderStore();
+  }
+}
+
+// ==================== Admin, Anuncios, Editar Usuario ====================
+function showAdminCodeModal() {
+  document.getElementById("adminCodeModal").style.display = "flex";
+  document.getElementById("adminCodeInput").value = "";
+  document.getElementById("adminCodeMsg").textContent = "";
+}
+function closeAdminCodeModal() {
+  document.getElementById("adminCodeModal").style.display = "none";
+}
+function checkAdminCode() {
+  let c = document.getElementById("adminCodeInput").value.trim();
+  if (c !== "MAK1") {
+    document.getElementById("adminCodeMsg").textContent = "Código incorrecto.";
+    return;
+  }
+  document.getElementById("adminCodeModal").style.display = "none";
+  showAdminPanel();
+}
+function showAdminPanel() {
+  document.getElementById("adminModal").style.display = "flex";
+  renderAdminUsers();
+}
+function closeAdminModal() {
+  document.getElementById("adminModal").style.display = "none";
+}
+function renderAdminUsers() {
+  let container = document.getElementById("adminUsers");
+  container.innerHTML = "";
+  panelData.users.forEach((u, idx) => {
+    const row = document.createElement("div");
+    row.className = "admin-user-row";
+    const correo = document.createElement("span");
+    correo.className = "admin-user-label";
+    correo.textContent = u.correo;
+    row.appendChild(correo);
+    const editBtn = document.createElement("button");
+    editBtn.innerHTML = '<i class="ri-pencil-line"></i>';
+    editBtn.onclick = ()=>openEditUserModal(idx);
+    row.appendChild(editBtn);
+    container.appendChild(row);
+  });
+}
+function openEditUserModal(idx) {
+  editUserIdx = idx;
+  let u = panelData.users[idx];
+  let html = `
+    <label>Correo: <input id="editCorreo" class="panel-input" value="${u.correo}" /></label><br>
+    <label>Coins usados: <input type="number" id="editCoinsUsed" class="panel-input" value="${u.coinsUsed}" /></label><br>
+    <label>Coins totales: <input type="number" id="editCoinsTotal" class="panel-input" value="${u.coinsTotal}" /></label><br>
+    <label>Servidores permitidos: <input type="number" id="editMaxServers" class="panel-input" value="${u.maxServers??1}" min="1" /></label><br>
+    <label>Servidores: <input id="editServidores" class="panel-input" value="${u.servidores.map(s=>s.nombre).join(',')}" placeholder="nombres separados por coma" /></label><br>
+    <label>Bases de datos: <input id="editBases" class="panel-input" value="${u.bases.join(',')}" placeholder="bases separadas por coma" /></label>
+  `;
+  document.getElementById("editUserForm").innerHTML = html;
+  document.getElementById("editUserModal").style.display = "flex";
+}
+function closeEditUserModal() {
+  document.getElementById("editUserModal").style.display = "none";
+}
+function saveEditedUser() {
+  let u = panelData.users[editUserIdx];
+  u.correo = document.getElementById("editCorreo").value;
+  u.coinsUsed = parseFloat(document.getElementById("editCoinsUsed").value)||0;
+  u.coinsTotal = parseFloat(document.getElementById("editCoinsTotal").value)||0;
+  u.maxServers = parseInt(document.getElementById("editMaxServers").value)||1;
+  let servers = document.getElementById("editServidores").value.split(',').map(s=>s.trim()).filter(Boolean);
+  u.servidores = servers.map(s=>({nombre:s,coins:100,consola:"",files:[],startupRepo:""}));
+  u.bases = document.getElementById("editBases").value.split(',').map(b=>b.trim()).filter(Boolean);
+  saveData();
+  renderAdminUsers();
+  closeEditUserModal();
+  if (currentUser && u.user === currentUser.user) {
+    currentUser = u;
+    renderAll();
+  }
+}
+
+function showAnnouncementModal() {
+  document.getElementById("announcementInput").value = panelData.announcement;
+  document.getElementById("announcementModal").style.display = "flex";
+}
+function closeAnnouncementModal() {
+  document.getElementById("announcementModal").style.display = "none";
+}
+function saveAnnouncement() {
+  panelData.announcement = document.getElementById("announcementInput").value;
+  saveData();
+  renderDashboard();
+  closeAnnouncementModal();
+}
+
+// ==================== Utilidad Modal Genérico ====================
+function showModal(html, titulo) {
+  let div = document.createElement("div");
+  div.className = "modal-bg";
+  div.innerHTML = `<div class="modal-content panel-modal-content"><h2>${titulo||""}</h2>${html}</div>`;
+  document.body.appendChild(div);
+  window.currentModal = div;
+}
+function closeModal() {
+  if (window.currentModal) document.body.removeChild(window.currentModal);
+  window.currentModal = null;
+}
+
+function now() { return new Date().toLocaleString(); }
+
+// ================ INICIO ====================
+renderAuthPanels();
+showLogin();
+</script>
+</body>
+</html>
