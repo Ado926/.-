@@ -2,911 +2,179 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Panel Maki Host</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Maki Hosting</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
   <style>
-    body { margin:0; font-family:sans-serif; min-height:100vh; color:#e2e8f0; }
-    .container { display:flex; min-height:100vh; }
-    .sidebar { background:#101820; width:70px; min-width:70px; display:flex; flex-direction:column; align-items:center; padding-top:36px; box-shadow:2px 0 14px #00fff77a; gap:0.3em; z-index:10; }
-    .logo { font-size:2em; font-weight:bold; color:#00fff7; margin-bottom:22px; letter-spacing:2px; text-shadow:0 2px 8px #00fff766; }
-    .side-btn, .admin-btn { background:transparent; border:none; color:#00fff7; font-size:1.6em; margin:0.3em 0; border-radius:12px; transition:background 0.15s, color 0.2s; width:52px; height:52px; display:flex; align-itemscolumn; align-items:stretch; min-height:100vh; padding:0 0.5em; margin-bottom:54px; }
-    .topbar { display:flex; align-items:center; padding:0 28px; height:72px; background:rgba(56,189,248,0.09); box-shadow:0 4px 24px #00fff722; z-index:8; position:relative; }
-    .topbar .title { font-size:1.4em; font-weight:600; color:#fff; letter-spacing:1px; margin-right:auto;}
-    .topbar .logout-btn { background:#ff8800; color:#fff; border:none; border-radius:7px; padding:8px 16px; font-weight:bold; font-size:1em; margin-left:16px; cursor:pointer; box-shadow:0 2px 14px #ff88004a; transition:background 0.15s, color 0.2s;}
-    .auth-panel { max-width:370px; margin:80px auto; background:#101820e8; box-shadow:0 2px 24px #00fff72a; border-radius:16px; padding:36px 32px; text-align:center; color:#e2e8f0;}
-    .auth-panel h2 { margin-bottom:18px; color:#00fff7; font-weight:600; font-size:1.5em;}
-    .auth-panel input { width:90%; padding:8px 12px; border:none; border-radius:7px; background:#1c232b; color:#00fff7; margin-bottom:14px; font-size:1.07em; outline:none; transition:box-shadow 0.15s;}
-    .auth-panel input:focus { box-shadow:0 0 0 2px #00fff7;}
-    .auth-panel button { background:#00fff7; color:#101820; border-radius:7px; border:none; font-weight:bold; font-size:1em; padding:9px 22px; margin-top:4px; cursor:pointer; margin-bottom:8px; box-shadow:0 2px 10px #00fff74a;}
-    .auth-panel .secondary { background:#1c232b; color:#00fff7; border:1px solid #00fff7; margin-left:8px;}
-    .auth-panel .extra { margin-top:16px; font-size:0.98em;}
-    .panel-bg { background: #181818 !important; }
-    .panel-main, .panel-card, .panel-modal-content { background: #222 !important; border-radius: 14px; box-shadow: none; color: #fff; border: none;}
-    .panel-card { padding: 24px 20px 18px 20px; margin-bottom:24px; }
-    .panel-btn, .admin-close-btn, .modal-close-btn, .card-btn, .console-send-btn { background:#ff8800 !important; color:#fff !important; border:none !important; border-radius:7px; font-weight:bold; font-size:1em; cursor:pointer; box-shadow:0 2px 10px #ff88004a; transition:background 0.15s, color 0.2s;}
-    .panel-btn:disabled, .card-btn:disabled { background:#444 !important; color:#bbb !important; }
-    .panel-input, .panel-select { background:#181818; color:#fff; border:1px solid #ff8800; border-radius:7px; padding:8px 12px; margin-bottom:8px;}
-    .footer { width:100%; background:#181818 !important; color:#ff8800 !important; padding:18px 0 10px 0; text-align:center; font-size:1.05em; position:fixed; left:0; bottom:0; z-index:99; letter-spacing:1px;}
-    .card-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(270px,1fr)); gap:24px; margin:36px 30px 0 30px;}
-    .card, .admin-panel, .modal-content { background:#222; border-radius:16px; box-shadow:none; color:#fff; display:flex; flex-direction:column; min-height:120px; position:relative; padding:28px 22px 22px 22px; border:none;}
-    .card h3 { margin-top:0; margin-bottom:10px; color:#ff8800; font-size:1.15em; font-weight:600;}
-    .card .coin-value { font-size:2.3em; font-weight:bold; color:#ff8800; margin-top:10px;}
-    .admin-modal-bg, .modal-bg { position:fixed; top:0; left:0; right:0; bottom:0; background:#181818cc; z-index:999; display:flex; align-items:center; justify-content:center;}
-    .admin-panel, .modal-content { min-width:320px; max-width:450px; position:relative; box-shadow:none; padding:36px 32px; border:none;}
-    .admin-panel h2, .modal-content h2 { margin-top:0; margin-bottom:22px; color:#ff8800; font-size:1.14em; font-weight:bold; text-align:center;}
-    .hamburger { position:absolute; top:14px; left:20px; font-size:2em; color:#ff8800; background:none; border:none; cursor:pointer; z-index:99;}
-    .user-menu { position:fixed; top:0; left:0; width:210px; height:100vh; background:#181818f0; box-shadow:none; padding-top:70px; z-index:1001; display:none; flex-direction:column; }
-    .user-menu button { background:none; border:none; color:#ff8800; font-size:1.15em; text-align:left; padding:16px 24px; cursor:pointer; width:100%; transition:background 0.15s, color 0.2s;}
-    .user-menu button:hover { background:#ff88001a; color:#fff;}
-    .user-menu .close-menu { font-size:1.4em; position:absolute; top:12px; right:16px; background:none; border:none; color:#ff8800; cursor:pointer;}
-    .console-area { background:#181818; color:#39ff14; border-radius:8px; padding:12px; font-size:1.05em; height:180px; overflow-y:auto; font-family:monospace; border:1px solid #222;}
-    .console-area .cmd-error { color: #ff4444; }
-    .console-area .cmd-info { color: #ffe100; }
-    .console-area .cmd-success { color: #39ff14; }
-    .console-input-row { display:flex; gap:8px;}
-    .console-input { flex:1; background:#181818; color:#fff; border:1px solid #ff8800; border-radius:5px; padding:4px; font-family:monospace;}
-    .console-send-btn { background:#ff8800 !important; }
-    .server-tabs {display:flex; gap:8px; margin-bottom:18px;}
-    .server-tab-btn {background:#222; color:#ff8800; border:none; border-radius:5px; font-weight:bold; font-size:1em; cursor:pointer; padding:8px 16px;}
-    .server-tab-btn.active, .server-tab-btn:hover {background:#ff88001a; color:#fff;}
-    @media (max-width:650px){ .card-grid{grid-template-columns:1fr;} .sidebar{width:56px;min-width:56px;} .sidebar .logo{font-size:1.2em;} .main{margin-bottom:54px;} .topbar{height:54px;} .topbar .title{font-size:1.1em;} }
-
-    /* NUEVO: Tarjeta vacía de servidores */
-    .empty-server-card {
-      background: #23272f;
-      border-radius: 18px;
-      box-shadow: 0 4px 32px #00fff74a;
-      color: #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 54px 32px 44px 32px;
-      margin: 60px auto 0 auto;
-      max-width: 390px;
-      min-height: 340px;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      animation: fadeIn 0.5s;
+    :root {
+      --main-blue: #0e1734;
+      --accent: #00fff7;
+      --orange: #ff8800;
+      --card-bg: #181d2b;
+      --text: #e2e8f0;
+      --muted: #b4bcd0;
     }
-    .empty-server-icon {
-      font-size: 3.7em;
-      color: #00fff7;
-      margin-bottom: 18px;
-      filter: drop-shadow(0 6px 32px #00fff799);
+    html, body { height:100%; margin:0; padding:0; font-family:'Inter',sans-serif; background:linear-gradient(120deg,#0e1734 0%,#1e293b 100%);}
+    body { color:var(--text); }
+    a { color:inherit; text-decoration:none; }
+    .navbar {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:22px 32px 18px 32px; background:rgba(14,23,52,0.92); position:relative; z-index:10;
     }
-    .empty-server-title {
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #fff;
-      margin-bottom: 8px;
-      letter-spacing: 1px;
+    .navbar .logo { font-size:1.5em; font-weight:700; color:var(--accent); letter-spacing:1px; }
+    .navbar nav { display:flex; gap:32px;}
+    .navbar nav a { font-size:1.05em; color:var(--text); opacity:.92; padding:6px 0; transition:.18s; border-bottom:2px solid transparent;}
+    .navbar nav a.active, .navbar nav a:hover { color:var(--accent); border-bottom:2px solid var(--accent);}
+    .navbar .btn-acceder {
+      background:var(--orange); color:#fff; font-weight:bold; padding:10px 26px; border-radius:7px;
+      margin-left:18px; border:none; font-size:1.07em; box-shadow:0 2px 14px #ff88004a;
+      letter-spacing:1px; cursor:pointer; transition:.18s;
     }
-    .empty-server-subtitle {
-      font-size: 1.08em;
-      color: #b4bcd0;
-      margin-bottom: 22px;
+    .navbar .btn-acceder:hover { background:#ffae00; }
+    .hero {
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      padding:44px 32px 0 32px; min-height:420px; margin-bottom:64px;
     }
-    .empty-server-btn {
-      font-size: 1.15em !important;
-      padding: 11px 26px !important;
-      background: #00fff7 !important;
-      color: #101820 !important;
-      border-radius: 8px !important;
-      box-shadow: 0 2px 16px #00fff77a !important;
-      font-weight: bold !important;
-      letter-spacing: 1px;
-      transition: background 0.18s, color 0.18s;
+    .hero-content { max-width:500px; }
+    .hero-title {
+      font-size:2.6em; font-weight:800; letter-spacing:1px; line-height:1.16; margin-bottom:14px;
+      background:linear-gradient(90deg,#fff 40%,var(--accent) 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
-    .empty-server-btn:hover {
-      background: #18d8cc !important;
-      color: #fff !important;
+    .hero-sub { font-size:1.21em; color:var(--muted); margin-bottom:32px; }
+    .hero-btn {
+      background:var(--accent); color:#131a26; font-size:1.15em; font-weight:bold; padding:15px 44px;
+      border-radius:10px; box-shadow:0 2px 24px #00fff733; border:none; letter-spacing:1px; cursor:pointer;
+      transition:.18s; margin-bottom:40px;
     }
-    /* NUEVO: Tienda tipo servidores */
-    .store-panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
+    .hero-btn:hover { background:#18d8cc; color:#fff; }
+    .hero-img {
+      flex:1; display:flex; align-items:center; justify-content:center;
+      min-width:280px; min-height:240px;
     }
-    .store-create-btn {
-      background: #00fff7 !important;
-      color: #181818 !important;
-      font-weight: bold !important;
-      padding: 8px 18px !important;
-      border-radius: 8px !important;
-      font-size: 1.09em !important;
-      letter-spacing: 1px;
-      transition: background 0.18s, color 0.18s;
-      box-shadow: 0 2px 14px #00fff768;
+    .hero-img svg { width:95%; max-width:370px; height:auto; }
+    .planes-section {
+      background:rgba(24,29,43,.93); border-top:2px solid #232c44;
+      padding:64px 0 54px 0; margin-top:0;
     }
-    .store-create-btn:hover { background: #18d8cc !important; color:#fff !important; }
+    .planes-title {
+      text-align:center; font-size:2em; color:var(--accent); font-weight:700; margin-bottom:36px; letter-spacing:1px;
+    }
+    .planes-cards {
+      display:flex; gap:36px; justify-content:center; flex-wrap:wrap; max-width:1060px; margin:auto;
+    }
     .plan-card {
-      background: #23272f;
-      border-radius: 18px;
-      box-shadow: 0 4px 24px #00fff74a;
-      color: #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px 20px 26px 20px;
-      margin: 0 auto 18px auto;
-      min-height: 180px;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      transition: box-shadow 0.17s;
+      background:var(--card-bg); border-radius:18px; box-shadow:0 4px 38px #00fff75a;
+      min-width:240px; max-width:310px; flex:1 1 260px; padding:38px 28px 32px 28px;
+      display:flex; flex-direction:column; align-items:center; text-align:center;
+      border:2.2px solid transparent; transition:.16s;
     }
-    .plan-card.selected, .plan-card:hover {
-      box-shadow: 0 8px 38px #00fff7cc;
-      border: 1.7px solid #00fff7;
+    .plan-card.featured { border:2.2px solid var(--accent); box-shadow:0 8px 44px #00fff7cc;}
+    .plan-name { font-size:1.17em; font-weight:700; color:#fff; margin-bottom:6px;}
+    .plan-price { font-size:2em; color:var(--accent); font-weight:800; margin-bottom:10px; }
+    .plan-desc { color:var(--muted); font-size:1.08em; margin-bottom:20px;}
+    .plan-list { text-align:left; margin-bottom:20px; }
+    .plan-list li { color:#fff; margin-bottom:5px; font-size:1.06em; display:flex; align-items:center;}
+    .plan-list li i { color:var(--accent); margin-right:7px; }
+    .plan-btn {
+      background:var(--orange); color:#fff; font-weight:bold; padding:11px 34px; border-radius:8px; border:none;
+      font-size:1.15em; box-shadow:0 2px 14px #ff88004a; cursor:pointer; letter-spacing:1px; transition:.18s;
     }
-    .plan-title {
-      font-size: 1.24em;
-      font-weight: bold;
-      color: #fff;
-      margin-bottom: 7px;
-      letter-spacing: 0.5px;
+    .plan-btn:hover { background:#ffae00; }
+    .footer {
+      width:100%; background:#181818 !important; color:#ff8800 !important; padding:18px 0 10px 0;
+      text-align:center; font-size:1.05em; position:relative; left:0; bottom:0; z-index:2; letter-spacing:1px; margin-top:42px;
     }
-    .plan-cost {
-      font-size: 1.65em;
-      font-weight: bold;
-      color: #00fff7;
-      margin-bottom: 13px;
+    @media (max-width:900px) {
+      .hero { flex-direction:column; gap:36px; align-items:flex-start; padding:40px 8vw 0 8vw;}
+      .hero-img { justify-content:flex-end; width:100%; }
+      .planes-cards { flex-direction:column; gap:26px;}
     }
-    .plan-code {
-      font-size: 0.98em;
-      color: #b4bcd0;
-      margin-bottom: 8px;
-    }
-    .plan-buy-btn {
-      background: #ff8800 !important;
-      color: #fff !important;
-      border-radius: 8px !important;
-      font-size: 1.11em !important;
-      font-weight:bold !important;
-      padding: 10px 26px !important;
-      box-shadow: 0 2px 14px #ff88004a !important;
-      margin-top: 8px;
-    }
-    .plan-buy-btn:active { background: #d87200 !important; }
-    /* Modal crear servidor */
-    .modal-server-create {
-      max-width: 430px;
-      background: #23272f !important;
-      border-radius: 22px !important;
-      color: #fff !important;
-      padding: 38px 28px 32px 28px !important;
-      min-width: 320px;
-      box-shadow: 0 2px 32px #00fff722 !important;
-      border: none !important;
-      display: flex; flex-direction: column; align-items: center;
-    }
-    .modal-server-create label { font-weight:bold; color:#00fff7;}
-    .modal-server-create input, .modal-server-create textarea {
-      background:#181818; color:#fff; border:1px solid #00fff7; border-radius:7px; padding:8px 12px; margin-bottom:12px; width:99%; font-size:1.07em;
-    }
-    .modal-server-create .next-btn, .modal-server-create .confirm-btn {
-      background:#00fff7 !important; color:#181818 !important; border-radius:8px !important; font-weight:bold !important; font-size:1.08em !important; padding:10px 22px !important; margin:12px 0 0 0 !important;
-      letter-spacing:1px;
-      box-shadow: 0 2px 10px #00fff74a !important;
-      transition: background 0.18s, color 0.18s;
-    }
-    .modal-server-create .next-btn:hover, .modal-server-create .confirm-btn:hover { background: #18d8cc !important; color:#fff !important; }
-    .plan-list { display:flex; gap:18px; margin-top:14px; justify-content:center; }
-    .plan-option {
-      background: #181818;
-      border-radius: 14px;
-      border: 2px solid #00fff7;
-      color: #fff;
-      padding: 18px 12px 12px 12px;
-      min-width: 105px;
-      text-align: center;
-      box-shadow: 0 2px 14px #00fff74a;
-      cursor: pointer;
-      transition: box-shadow 0.18s, border 0.16s;
-      font-size: 1.05em;
-      font-weight: bold;
-    }
-    .plan-option.selected, .plan-option:hover { box-shadow: 0 4px 20px #00fff7cc; background: #23272f; }
-    .plan-option .plan-cost { color:#00fff7;font-size:1.18em;margin-top:6px;margin-bottom:1px;}
-    .plan-option .plan-name { font-size:1.07em;color:#fff;margin-bottom:0;}
-    .server-create-success {
-      color:#00fff7;
-      margin-top:16px;
-      font-size:1.15em;
-      font-weight:bold;
-      text-align:center;
-      display:block;
-      animation:fadeIn 0.3s;
-    }
-    @keyframes fadeIn {
-      from { opacity:0; transform: translateY(30px);}
-      to   { opacity:1; transform: translateY(0);}
+    @media (max-width:600px) {
+      .navbar { flex-direction:column; gap:16px; padding:16px 7vw 12px 7vw;}
+      .hero { padding:34px 5vw 0 5vw; min-height:350px;}
+      .planes-section { padding:38px 0 34px 0;}
+      .footer { font-size:0.97em; }
     }
   </style>
 </head>
 <body>
-<div id="authPanels"></div>
-<div class="container panel-bg" id="container" style="display:none">
-  <div class="sidebar" id="sidebar">
-    <div class="logo">Maki</div>
-    <button class="side-btn" id="btn-dashboard" title="Dashboard"><i class="ri-dashboard-3-line"></i></button>
-    <button class="side-btn" id="btn-servers" title="Servidores"><i class="ri-server-lineModal()"><i class="ri-shield-user-line"></i></button>
+  <!-- Navbar -->
+  <div class="navbar">
+    <span class="logo">Maki Hosting</span>
+    <nav>
+      <a href="#" class="active">Inicio</a>
+      <a href="#planes">Planes</a>
+      <a href="#soporte">Soporte</a>
+      <button class="btn-acceder">Acceder</button>
+    </nav>
   </div>
-  <div class="main panel-main">
-    <div class="topbar">
-      <span class="title" id="topbar-title">Dash Maki Host</span>
-      <button class="logout-btn panel-btn" onclick="logout()">Salir</button>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-title">Hosting profesional para bots y apps</div>
+      <div class="hero-sub">Alojamiento ultrarrápido y seguro para tus proyectos de WhatsApp, Discord, Telegram y mucho más. ¡Despreocúpate del uptime, nosotros nos encargamos!</div>
+      <button class="hero-btn">¡Comenzar ahora!</button>
     </div>
-    <button class="hamburger" onclick="openUserMenu()" id="hamburgerBtn"><i class="ri-menu-line"></i></button>
-    <div id="userMenu" class="user-menu"></div>
-    <div id=">
-    <div id="adminCodeModal" class="modal-bg" style="display:none">
-      <div class="modal-content panel-modal-content">
-        <h2>Ingresa el código de administrador</h2>
-        <input id="adminCodeInput" placeholder="Código" autocomplete="off" class="panel-input"/>
-        <div id="adminCodeMsg" style="color:#ff8800; margin-top:12px;"></div>
-        <button onclick="checkAdminCode()" class="panel-btn">Entrar</button>
-        <button onclick="closeAdminCodeModal()" class="modal-close-btn panel-btn">Cancelar</button>
+    <div class="hero-img">
+      <!-- SVG decorativo reemplaza tu imagen -->
+      <svg viewBox="0 0 400 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="200" cy="205" rx="190" ry="55" fill="#00fff744"/>
+        <rect x="60" y="40" width="280" height="110" rx="20" fill="#101820" stroke="#00fff7" stroke-width="4"/>
+        <rect x="90" y="80" width="220" height="50" rx="12" fill="#1e293b"/>
+        <circle cx="110" cy="105" r="9" fill="#00fff7"/>
+        <rect x="130" y="97" width="120" height="16" rx="6" fill="#282f44"/>
+        <rect x="260" y="97" width="38" height="16" rx="7" fill="#282f44"/>
+        <rect x="60" y="160" width="280" height="38" rx="15" fill="#232c44"/>
+        <rect x="70" y="170" width="100" height="16" rx="7" fill="#282f44"/>
+        <rect x="230" y="170" width="70" height="16" rx="7" fill="#282f44"/>
+      </svg>
+    </div>
+  </section>
+  <!-- Planes -->
+  <section class="planes-section" id="planes">
+    <div class="planes-title">Nuestros Planes</div>
+    <div class="planes-cards">
+      <div class="plan-card">
+        <div class="plan-name">Lite</div>
+        <div class="plan-price">$1.99<span style="font-size:.52em; color:var(--muted);">/mes</span></div>
+        <div class="plan-desc">Para comenzar con bots y apps pequeños.</div>
+        <ul class="plan-list">
+          <li><i class="ri-check-line"></i> 512 MB RAM</li>
+          <li><i class="ri-check-line"></i> 1 vCPU</li>
+          <li><i class="ri-check-line"></i> 2 GB SSD</li>
+          <li><i class="ri-check-line"></i> Soporte básico</li>
+        </ul>
+        <button class="plan-btn">Adquirir</button>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$3.99<span style="font-size:.52em; color:var(--muted);">/mes</span></div>
+        <div class="plan-desc">Nuestro plan más popular para proyectos exigentes.</div>
+        <ul class="plan-list">
+          <li><i class="ri-check-line"></i> 2 GB RAM</li>
+          <li><i class="ri-check-line"></i> 2 vCPU</li>
+          <li><i class="ri-check-line"></i> 10 GB SSD</li>
+          <li><i class="ri-check-line"></i> Soporte prioritario</li>
+        </ul>
+        <button class="plan-btn">Adquirir</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Max</div>
+        <div class="plan-price">$7.99<span style="font-size:.52em; color:var(--muted);">/mes</span></div>
+        <div class="plan-desc">Para empresas y bots de alto tráfico.</div>
+        <ul class="plan-list">
+          <li><i class="ri-check-line"></i> 6 GB RAM</li>
+          <li><i class="ri-check-line"></i> 4 vCPU</li>
+          <li><i class="ri-check-line"></i> 40 GB SSD</li>
+          <li><i class="ri-check-line"></i> Soporte premium 24/7</li>
+        </ul>
+        <button class="plan-btn">Adquirir</button>
       </div>
     </div>
-    <div id="announcementModal" class="modal-bg" style="display:none;">
-      <div class="modal-content panel-modal-content">
-        <h2>🛠️ Crear anuncio</h2>
-        <textarea id="announcementInput" rows="3" style="margin-bottom:10px;resize:none;" placeholder="Escribe el anuncio aquí" class="panel-input"></textarea>
-        <button onclick="saveAnnouncement()" class="panel-btn">Guardar anuncio</button>
-        <button onclick="closeAnnouncementModal()" class="modal-close-btn panel-btn">Cancelar</button>
-      </div>
-    </div>
-    <div id="editUserModal" class="modal-bg" style="display:none;">
-      <div class="modal-content panel-modal-content">
-        <h2>Editar usuario</h2>
-        <div id="editUserForm"></div>
-        <button onclick="saveEditedUser()" class="panel-btn">Guardar cambios</button>
-        <button onclick="closeEditUserModal()" class="modal-close-btn panel-btn">Cancelar</button>
-      </div>
-    </div>
-    <!-- Modal para tienda: crear plan -->
-    <div id="createPlanModal" class="modal-bg" style="display:none;">
-      <div class="modal-content panel-modal-content">
-        <h2>Crear nuevo plan</h2>
-        <label>Nombre del plan:</label>
-        <input id="planNameInput" class="panel-input" placeholder="Nombre del plan">
-        <label>Costo del plan (coins):</label>
-        <input id="planCostInput" class="panel-input" type="number" min="1" placeholder="Costo">
-        <label>Código de canje:</label>
-        <input id="planCodeInput" class="panel-input" placeholder="Código único">
-        <div id="planCreateMsg" style="color:#ff8800; margin-top:12px;"></div>
-        <button onclick="saveNewPlan()" class="panel-btn">Crear plan</button>
-        <button onclick="closeCreatePlanModal()" class="modal-close-btn panel-btn">Cancelar</button>
-      </div>
-    </div>
-    <!-- Modal para crear servidor (diseño especial/foto) -->
-    <div id="serverCreateModal" class="modal-bg" style="display:none;">
-      <div class="modal-server-create" id="serverCreateModalContent"></div>
-    </div>
-    <!-- Modal administración de códigos de canje/planes -->
-    <div id="adminPlansModal" class="modal-bg" style="display:none;">
-      <div class="modal-content panel-modal-content" style="max-width:520px">
-        <h2>Administrar códigos de canje</h2>
-        <div id="adminPlansList"></div>
-        <button onclick="closeAdminPlansModal()" class="modal-close-btn panel-btn">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="footer">© Maki Host | Todos los derechos reservados</div>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-// ==================== Datos Iniciales, Utilidades y Estado ====================
-const STORAGE_KEY = "panel_sim_host_v3";
-function getInitialData() {
-  return {
-    users: [
-      { user:"admin", pass:"admin", correo:"admin@host.com", role:"admin", coinsUsed:0, coinsTotal:1000, servidores:[], bases:[], maxServers:3 },
-      { user:"editor", pass:"editor", correo:"editor@host.com", role:"editor", coinsUsed:0, coinsTotal:300, servidores:[], bases:[], maxServers:2 },
-    ],
-    announcement: "",
-    plans: [
-      {name:"Plan 1", cost:100, code:"MAK28"},
-      {name:"Plan 2", cost:400, code:"MAK29"},
-      {name:"Plan 3", cost:1000, code:"MAK30"},
-      {name:"Plan 4", cost:1200, code:"MAK21"},
-    ]
-  };
-}
-function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(panelData)); }
-function loadData() {
-  let d = localStorage.getItem(STORAGE_KEY);
-  if (d) return JSON.parse(d);
-  return getInitialData();
-}
-let panelData = loadData();
-let currentUser = null;
-let editUserIdx = null;
-
-const panels = ["dashboardPanel","serversPanel","ticketsPanel","storePanel"];
-["btn-dashboard","btn-servers","btn-tickets","btn-store"].forEach((id,i)=>{
-  document.getElementById(id).onclick = ()=>showPanel(i);
-});
-function showPanel(idx) {
-  panels.forEach((id,i)=>{
-    document.getElementById(id).style.display = (i===idx)?"grid":"none";
-  });
-  renderAll();
-}
-
-// ==================== Autenticación ====================
-function renderAuthPanels() {
-  let html = '';
-  html += `<div class="auth-panel" id="loginPanel">
-    <h2>Iniciar Sesión</h2>
-    <input id="loginUser" placeholder="Usuario" autocomplete="username" />
-    <input id="loginPass" placeholder="Contraseña" type="password" autocomplete="current-password" />
-    <button onclick="login()">Entrar</button>
-    <div id="loginMsg"></div>
-    <div class="extra">¿No tienes cuenta?
-      <button onclick="showRegister()" class="secondary">Crear cuenta nueva</button>
-    </div>
-  </div>
-  <div class="auth-panel" id="registerPanel" style="display:none">
-    <h2>Crear Cuenta Nueva</h2>
-    <input id="regUser" placeholder="Usuario" autocomplete="username" />
-    <input id="regPass" placeholder="Contraseña" type="password" autocomplete="new-password" />
-    <input id="regCorreo" placeholder="Correo" autocomplete="email" />
-    <button onclick="register()">Registrar</button>
-    <button onclick="showLogin()" class="secondary">Volver</button>
-    <div id="regMsg"></div>
-  </div>`;
-  document.getElementById("authPanels").innerHTML = html;
-}
-function showLogin() {
-  document.getElementById("loginPanel").style.display = "block";
-  document.getElementById("registerPanel").style.display = "none";
-  document.getElementById("loginMsg").textContent = "";
-}
-function showRegister() {
-  document.getElementById("loginPanel").style.display = "none";
-  document.getElementById("registerPanel").style.display = "block";
-  document.getElementById("regMsg").textContent = "";
-}
-function register() {
-  const regUser = document.getElementById("regUser").value.trim();
-  const regPass = document.getElementById("regPass").value.trim();
-  const regCorreo = document.getElementById("regCorreo").value.trim();
-  if (!regUser || !regPass || !regCorreo) {
-    document.getElementById("regMsg").textContent = "Todos los campos son obligatorios.";
-    return;
-  }
-  if (panelData.users.find(u => u.user === regUser)) {
-    document.getElementById("regMsg").textContent = "Ese usuario ya existe.";
-    return;
-  }
-  const newUser = {
-    user: regUser, pass: regPass, correo: regCorreo, role: "lector",
-    coinsUsed:0, coinsTotal:0, servidores:[], bases:[], maxServers:1
-  };
-  panelData.users.push(newUser);
-  saveData();
-  document.getElementById("regMsg").textContent = "Cuenta creada, ahora puedes iniciar sesión.";
-  setTimeout(() => { showLogin(); document.getElementById("loginUser").value = regUser; }, 1000);
-}
-function login() {
-  const u = document.getElementById("loginUser").value;
-  const p = document.getElementById("loginPass").value;
-  const found = panelData.users.find(x => x.user === u && x.pass === p);
-  if (found) {
-    currentUser = found;
-    document.getElementById("authPanels").style.display = "none";
-    document.getElementById("container").style.display = "flex";
-    showPanel(0);
-    updateSidebarState();
-  } else {
-    document.getElementById("loginMsg").textContent = "Usuario o contraseña incorrectos";
-  }
-}
-function logout() {
-  currentUser = null;
-  document.getElementById("authPanels").style.display = "block";
-  document.getElementById("container").style.display = "none";
-  renderAuthPanels();
-  showLogin();
-}
-
-// ==================== Render General ====================
-function renderAll() {
-  renderDashboard();
-  renderServers();
-  renderTickets();
-  renderStore();
-  updateSidebarState();
-  renderUserMenu();
-}
-function updateSidebarState() {
-  document.getElementById("btn-admin").style.display = ["admin","editor"].includes(currentUser.role) ? "block" : "none";
-}
-
-// ==================== Menú Usuario ====================
-function openUserMenu() {
-  renderUserMenu();
-  document.getElementById("userMenu").style.display = "flex";
-}
-function closeUserMenu() {
-  document.getElementById("userMenu").style.display = "none";
-}
-function renderUserMenu() {
-  let html = `<button onclick="closeUserMenu()" class="close-menu"><i class="ri-close-line"></i></button>
-    <button onclick="showPanel(0);closeUserMenu();">Principal</button>
-    <button onclick="showPanel(1);closeUserMenu();">Servidores</button>
-    <button onclick="showPanel(2);closeUserMenu();">Tickets</button>
-    <button onclick="showPanel(3);closeUserMenu();">Tienda</button>`;
-  document.getElementById("userMenu").innerHTML = html;
-}
-
-// ==================== Dashboard ====================
-function renderDashboard() {
-  let anuncio = panelData.announcement ? `<div style="background:#222;color:#ff8800;border-radius:7px;padding:8px 12px;font-weight:bold;margin-bottom:10px;">
-    🛠️Anuncio de admins<br>${panelData.announcement}</div>` : "";
-  document.getElementById("dashboardPanel").innerHTML = `
-    <div class="card panel-card" style="">
-      ${anuncio}
-      <h3><i class="ri-coins-line"></i> Coins en uso</h3>
-      <div class="coin-value" id="coinsUsed">${currentUser?.coinsUsed?.toFixed(2) ?? "0,00"}</div>
-    </div>
-    <div class="card panel-card" style="">
-      <h3><i class="ri-copper-coin-line"></i> Coins totales</h3>
-      <div class="coin-value" id="coinsTotal">${currentUser?.coinsTotal?.toFixed(2) ?? "0,00"}</div>
-    </div>
-    <div class="card panel-card" style="grid-column:span 2;">
-      <h3><i class="ri-user-line"></i> Información de usuario</h3>
-      <b>Usuario:</b> ${currentUser.user}<br>
-      <b>Correo:</b> ${currentUser.correo}<br>
-      <b>Rol:</b> ${currentUser.role}<br>
-      <b>Servidores permitidos:</b> ${currentUser.maxServers ?? 1}
-    </div>
-  `;
-}
-
-// ==================== SERVIDORES ====================
-function renderServers() {
-  if (!currentUser.servidores.length) {
-    document.getElementById("serversPanel").innerHTML = `
-      <div class="empty-server-card">
-        <div class="empty-server-icon"><i class="ri-server-line"></i></div>
-        <div class="empty-server-title">No tienes servidores</div>
-        <div class="empty-server-subtitle">¡Crea tu primer servidor para empezar a usar el panel!</div>
-        <button class="panel-btn empty-server-btn" onclick="openServerCreateModal()">+ Crear servidor</button>
-      </div>
-    `;
-    return;
-  }
-  let html = `<div class="card panel-card">
-    <h3><i class="ri-server-line"></i> Servidores</h3>`;
-  currentUser.servidores.forEach((srv,i)=>{
-    html += `<div style="background:#222;color:#ff8800;border-radius:7px;padding:8px 12px;margin-bottom:6px;">
-      <b>${srv.nombre}</b> (${srv.coins} coins) <button class="panel-btn" onclick="openServerModal(${i})">Abrir</button>
-    </div>`;
-  });
-  let allowCreate = (currentUser.servidores.length < (currentUser.maxServers || 1));
-  html += `<button class="card-btn panel-btn" onclick="openServerCreateModal()" ${allowCreate?"":"disabled"}>+ Crear servidor</button>
-    ${!allowCreate?'<div style="color:#ff4444;margin-top:8px;">Has alcanzado el límite de servidores permitidos.</div>':''}
-    </div>`;
-  document.getElementById("serversPanel").innerHTML = html;
-}
-
-// ================ MODAL CREAR SERVIDOR (MULTIPASO) =================
-let serverCreateState = {};
-function openServerCreateModal() {
-  serverCreateState = {};
-  let html = `
-    <h2 style="color:#00fff7;text-align:center;margin-bottom:20px;">Crear servidor</h2>
-    <label>Nombre:</label>
-    <input id="srvName" maxlength="32" placeholder="Nombre del servidor">
-    <label>Descripción:</label>
-    <textarea id="srvDesc" maxlength="80" rows="2" placeholder="¿Para qué es este servidor?"></textarea>
-    <label>¿Qué bot/app es?</label>
-    <input id="srvTipo" maxlength="32" placeholder="Tipo (ej: WhatsApp Bot)">
-    <label>Versión:</label>
-    <input id="srvVer" maxlength="16" placeholder="v1.0, 2.2, etc.">
-    <label>Repositorio (opcional):</label>
-    <input id="srvRepo" maxlength="80" placeholder="https://github.com/user/repo">
-    <button class="next-btn" onclick="serverCreateNextPlans()">Siguiente</button>
-    <button class="modal-close-btn panel-btn" onclick="closeServerCreateModal()" style="background:#ff4444 !important;margin-top:10px;">Cancelar</button>
-  `;
-  document.getElementById("serverCreateModalContent").innerHTML = html;
-  document.getElementById("serverCreateModal").style.display = "flex";
-}
-function closeServerCreateModal() {
-  document.getElementById("serverCreateModal").style.display = "none";
-}
-function serverCreateNextPlans() {
-  let name = document.getElementById("srvName").value.trim();
-  let desc = document.getElementById("srvDesc").value.trim();
-  let tipo = document.getElementById("srvTipo").value.trim();
-  let ver = document.getElementById("srvVer").value.trim();
-  let repo = document.getElementById("srvRepo").value.trim();
-  if(!name || !desc || !tipo || !ver) {
-    alert("Completa todos los campos obligatorios.");
-    return;
-  }
-  serverCreateState = { nombre:name, descripcion:desc, tipo, ver, repo, coins:0, consola:"", files:[], startupRepo:repo };
-  let plans = [
-    {name:"Plan 1",cost:100},
-    {name:"Plan 2",cost:400},
-    {name:"Plan 3",cost:1000}
-  ];
-  let html = `<h2 style="color:#00fff7;text-align:center;margin-bottom:20px;">Selecciona un plan</h2>
-    <div class="plan-list">`;
-  plans.forEach((p,i)=>{
-    html += `<div class="plan-option" id="planOpt${i}" onclick="selectServerPlan(${i})">
-      <div class="plan-name">${p.name}</div>
-      <div class="plan-cost">${p.cost} coins</div>
-    </div>`;
-  });
-  html += `</div>
-    <button id="confirmServerBtn" class="confirm-btn" style="display:none;margin-top:18px;" onclick="confirmServerPurchase()">Confirmar compra</button>
-    <button class="modal-close-btn panel-btn" onclick="closeServerCreateModal()" style="background:#ff4444 !important;margin-top:10px;">Cancelar</button>
-    <div id="serverCreateMsg" class="server-create-success"></div>
-  `;
-  document.getElementById("serverCreateModalContent").innerHTML = html;
-  serverCreateState.plans = plans;
-  serverCreateState.selectedPlan = null;
-}
-function selectServerPlan(i) {
-  serverCreateState.selectedPlan = serverCreateState.plans[i];
-  for(let x=0;x<3;x++) {
-    let el = document.getElementById("planOpt"+x);
-    if(el) el.classList.toggle("selected", x==i);
-  }
-  document.getElementById("confirmServerBtn").style.display = "block";
-}
-function confirmServerPurchase() {
-  let plan = serverCreateState.selectedPlan;
-  if(!plan) return;
-  if(currentUser.coinsTotal < plan.cost) {
-    document.getElementById("serverCreateMsg").textContent = "No tienes suficientes coins.";
-    return;
-  }
-  serverCreateState.coins = plan.cost;
-  currentUser.coinsTotal -= plan.cost;
-  currentUser.servidores.push({...serverCreateState});
-  saveData();
-  document.getElementById("serverCreateMsg").textContent = "¡Servidor creado exitosamente!";
-  setTimeout(()=>{
-    closeServerCreateModal();
-    renderServers();
-  },1200);
-}
-
-// =============== SERVIDOR INDIVIDUAL ===============
-function openServerModal(idx) {
-  let srv = currentUser.servidores[idx];
-  let html = `
-    <button onclick="closeServerModal()" class="close-menu" style="position:absolute;top:16px;right:20px;">✖</button>
-    <div class="server-tabs">
-      <button onclick="showServerTab('consola')" id="tabConsola" class="server-tab-btn">Console</button>
-      <button onclick="showServerTab('files')" id="tabFiles" class="server-tab-btn">Files</button>
-      <button onclick="showServerTab('startup')" id="tabStartup" class="server-tab-btn">Startup</button>
-      <button onclick="showServerTab('settings')" id="tabSettings" class="server-tab-btn">Settings</button>
-    </div>
-    <div id="serverTabContent"></div>
-  `;
-  showModal(html, "Servidor: " + srv.nombre);
-  showServerTab('consola', srv);
-  window.currentServerIdx = idx;
-}
-function showServerTab(tab, srv) {
-  let idx = window.currentServerIdx;
-  srv = srv || currentUser.servidores[idx];
-  let html = "";
-  ["tabConsola","tabFiles","tabStartup","tabSettings"].forEach(el=>{
-    let btn = document.getElementById(el);
-    if(btn) btn.classList.remove("active");
-  });
-  let activeBtn = document.getElementById("tab"+tab.charAt(0).toUpperCase()+tab.slice(1));
-  if(activeBtn) activeBtn.classList.add("active");
-  if (tab==="consola") {
-    html = `<div class="console-area" id="consoleOutput">${srv.consola||""}</div>
-            <div class="console-input-row">
-              <input class="console-input" id="consoleCmdInput" placeholder="Comando..." autocomplete="off">
-              <button class="console-send-btn panel-btn" onclick="sendServerCmd(${idx})">Enviar</button>
-            </div>`;
-  } else if (tab==="files") {
-    html = `<div><b>Archivos:</b></div>
-      <ul class="list-ul" id="serverFileList">${(srv.files||[]).map(f=>`<li>${f}</li>`).join("")}</ul>
-      <input id="newServerFile" class="panel-input" placeholder="Subir archivo (nombre)" />
-      <button onclick="addServerFile(${idx})" class="card-btn panel-btn">Subir</button>`;
-  } else if (tab==="startup") {
-    html = `<div><b>Startup (repositorio GitHub):</b></div>
-      <input id="startupRepo" class="panel-input" placeholder="URL o nombre del repo" value="${srv.startupRepo||""}">
-      <button onclick="saveStartupRepo(${idx})" class="card-btn panel-btn">Guardar</button>
-      <div style="margin-top:10px;color:#ff8800;">Ejemplo: user/repo o https://github.com/user/repo</div>`;
-  } else if (tab==="settings") {
-    html = `<div>
-      <label>Nombre del servidor:</label>
-      <input id="editSrvName" class="panel-input" value="${srv.nombre}" />
-      <button onclick="saveSrvName(${idx})" class="panel-btn">Guardar</button>
-      <button onclick="deleteServer(${idx})" class="panel-btn" style="background:#ff4444;">Eliminar servidor</button>
-    </div>`;
-  }
-  document.getElementById("serverTabContent").innerHTML = html;
-}
-function closeServerModal() { closeModal(); }
-function sendServerCmd(idx) {
-  let cmd = document.getElementById("consoleCmdInput").value;
-  if (!cmd) return;
-  let srv = currentUser.servidores[idx];
-  let out = srv.consola||"";
-  out += `\n$ <span class="cmd-info">${cmd}</span>`;
-  if (cmd.includes("git clone") || cmd.includes("startup") || cmd.includes("npm install")) {
-    out += '\n<span class="cmd-info">Instalando repositorio...</span>';
-    animateConsole(idx, out, [
-      "Descargando archivos...",
-      "Instalando dependencias...",
-      "Compilando...",
-      "Preparando entorno...",
-      "ERROR: Dependencias incompatibles. Instalación fallida."
-    ]);
-  } else if (cmd.includes("run bot")) {
-    out += '\n<span class="cmd-success">Bot de WhatsApp iniciado!</span>';
-    srv.consola = out;
-    saveData();
-    showServerTab('consola', srv);
-    scrollConsole();
-  } else {
-    out += '\n<span class="cmd-success">Comando ejecutado: ' + cmd + '</span>';
-    srv.consola = out;
-    saveData();
-    showServerTab('consola', srv);
-    scrollConsole();
-  }
-  document.getElementById("consoleCmdInput").value = "";
-}
-function animateConsole(idx, baseOut, steps, i=0) {
-  let srv = currentUser.servidores[idx];
-  if(i < steps.length) {
-    srv.consola = baseOut + steps.slice(0,i+1).map((step,j)=>{
-      if(j===steps.length-1) return `<span class="cmd-error">${step}</span>`;
-      return `<span class="cmd-info">${step}</span>`;
-    }).join("\n");
-    saveData();
-    showServerTab('consola', srv);
-    scrollConsole();
-    setTimeout(()=>animateConsole(idx,baseOut,steps,i+1), 900);
-  }
-}
-function scrollConsole() {
-  let out = document.getElementById("consoleOutput");
-  if(out) out.scrollTop = out.scrollHeight;
-}
-function addServerFile(idx) {
-  let f = document.getElementById("newServerFile").value.trim();
-  if (!f) return;
-  let srv = currentUser.servidores[idx];
-  if (!srv.files) srv.files = [];
-  srv.files.push(f);
-  saveData();
-  showServerTab('files', srv);
-  document.getElementById("newServerFile").value = "";
-}
-function saveStartupRepo(idx) {
-  let repo = document.getElementById("startupRepo").value.trim();
-  let srv = currentUser.servidores[idx];
-  srv.startupRepo = repo;
-  saveData();
-  showServerTab('startup', srv);
-}
-function saveSrvName(idx) {
-  let name = document.getElementById("editSrvName").value.trim();
-  if(!name) return;
-  let srv = currentUser.servidores[idx];
-  srv.nombre = name;
-  saveData();
-  showServerTab('settings', srv);
-}
-function deleteServer(idx) {
-  if(confirm("¿Seguro que quieres eliminar este servidor?")) {
-    currentUser.servidores.splice(idx,1);
-    saveData();
-    closeServerModal();
-    renderServers();
-  }
-}
-
-// ==================== TICKETS ====================
-function renderTickets() {
-  document.getElementById("ticketsPanel").innerHTML = `<div class="card panel-card">
-    <h3><i class="ri-question-line"></i> Tickets</h3>
-    <div>No hay tickets aún.</div>
-  </div>`;
-}
-
-// ==================== TIENDA ====================
-function renderStore() {
-  let isAdmin = ["admin","editor"].includes(currentUser.role);
-  let html = `<div class="store-panel-header">
-    <span style="font-size:1.18em;color:#00fff7;font-weight:bold;">Planes disponibles</span>`;
-  if(isAdmin) html += `<button class="store-create-btn" onclick="openCreatePlanModal()">Crear plan</button>`;
-  html += `</div>`;
-  if(!panelData.plans.length)
-    html += `<div class="empty-server-card" style="margin-top:8px;"><div class="empty-server-title">No hay planes disponibles</div></div>`;
-  else
-    panelData.plans.forEach((plan, i) => {
-      html += `<div class="plan-card">
-        <div class="plan-title">${plan.name}</div>
-        <div class="plan-cost">${plan.cost} coins</div>
-        <div class="plan-code">Código: <b>${plan.code}</b></div>
-        <button class="plan-buy-btn" onclick="buyPlanPrompt(${i})">Comprar</button>
-        <div id="planMsg${i}" style="color:#ff8800;margin-top:7px;"></div>
-      </div>`;
-    });
-  document.getElementById("storePanel").innerHTML = html;
-}
-function buyPlanPrompt(idx) {
-  let plan = panelData.plans[idx];
-  let code = prompt("Introduce el código de canje:");
-  if (!code || code.trim().toUpperCase() !== plan.code.toUpperCase()) {
-    document.getElementById("planMsg"+idx).textContent = "Código incorrecto.";
-    return;
-  }
-  if(currentUser.coinsTotal < plan.cost) {
-    document.getElementById("planMsg"+idx).textContent = "No tienes suficientes coins.";
-    return;
-  }
-  currentUser.coinsTotal += plan.cost;
-  currentUser.coinsTotal -= plan.cost;
-  saveData();
-  document.getElementById("planMsg"+idx).textContent = "¡Compra exitosa! Coins añadidos.";
-  renderDashboard();
-  setTimeout(()=>document.getElementById("planMsg"+idx).textContent = "", 2000);
-}
-function openCreatePlanModal() {
-  document.getElementById("planNameInput").value = "";
-  let max = panelData.plans.reduce((a,b)=>b.cost>a?b.cost:a,0);
-  document.getElementById("planCostInput").value = max ? (max+200) : 1400;
-  document.getElementById("planCodeInput").value = "";
-  document.getElementById("planCreateMsg").textContent = "";
-  document.getElementById("createPlanModal").style.display = "flex";
-}
-function closeCreatePlanModal() {
-  document.getElementById("createPlanModal").style.display = "none";
-}
-function saveNewPlan() {
-  let n = document.getElementById("planNameInput").value.trim();
-  let c = parseInt(document.getElementById("planCostInput").value);
- () {
-  let html = "";
-  if(!panelData.plans.length) html = `<div style="margin-bottom:8px;">No hay planes/códigos de canje.</div>`;
-  else panelData.plans.forEach((p,i)=>{
-    html += `<div style="background:#181818;border-radius:7px;padding:7px 12px;margin-bottom:10px;">
-      <b>${p.name}</b> (${p.cost} coins) <span style="color:#00fff7;font-weight:bold;">${p.code}</span>
-      <button onclick="deletePlan(${i})" class="panel-btn" style="background:#ff4444;margin-left:8px;font-size:0.98em;">Eliminar</button>
-    </div>`;
-  });
-  document.getElementById("adminPlansList").innerHTML = html;
-  document.getElementById("adminPlansModal").style.display = "flex";
-}
-function closeAdminPlansModal() {
-  document.getElementById("adminPlansModal").style.display = "none";
-}
-function deletePlan(idx) {
-  if(confirm("¿Eliminar este plan/código de canje?")) {
-    panelData.plans.splice(idx,1);
-    saveData();
-    showAdminPlansModal();
-    renderStore();
-  }
-}
-
-// ==================== Admin, Anuncios, Editar Usuario ====================
-function showAdminCodeModal() {
-  document.getElementById("adminCodeModal").style.display = "flex";
-  document.getElementById("adminCodeInput").value = "";
-  document.getElementById("adminCodeMsg").textContent = "";
-}
-function closeAdminCodeModal() {
-  document.getElementById("adminCodeModal").style.display = "none";
-}
-function checkAdminCode() {
-  let c = document.getElementById("adminCodeInput").value.trim();
-  if (c !== "MAK1") {
-    document.getElementById("adminCodeMsg").textContent = "Código incorrecto.";
-    return;
-  }
-  document.getElementById("adminCodeModal").style.display = "none";
-  showAdminPanel();
-}
-function showAdminPanel() {
-  document.getElementById("adminModal").style.display = "flex";
-  renderAdminUsers();
-}
-function closeAdminModal() {
-  document.getElementById("adminModal").style.display = "none";
-}
-function renderAdminUsers() {
-  let container = document.getElementById("adminUsers");
-  container.innerHTML = "";
-  panelData.users.forEach((u, idx) => {
-    const row = document.createElement("div");
-    row.className = "admin-user-row";
-    const correo = document.createElement("span");
-    correo.className = "admin-user-label";
-    correo.textContent = u.correo;
-    row.appendChild(correo);
-    const editBtn = document.createElement("button");
-    editBtn.innerHTML = '<i class="ri-pencil-line"></i>';
-    editBtn.onclick = ()=>openEditUserModal(idx);
-    row.appendChild(editBtn);
-    container.appendChild(row);
-  });
-}
-function openEditUserModal(idx) {
-  editUserIdx = idx;
-  let u = panelData.users[idx];
-  let html = `
-    <label>Correo: <input id="editCorreo" class="panel-input" value="${u.correo}" /></label><br>
-    <label>Coins usados: <input type="number" id="editCoinsUsed" class="panel-input" value="${u.coinsUsed}" /></label><br>
-    <label>Coins totales: <input type="number" id="editCoinsTotal" class="panel-input" value="${u.coinsTotal}" /></label><br>
-    <label>Servidores permitidos: <input type="number" id="editMaxServers" class="panel-input" value="${u.maxServers??1}" min="1" /></label><br>
-    <label>Servidores: <input id="editServidores" class="panel-input" value="${u.servidores.map(s=>s.nombre).join(',')}" placeholder="nombres separados por coma" /></label><br>
-    <label>Bases de datos: <input id="editBases" class="panel-input" value="${u.bases.join(',')}" placeholder="bases separadas por coma" /></label>
-  `;
-  document.getElementById("editUserForm").innerHTML = html;
-  document.getElementById("editUserModal").style.display = "flex";
-}
-function closeEditUserModal() {
-  document.getElementById("editUserModal").style.display = "none";
-}
-function saveEditedUser() {
-  let u = panelData.users[editUserIdx];
-  u.correo = document.getElementById("editCorreo").value;
-  u.coinsUsed = parseFloat(document.getElementById("editCoinsUsed").value)||0;
-  u.coinsTotal = parseFloat(document.getElementById("editCoinsTotal").value)||0;
-  u.maxServers = parseInt(document.getElementById("editMaxServers").value)||1;
-  let servers = document.getElementById("editServidores").value.split(',').map(s=>s.trim()).filter(Boolean);
-  u.servidores = servers.map(s=>({nombre:s,coins:100,consola:"",files:[],startupRepo:""}));
-  u.bases = document.getElementById("editBases").value.split(',').map(b=>b.trim()).filter(Boolean);
-  saveData();
-  renderAdminUsers();
-  closeEditUserModal();
-  if (currentUser && u.user === currentUser.user) {
-    currentUser = u;
-    renderAll();
-  }
-}
-
-function showAnnouncementModal() {
-  document.getElementById("announcementInput").value = panelData.announcement;
-  document.getElementById("announcementModal").style.display = "flex";
-}
-function closeAnnouncementModal() {
-  document.getElementById("announcementModal").style.display = "none";
-}
-function saveAnnouncement() {
-  panelData.announcement = document.getElementById("announcementInput").value;
-  saveData();
-  renderDashboard();
-  closeAnnouncementModal();
-}
-
-// ==================== Utilidad Modal Genérico ====================
-function showModal(html, titulo) {
-  let div = document.createElement("div");
-  div.className = "modal-bg";
-  div.innerHTML = `<div class="modal-content panel-modal-content"><h2>${titulo||""}</h2>${html}</div>`;
-  document.body.appendChild(div);
-  window.currentModal = div;
-}
-function closeModal() {
-  if (window.currentModal) document.body.removeChild(window.currentModal);
-  window.currentModal = null;
-}
-function now() { return new Date().toLocaleString(); }
-
-// ================ INICIO ====================
-renderAuthPanels();
-showLogin();
-});
-</script>
+  </section>
+  <!-- Soporte (solo ancla, puedes personalizar) -->
+  <div id="soporte"></div>
+  <div class="footer">© Maki Hosting | Todos los derechos reservados</div>
+</body>
+</html>
