@@ -229,3 +229,92 @@
     to   { opacity:1; transform: translateY(0);}
   }
 </style>
+</head>
+<body>
+<div id="authPanels"></div>
+<div class="container panel-bg" id="container" style="display:none">
+  <div class="sidebar" id="sidebar">
+    <div class="logo">Maki</div>
+    <button class="side-btn" id="btn-dashboard" title="Dashboard"><i class="ri-dashboard-3-line"></i></button>
+    <button class="side-btn" id="btn-servers" title="Servidores"><i class="ri-server-line"></i></button>
+    <button class="side-btn" id="btn-tickets" title="Tickets"><i class="ri-question-line"></i></button>
+    <button class="side-btn" id="btn-store" title="Tienda"><i class="ri-shopping-cart-line"></i></button>
+    <button class="admin-btn" id="btn-admin" title="Panel De administración" onclick="showAdminCodeModal()"><i class="ri-shield-user-line"></i></button>
+  </div>
+  <div class="main panel-main">
+    <div class="topbar">
+      <span class="title" id="topbar-title">Dash Maki Host</span>
+      <button class="logout-btn panel-btn" onclick="logout()">Salir</button>
+    </div>
+    <button class="hamburger" onclick="openUserMenu()" id="hamburgerBtn"><i class="ri-menu-line"></i></button>
+    <div id="userMenu" class="user-menu"></div>
+    <div id="dashboardPanel" class="card-grid"></div>
+    <div id="serversPanel" class="card-grid" style="display:none"></div>
+    <div id="ticketsPanel" class="card-grid" style="display:none"></div>
+    <div id="storePanel" class="card-grid" style="display:none"></div>
+    <!-- Modales de administración y otros -->
+    <div id="adminModal" class="admin-modal-bg" style="display:none">
+      <div class="admin-panel panel-modal-content">
+        <h2>Panel de Administración</h2>
+        <div id="adminUsers"></div>
+        <button onclick="showAnnouncementModal()" style="margin-bottom: 14px;" class="panel-btn">🛠️ Crear anuncio</button>
+        <button onclick="showAdminPlansModal()" style="margin-bottom: 14px;" class="panel-btn">🎟️ Administrar códigos de canje</button>
+        <button onclick="closeAdminModal()" class="admin-close-btn panel-btn">Cerrar</button>
+      </div>
+    </div>
+    <div id="adminCodeModal" class="modal-bg" style="display:none">
+      <div class="modal-content panel-modal-content">
+        <h2>Ingresa el código de administrador</h2>
+        <input id="adminCodeInput" placeholder="Código" autocomplete="off" class="panel-input"/>
+        <div id="adminCodeMsg" style="color:#ff8800; margin-top:12px;"></div>
+        <button onclick="checkAdminCode()" class="panel-btn">Entrar</button>
+        <button onclick="closeAdminCodeModal()" class="modal-close-btn panel-btn">Cancelar</button>
+      </div>
+    </div>
+    <div id="announcementModal" class="modal-bg" style="display:none;">
+      <div class="modal-content panel-modal-content">
+        <h2>🛠️ Crear anuncio</h2>
+        <textarea id="announcementInput" rows="3" style="margin-bottom:10px;resize:none;" placeholder="Escribe el anuncio aquí" class="panel-input"></textarea>
+        <button onclick="saveAnnouncement()" class="panel-btn">Guardar anuncio</button>
+        <button onclick="closeAnnouncementModal()" class="modal-close-btn panel-btn">Cancelar</button>
+      </div>
+    </div>
+    <div id="editUserModal" class="modal-bg" style="display:none;">
+      <div class="modal-content panel-modal-content">
+        <h2>Editar usuario</h2>
+        <div id="editUserForm"></div>
+        <button onclick="saveEditedUser()" class="panel-btn">Guardar cambios</button>
+        <button onclick="closeEditUserModal()" class="modal-close-btn panel-btn">Cancelar</button>
+      </div>
+    </div>
+    <!-- Modal para tienda: crear plan -->
+    <div id="createPlanModal" class="modal-bg" style="display:none;">
+      <div class="modal-content panel-modal-content">
+        <h2>Crear nuevo plan</h2>
+        <label>Nombre del plan:</label>
+        <input id="planNameInput" class="panel-input" placeholder="Nombre del plan">
+        <label>Costo del plan (coins):</label>
+        <input id="planCostInput" class="panel-input" type="number" min="1" placeholder="Costo">
+        <label>Código de canje:</label>
+        <input id="planCodeInput" class="panel-input" placeholder="Código único">
+        <div id="planCreateMsg" style="color:#ff8800; margin-top:12px;"></div>
+        <button onclick="saveNewPlan()" class="panel-btn">Crear plan</button>
+        <button onclick="closeCreatePlanModal()" class="modal-close-btn panel-btn">Cancelar</button>
+      </div>
+    </div>
+    <!-- Modal para crear servidor (diseño especial/foto) -->
+    <div id="serverCreateModal" class="modal-bg" style="display:none;">
+      <div class="modal-server-create" id="serverCreateModalContent"></div>
+    </div>
+    <!-- Modal administración de códigos de canje/planes -->
+    <div id="adminPlansModal" class="modal-bg" style="display:none;">
+      <div class="modal-content panel-modal-content" style="max-width:520px">
+        <h2>Administrar códigos de canje</h2>
+        <div id="adminPlansList"></div>
+        <button onclick="closeAdminPlansModal()" class="modal-close-btn panel-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="footer">© Maki Host | Todos los derechos reservados</div>
+<!-- El JS va en el siguiente bloque -->
