@@ -2,224 +2,764 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Hosting Dashboard - Panel Completo</title>
+  <title>HostingPro Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
-      --main-bg: #232946;
-      --sidebar-bg: #121629;
-      --accent: #eebbc3;
-      --white: #f4faff;
+      --main-bg: linear-gradient(135deg,#5f72bd 0%,#9b23ea 100%);
+      --sidebar-bg: #22223b;
+      --sidebar-grad: linear-gradient(135deg,#22223b 60%,#4a4e69 100%);
+      --accent: #ffbe76;
+      --accent2: #e17055;
+      --white: #fff;
       --gray: #b8c1ec;
-      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
+      --glass: rgba(255,255,255,0.13);
+      --active: #9b23ea;
+      --danger: #fd7272;
+      --success: #32ff7e;
     }
     * {box-sizing: border-box; margin: 0; padding: 0;}
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       background: var(--main-bg);
       color: var(--gray);
-      height: 100vh;
-      display: flex;
-    }
-    .sidebar {
-      background: var(--sidebar-bg);
-      width: 220px;
       min-height: 100vh;
+      transition: background 0.4s;
+    }
+    /* HAMBURGER */
+    .hamburger {
+      position: fixed;
+      top: 20px; left: 20px;
+      z-index: 102;
+      width: 42px; height: 42px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background: var(--glass);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .hamburger:hover {background: rgba(255,255,255,0.21);}
+    .bar {
+      width: 25px;
+      height: 3.5px;
+      background: var(--accent);
+      margin: 4px 0;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 230px;
+      height: 100vh;
+      background: var(--sidebar-grad);
       box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
-      position: fixed;
+      z-index: 101;
+      transform: translateX(0);
+      transition: transform 0.33s;
     }
+    .sidebar.closed {transform: translateX(-110%);}
     .sidebar h2 {
       color: var(--accent);
       text-align: center;
-      margin: 30px 0 20px 0;
-      font-size: 1.5em;
+      margin: 32px 0 25px 0;
+      font-size: 1.6em;
       letter-spacing: 2px;
+      font-family: 'Segoe UI Semibold',Arial,sans-serif;
+      text-shadow: 0 2px 8px #0002;
     }
-    .sidebar nav {
-      flex: 1;
-    }
+    .sidebar nav {flex:1;}
     .sidebar a {
       display: block;
-      color: var(--gray);
+      color: var(--white);
       text-decoration: none;
-      padding: 16px 30px;
-      transition: background 0.2s, color 0.2s;
-      font-size: 1.08em;
-      border-left: 4px solid transparent;
+      padding: 19px 36px;
+      font-size: 1.09em;
+      border-left: 3.5px solid transparent;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+      letter-spacing: 1.5px;
+      font-weight: 500;
     }
-    .sidebar a:hover, .sidebar a.active {
-      background: var(--main-bg);
+    .sidebar a.active, .sidebar a:hover {
+      background: rgba(155,35,234,0.15);
       color: var(--accent);
-      border-left: 4px solid var(--accent);
+      border-left: 3.5px solid var(--accent);
     }
+    .sidebar .userbox {
+      border-top: 1px solid #fff2;
+      margin: 20px 0 0 0;
+      padding: 18px 28px 28px 28px;
+      color: var(--gray);
+      font-size: 0.97em;
+      background: rgba(255,255,255,0.06);
+      border-radius: 0 0 16px 16px;
+    }
+    .sidebar .userbox span {display: block; margin: 2px 0;}
     .main {
-      margin-left: 220px;
-      padding: 40px 5vw;
-      width: 100%;
+      margin-left: 230px;
+      padding: 38px 3vw 38px 3vw;
+      min-height: 100vh;
+      transition: margin 0.33s;
     }
-    section {
-      display: none;
-      animation: fadeIn 0.6s;
+    /* DASHBOARD */
+    .dashboard {
+      display: flex;
+      gap: 38px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
     }
-    section.active {display: block;}
-    @keyframes fadeIn {from{opacity:0;} to{opacity:1;}}
-
-    /* Simple Card Styles */
-    .cards {display: flex; gap: 32px; flex-wrap: wrap;}
-    .card {
-      background: var(--sidebar-bg);
-      border-radius: 12px;
+    .card-dash {
+      background: linear-gradient(135deg,#fff3 0%,#e1705530 100%);
+      border-radius: 18px;
       box-shadow: var(--shadow);
-      padding: 24px;
-      min-width: 220px;
+      padding: 32px 38px 26px 38px;
+      min-width: 230px;
       flex: 1;
-      margin: 12px 0;
-    }
-    .card h3 {color: var(--accent); margin-bottom: 10px;}
-    .btn {
-      background: var(--accent);
-      color: var(--sidebar-bg);
-      border: none;
-      padding: 10px 22px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
+      margin: 10px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 1.3px solid #fff2;
       transition: background 0.2s;
     }
-    .btn:hover {background: var(--white);}
-    /* Table Styles */
+    .card-dash h2 {
+      color: var(--accent);
+      font-size: 2.1em;
+      font-weight: bold;
+      text-shadow: 0 2px 8px #0002;
+      margin-bottom: 11px;
+    }
+    .card-dash small {
+      font-size: 1em;
+      color: #fff9;
+      letter-spacing: 1.2px;
+    }
+    .card-dash .big {
+      font-size: 2.45em;
+      font-weight: 700;
+      color: var(--accent2);
+      margin: 8px 0 8px 0;
+      text-shadow: 0 1.5px 8px #0002;
+      display: block;
+    }
+    /* Account Info Section */
+    .account-info {
+      margin-top: 18px;
+      margin-bottom: 22px;
+      background: linear-gradient(120deg,#9b23ea20 0%,#e1705540 100%);
+      padding: 24px 26px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      border: 1.3px solid #fff2;
+      color: var(--white);
+      font-size: 1.08em;
+      width: 100%;
+      max-width: 420px;
+    }
+    .account-info h3 {color: var(--accent); margin-bottom: 8px;}
+    /* Section styles */
+    section {display: none; animation: fadeIn 0.5s;}
+    section.active {display: block;}
+    @keyframes fadeIn {from{opacity:0;} to{opacity:1;}}
+    /* Cards */
+    .cards {display: flex; gap: 30px; flex-wrap: wrap;}
+    .card {
+      background: linear-gradient(135deg,#fff3 0%,#fd727210 100%);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 26px 24px;
+      min-width: 220px; flex: 1;
+      margin: 10px 0;
+      border: 1.1px solid #fff2;
+    }
+    .card h3 {color: var(--accent2); margin-bottom: 10px;}
+    .btn {
+      background: linear-gradient(90deg,#9b23ea 0%,#e17055 100%);
+      color: var(--white);
+      border: none;
+      padding: 12px 34px;
+      border-radius: 8px;
+      font-weight: bold;
+      letter-spacing: 1.2px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s, color 0.2s, filter 0.2s;
+      box-shadow: 0 2px 10px #9b23ea33;
+      border: 1px solid #fff3;
+    }
+    .btn:disabled {
+      filter: grayscale(0.9) brightness(0.85);
+      cursor: not-allowed;
+    }
+    .btn.green {background: linear-gradient(90deg,#32ff7e 0%,#9b23ea 100%);}
+    .btn.red {background: linear-gradient(90deg,#fd7272 0%,#e17055 100%);}
+    /* Table */
     table {
       width: 100%;
       border-collapse: collapse;
-      background: var(--sidebar-bg);
-      margin-top: 16px;
-      border-radius: 10px;
+      background: #fff2;
+      margin-top: 14px;
+      border-radius: 12px;
       overflow: hidden;
+      box-shadow: var(--shadow);
+      font-size: 1em;
     }
     th, td {
       padding: 10px 14px;
       text-align: left;
-      border-bottom: 1px solid #232946;
+      border-bottom: 1px solid #4a4e6950;
+      color: var(--white);
     }
     th {color: var(--accent);}
+    tr:last-child td {border-bottom: none;}
+    /* MODALS */
+    .modal-bg {
+      position: fixed;
+      z-index: 200;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(22,19,34,0.70);
+      display: none; align-items: center; justify-content: center;
+      animation: fadeIn 0.25s;
+    }
+    .modal-bg.show {display: flex;}
+    .modal {
+      background: linear-gradient(135deg,#fff9 70%,#9b23ea12 100%);
+      border-radius: 16px;
+      padding: 38px 30px 26px 30px;
+      min-width: 295px; max-width: 94vw;
+      box-shadow: 0 4px 55px #22223b33;
+      position: relative;
+      color: #333;
+    }
+    .modal h3 {color: var(--accent2);}
+    .modal .close {
+      position: absolute; top: 16px; right: 18px; font-size: 1.4em; color: #9b23ea; cursor: pointer;
+    }
+    .modal input, .modal select {
+      width: 100%; padding: 10px 10px; margin: 10px 0 18px 0; border-radius: 8px;
+      border: 1.2px solid #b8c1ec;
+      font-size: 1em; background: #fff; color: #333;
+    }
+    .modal label {font-weight: 500;}
+    .modal .btn {width: 100%; margin-top: 0;}
+    /* Login/Register */
+    #register-bg {
+      position: fixed; top:0;left:0; width:100vw; height:100vh;
+      background: linear-gradient(120deg,#9b23ea 0%,#e17055 100%);
+      z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      animation: fadeIn 0.5s;
+    }
+    #register {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 60px #4a4e697a;
+      padding: 48px 36px 38px 36px;
+      min-width: 320px;
+      text-align: center;
+      color: #333;
+      position: relative;
+    }
+    #register h2 {color: #9b23ea; margin-bottom: 12px;}
+    #register input {
+      width: 100%; padding: 12px 10px; margin: 15px 0 18px 0; border-radius: 8px;
+      border: 1.4px solid #e17055;
+      font-size: 1.12em; background: #fff; color: #333;
+      text-align: center;
+    }
+    #register .btn {width: 100%;}
+    #register small {color: #e17055;}
     /* Responsive */
-    @media (max-width: 850px) {
-      .main {padding: 20px 2vw;}
+    @media (max-width: 900px) {
+      .main {padding: 24px 1vw 24px 1vw;}
+      .dashboard {flex-direction: column;}
       .cards {flex-direction: column;}
     }
     @media (max-width: 600px) {
-      .sidebar {width: 70px;}
-      .sidebar h2 {font-size: 1em;}
-      .sidebar a {padding: 10px 10px;}
-      .main {margin-left: 70px;}
+      .sidebar {width: 0; min-width: 0;}
+      .sidebar.closed {transform: translateX(-120%);}
+      .main {margin-left: 0; padding-top: 70px;}
+      .hamburger {top: 14px; left: 12px;}
     }
+    /* Scrollbars */
+    ::-webkit-scrollbar{width: 9px; background: #232946;}
+    ::-webkit-scrollbar-thumb{background: #b8c1ec55; border-radius: 6px;}
   </style>
 </head>
 <body>
-  <aside class="sidebar">
-    <h2>HOSTING PRO</h2>
+  <!-- HAMBURGER -->
+  <div class="hamburger" onclick="toggleSidebar()" id="hamburger">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar closed" id="sidebar">
+    <h2>HostingPro</h2>
     <nav>
-      <a href="#" class="active" onclick="showSection('home')">Inicio</a>
-      <a href="#" onclick="showSection('admin')">Admin Panel</a>
-      <a href="#" onclick="showSection('users')">Usuarios</a>
-      <a href="#" onclick="showSection('shop')">Tienda</a>
-      <a href="#" onclick="showSection('servers')">Servidores</a>
-      <a href="#" onclick="showSection('tickets')">Tickets</a>
+      <a href="#" id="nav-inicio" class="active" onclick="showSection('inicio')">Inicio</a>
+      <a href="#" id="nav-servidor" onclick="showSection('servidor')">Servidor</a>
+      <a href="#" id="nav-tienda" onclick="showSection('tienda')">Tienda</a>
+      <a href="#" id="nav-admin" onclick="adminAccess()">Administración</a>
     </nav>
+    <div class="userbox" id="userbox">
+      <span id="ub-nombre"></span>
+      <span id="ub-email"></span>
+      <span id="ub-rol"></span>
+      <span>Coins: <b id="ub-coins"></b></span>
+    </div>
   </aside>
+  <!-- MAIN -->
   <main class="main">
-    <section id="home" class="active">
-      <h1>Bienvenido a Hosting Pro</h1>
-      <p>Tu panel de control todo en uno para administrar servicios de hosting, usuarios y mucho más.</p>
-      <div class="cards">
-        <div class="card">
-          <h3>Usuarios</h3>
-          <p>Administra usuarios y permisos</p>
+    <!-- INICIO -->
+    <section id="inicio" class="active">
+      <h1 style="color:#fff;font-size:2.2em;margin-bottom:15px;text-shadow:0 4px 12px #23294699;">Panel Principal</h1>
+      <div class="dashboard">
+        <div class="card-dash">
+          <h2 id="coins-usados">0</h2>
+          <small>Coins en uso</small>
         </div>
-        <div class="card">
-          <h3>Servidores</h3>
-          <p>Gestiona, monitorea y despliega tus servidores</p>
-        </div>
-        <div class="card">
-          <h3>Tickets</h3>
-          <p>Soporte rápido y seguimiento a incidencias</p>
+        <div class="card-dash">
+          <span class="big" id="coins-disponibles">0</span>
+          <small>Coins disponibles</small>
         </div>
       </div>
+      <div class="account-info" id="info-cuenta">
+        <h3>Información de la cuenta</h3>
+        <div><b>Usuario:</b> <span id="cuenta-usuario"></span></div>
+        <div><b>Email:</b> <span id="cuenta-email"></span></div>
+        <div><b>Rol:</b> <span id="cuenta-rol"></span></div>
+        <div><b>Servidores activos:</b> <span id="cuenta-servers"></span></div>
+      </div>
+      <div class="card" style="background:linear-gradient(135deg,#e1705522 0%,#9b23ea22 100%);color:#fff;">
+        <h3>Sobre tu hosting</h3>
+        <p>Disfruta la mejor experiencia de hosting, crea y administra tus servidores fácilmente, canjea coins y accede a soporte premium desde este panel.</p>
+      </div>
     </section>
+    <!-- SERVIDOR -->
+    <section id="servidor">
+      <h1 style="color:#fff;margin-bottom:15px;">Tus Servidores</h1>
+      <div id="servidor-list"></div>
+      <div id="crear-server-btn-wrap" style="margin-top:24px;">
+        <button class="btn" id="btn-crear-server" onclick="mostrarModalServidor()">+ Crear servidor</button>
+      </div>
+    </section>
+    <!-- TIENDA -->
+    <section id="tienda">
+      <h1 style="color:#fff;margin-bottom:15px;">Tienda de Planes</h1>
+      <div class="cards" id="tienda-planes"></div>
+      <div class="card" style="margin-top:28px;max-width:420px;">
+        <h3>Canjear código de coins</h3>
+        <input type="text" id="codigo-canjear" placeholder="Introduce el código">
+        <button class="btn green" onclick="canjearCodigo()">Canjear código</button>
+        <div id="msg-canjeo" style="margin-top:8px;min-height:22px;color:#e17055;font-weight:bold;"></div>
+      </div>
+    </section>
+    <!-- ADMIN -->
     <section id="admin">
-      <h1>Panel de Administración</h1>
-      <div class="cards">
-        <div class="card">
-          <h3>Estadísticas</h3>
-          <p>Usuarios: 128<br>Servidores activos: 42<br>Tickets abiertos: 5</p>
+      <h1 style="color:#fff;margin-bottom:15px;">Panel de Administración</h1>
+      <div class="dashboard">
+        <div class="card-dash">
+          <h2 id="admin-servidores">0</h2>
+          <small>Servidores activos</small>
         </div>
-        <div class="card">
-          <h3>Configuraciones</h3>
-          <button class="btn">Editar Configuración</button>
+        <div class="card-dash">
+          <span class="big" id="admin-users">0</span>
+          <small>Usuarios registrados</small>
         </div>
-      </div>
-    </section>
-    <section id="users">
-      <h1>Gestión de Usuarios</h1>
-      <table>
-        <tr><th>ID</th><th>Usuario</th><th>Email</th><th>Rol</th></tr>
-        <tr><td>1</td><td>admin</td><td>admin@mail.com</td><td>Administrador</td></tr>
-        <tr><td>2</td><td>juanp</td><td>juanp@mail.com</td><td>Usuario</td></tr>
-        <tr><td>3</td><td>mariax</td><td>mariax@mail.com</td><td>Usuario</td></tr>
-      </table>
-    </section>
-    <section id="shop">
-      <h1>Tienda de Servicios</h1>
-      <div class="cards">
-        <div class="card">
-          <h3>Hosting Básico</h3>
-          <p>1 sitio, 20GB SSD<br><b>$4.99/mes</b></p>
-          <button class="btn">Comprar</button>
-        </div>
-        <div class="card">
-          <h3>Hosting Pro</h3>
-          <p>5 sitios, 100GB SSD<br><b>$12.99/mes</b></p>
-          <button class="btn">Comprar</button>
-        </div>
-        <div class="card">
-          <h3>Servidor Dedicado</h3>
-          <p>CPU 8 cores, 32GB RAM<br><b>$49.99/mes</b></p>
-          <button class="btn">Comprar</button>
+        <div class="card-dash">
+          <span class="big" id="admin-codes">0</span>
+          <small>Códigos generados</small>
         </div>
       </div>
-    </section>
-    <section id="servers">
-      <h1>Listado de Servidores</h1>
-      <table>
-        <tr><th>Nombre</th><th>IP</th><th>Estado</th><th>Acción</th></tr>
-        <tr><td>VPS-01</td><td>192.168.1.10</td><td>Activo</td><td><button class="btn">Reiniciar</button></td></tr>
-        <tr><td>DEDICADO-02</td><td>192.168.1.24</td><td>Mantenimiento</td><td><button class="btn">Ver</button></td></tr>
-        <tr><td>SHARED-03</td><td>192.168.1.34</td><td>Activo</td><td><button class="btn">Suspender</button></td></tr>
-      </table>
-    </section>
-    <section id="tickets">
-      <h1>Soporte y Tickets</h1>
-      <table>
-        <tr><th>#</th><th>Asunto</th><th>Estado</th><th>Acción</th></tr>
-        <tr><td>101</td><td>Problema con servidor</td><td>Abierto</td><td><button class="btn">Ver</button></td></tr>
-        <tr><td>102</td><td>Factura no recibida</td><td>Cerrado</td><td><button class="btn">Ver</button></td></tr>
-      </table>
-      <br>
-      <button class="btn">Crear nuevo ticket</button>
+      <div class="cards" style="margin-top:30px;">
+        <!-- USUARIOS -->
+        <div class="card" style="min-width:290px;max-width:410px;">
+          <h3>Usuarios</h3>
+          <table id="admin-usuarios">
+            <tr><th>Usuario</th><th>Email</th><th>Rol</th><th>Editar</th></tr>
+          </table>
+        </div>
+        <!-- CÓDIGOS -->
+        <div class="card" style="min-width:240px;">
+          <h3>Generar código de coins</h3>
+          <input type="number" id="admin-coins-cantidad" min="1" placeholder="Cantidad de coins">
+          <button class="btn green" onclick="generarCodigoAdmin()">Generar código</button>
+          <div id="admin-codigos-list" style="margin-top:12px;max-height:120px;overflow-y:auto;font-size:0.95em;color:#222;"></div>
+        </div>
+      </div>
     </section>
   </main>
 
-  <!-- Pequeño script para mostrar/ocultar secciones sin recargar -->
+  <!-- MODAL CREAR SERVIDOR -->
+  <div class="modal-bg" id="modal-server-bg">
+    <form class="modal" id="modal-server-form" onsubmit="crearServidor(event)">
+      <span class="close" onclick="cerrarModalServidor()">×</span>
+      <h3>Crear servidor</h3>
+      <label>Nombre del servidor</label>
+      <input required maxlength="16" id="serv-nombre" placeholder="Ej: MiVPS01">
+      <label>Ubicación</label>
+      <select id="serv-ubicacion" required>
+        <option value="">Selecciona</option>
+        <option>Argentina</option>
+        <option>Chile</option>
+        <option>México</option>
+        <option>España</option>
+        <option>Estados Unidos</option>
+      </select>
+      <label>Tipo</label>
+      <select id="serv-tipo" required>
+        <option value="">Selecciona</option>
+        <option>VPS</option>
+        <option>Dedicado</option>
+        <option>Compartido</option>
+      </select>
+      <label>Código de verificación</label>
+      <input required maxlength="10" id="serv-codigo" placeholder="Código de admin">
+      <button class="btn" type="submit">Crear servidor (200 coins)</button>
+      <div id="msg-server" style="margin-top:10px;color:#e17055;font-weight:bold;"></div>
+    </form>
+  </div>
+  <!-- MODAL ADMIN ACCESS -->
+  <div class="modal-bg" id="modal-admin-bg">
+    <form class="modal" id="modal-admin-form" onsubmit="adminLogin(event)">
+      <span class="close" onclick="cerrarModalAdmin()">×</span>
+      <h3>Acceso de administración</h3>
+      <label>Introduce el código de admin</label>
+      <input required maxlength="8" id="codigo-admin" placeholder="Código">
+      <button class="btn" type="submit">Entrar</button>
+      <div id="msg-admin" style="margin-top:10px;color:#e17055;font-weight:bold;"></div>
+    </form>
+  </div>
+  <!-- LOGIN/REGISTER BG -->
+  <div id="register-bg">
+    <form id="register" onsubmit="registro(event)">
+      <h2>Acceso al Panel</h2>
+      <input required maxlength="16" id="reg-user" placeholder="Nombre de usuario">
+      <input required maxlength="32" id="reg-email" placeholder="Correo electrónico">
+      <input required maxlength="16" id="reg-codigo" placeholder="Código de registro">
+      <button class="btn" type="submit">Entrar</button>
+      <div id="msg-registro" style="margin-top:8px;min-height:18px;"></div>
+      <small>Usa el código <b>MAK28</b> (o <b>Mak28</b>) para registrarte</small>
+    </form>
+  </div>
   <script>
-    function showSection(id) {
-      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    // --- ESTADOS Y DATOS PERSISTENTES ---
+    let app = {
+      usuario: null,
+      usuarios: [],
+      coins: 0,
+      coinsUso: 0,
+      servers: [],
+      codigos: [],
+      admin: false,
+      sesion: false
+    };
+    // --- DATOS DEMO INICIALES ---
+    const USUARIO_DEMO = {nombre:"admin",email:"admin@mail.com",rol:"Administrador"};
+    const COD_ADMIN = ["MAK1","Mak1"];
+    const COD_REG = ["MAK28","Mak28"];
+    // ---- CARGAR ESTADO LOCALSTORAGE ---
+    function cargarEstado(){
+      if(localStorage.getItem("app-hosting")){
+        app = JSON.parse(localStorage.getItem("app-hosting"));
+      }else{
+        app.usuarios = [
+          {nombre:"admin",email:"admin@mail.com",rol:"Administrador",coins:10000,coinsUso:0,servers:[],id:1},
+        ];
+        app.codigos = [];
+        app.servers = [];
+        app.admin = false;
+        app.sesion = false;
+        guardarEstado();
+      }
+    }
+    function guardarEstado(){
+      localStorage.setItem("app-hosting",JSON.stringify(app));
+    }
+    // --- REGISTRO Y LOGIN ---
+    function registro(e){
+      e.preventDefault();
+      let user = document.getElementById('reg-user').value.trim();
+      let email = document.getElementById('reg-email').value.trim();
+      let cod = document.getElementById('reg-codigo').value.trim();
+      let msg = document.getElementById('msg-registro');
+      if(!user||!email||!cod){msg.innerText="Completa todos los campos.";return;}
+      if(!COD_REG.includes(cod)){
+        msg.innerText="Código incorrecto.";
+        return;
+      }
+      // ¿Ya existe ese usuario?
+      let exist = app.usuarios.find(u=>u.nombre.toLowerCase()===user.toLowerCase());
+      if(exist){
+        app.usuario = exist;
+        app.sesion = true;
+        guardarEstado();
+        document.getElementById('register-bg').style.display="none";
+        cargarUsuario();
+        return;
+      }
+      // Registrar nuevo:
+      let id = Date.now();
+      let nuevo = {nombre:user,email:email,rol:"Usuario",coins:500,coinsUso:0,servers:[],id:id};
+      app.usuarios.push(nuevo);
+      app.usuario = nuevo;
+      app.sesion = true;
+      guardarEstado();
+      document.getElementById('register-bg').style.display="none";
+      cargarUsuario();
+    }
+    // --- MOSTRAR USUARIO EN PANEL ---
+    function cargarUsuario(){
+      if(!app.usuario) return;
+      document.getElementById('ub-nombre').innerText="👤 "+app.usuario.nombre;
+      document.getElementById('ub-email').innerText="✉ "+app.usuario.email;
+      document.getElementById('ub-rol').innerText="🔑 "+app.usuario.rol;
+      document.getElementById('ub-coins').innerText=app.usuario.coins;
+      document.getElementById('coins-usados').innerText=app.usuario.coinsUso;
+      document.getElementById('coins-disponibles').innerText=app.usuario.coins;
+      document.getElementById('cuenta-usuario').innerText=app.usuario.nombre;
+      document.getElementById('cuenta-email').innerText=app.usuario.email;
+      document.getElementById('cuenta-rol').innerText=app.usuario.rol;
+      document.getElementById('cuenta-servers').innerText=app.usuario.servers.length;
+      // Servidor: mostrar servers
+      mostrarServidores();
+      // Tienda: cargar planes
+      cargarTienda();
+      // Admin: si es admin
+      if(app.usuario.rol=="Administrador") app.admin=true;
+      else app.admin=false;
+    }
+    // --- SIDEBAR Y NAVEGACIÓN ---
+    function toggleSidebar(){
+      let sb=document.getElementById('sidebar');
+      sb.classList.toggle('closed');
+    }
+    function showSection(id){
+      document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
-      const idx = ['home','admin','users','shop','servers','tickets'].indexOf(id);
-      document.querySelectorAll('.sidebar a')[idx].classList.add('active');
+      document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
+      if(id=="inicio")document.getElementById('nav-inicio').classList.add('active');
+      if(id=="servidor")document.getElementById('nav-servidor').classList.add('active');
+      if(id=="tienda")document.getElementById('nav-tienda').classList.add('active');
+      if(id=="admin")document.getElementById('nav-admin').classList.add('active');
+      if(window.innerWidth<700)toggleSidebar();
+    }
+    // --- SERVIDORES ---
+    function mostrarServidores(){
+      let wrap = document.getElementById('servidor-list');
+      let us = app.usuario;
+      if(us.servers.length==0){
+        wrap.innerHTML = `<div class="card" style="background:linear-gradient(135deg,#fd727210 0%,#9b23ea10 100%);text-align:center;">
+          <h3>No tienes servidores creados</h3>
+          <p>Puedes crear uno si tienes al menos 200 coins</p>
+        </div>`;
+        if(us.coins<200) document.getElementById('btn-crear-server').disabled=true;
+        else document.getElementById('btn-crear-server').disabled=false;
+        return;
+      }
+      let html = `<table><tr><th>Nombre</th><th>Ubicación</th><th>Tipo</th><th>Estado</th></tr>`;
+      us.servers.forEach(s=>{
+        html+=`<tr>
+        <td>${s.nombre}</td>
+        <td>${s.ubicacion}</td>
+        <td>${s.tipo}</td>
+        <td style="color:var(--success);">Activo</td>
+        </tr>`;
+      });
+      html+="</table>";
+      wrap.innerHTML=html;
+      document.getElementById('btn-crear-server').disabled=(us.coins<200);
+    }
+    // --- MODAL CREAR SERVER ---
+    function mostrarModalServidor(){
+      document.getElementById('serv-nombre').value="";
+      document.getElementById('serv-ubicacion').value="";
+      document.getElementById('serv-tipo').value="";
+      document.getElementById('serv-codigo').value="";
+      document.getElementById('msg-server').innerText="";
+      document.getElementById('modal-server-bg').classList.add('show');
+    }
+    function cerrarModalServidor(){
+      document.getElementById('modal-server-bg').classList.remove('show');
+    }
+    function crearServidor(e){
+      e.preventDefault();
+      let nombre = document.getElementById('serv-nombre').value.trim();
+      let ubicacion = document.getElementById('serv-ubicacion').value;
+      let tipo = document.getElementById('serv-tipo').value;
+      let cod = document.getElementById('serv-codigo').value.trim();
+      let msg = document.getElementById('msg-server');
+      if(!nombre||!ubicacion||!tipo||!cod){msg.innerText="Completa todos los campos.";return;}
+      // Código debe ser un código de admin generado
+      let code = app.codigos.find(c=>c.code===cod&&!c.usado);
+      if(!code){msg.innerText="Código de verificación inválido o ya usado.";return;}
+      if(app.usuario.coins<200){msg.innerText="No tienes coins suficientes.";return;}
+      // OK: crear server
+      let server = {nombre,ubicacion,tipo,fecha:Date.now()};
+      app.usuario.coins-=200;
+      app.usuario.coinsUso+=200;
+      app.usuario.servers.push(server);
+      // Marcar código como usado
+      code.usado=true;
+      guardarEstado();
+      cerrarModalServidor();
+      cargarUsuario();
+      showSection('servidor');
+    }
+    // --- TIENDA ---
+    let planesTienda = [
+      {nombre:"Hosting Básico",desc:"1 sitio, 20GB SSD",precio:100,img:"https://i.imgur.com/3WQBCkC.png"},
+      {nombre:"Hosting Pro",desc:"5 sitios, 100GB SSD",precio:250,img:"https://i.imgur.com/2rG7Q1f.png"},
+      {nombre:"Servidor Dedicado",desc:"CPU 8 cores, 32GB RAM",precio:600,img:"https://i.imgur.com/1a1Ffug.png"},
+    ];
+    function cargarTienda(){
+      let wrap = document.getElementById('tienda-planes');
+      wrap.innerHTML="";
+      planesTienda.forEach(p=>{
+        wrap.innerHTML+=`
+        <div class="card" style="max-width:310px;text-align:center;">
+          <img src="${p.img}" alt="" style="width:64px;margin-bottom:8px;filter:drop-shadow(0 0 6px #9b23ea33)">
+          <h3>${p.nombre}</h3>
+          <p>${p.desc}</p>
+          <p style="font-size:1.14em;margin:8px 0;"><b style="color:var(--accent);">${p.precio} coins</b></p>
+          <button class="btn" onclick="comprarPlan(${p.precio},'${p.nombre}')">Comprar</button>
+        </div>`;
+      });
+    }
+    function comprarPlan(precio,nombre){
+      if(app.usuario.coins<precio){
+        alert("No tienes coins suficientes.");
+        return;
+      }
+      app.usuario.coins-=precio;
+      guardarEstado();
+      cargarUsuario();
+      alert("¡Plan "+nombre+" adquirido correctamente!");
+    }
+    // --- CANJEAR CÓDIGO ---
+    function canjearCodigo(){
+      let code = document.getElementById('codigo-canjear').value.trim();
+      let msg = document.getElementById('msg-canjeo');
+      let cod = app.codigos.find(c=>c.code===code&&!c.usado);
+      if(!cod){msg.innerText="Código inválido o ya usado.";return;}
+      app.usuario.coins += cod.cantidad;
+      cod.usado = true;
+      guardarEstado();
+      cargarUsuario();
+      msg.innerText = `¡Canjeado! +${cod.cantidad} coins`;
+      setTimeout(()=>{msg.innerText="";},3000);
+    }
+    // --- ADMIN ---
+    function adminAccess(){
+      if(app.usuario&&app.usuario.rol==="Administrador"){
+        showSection('admin');
+        cargarAdmin();
+        return;
+      }
+      document.getElementById('codigo-admin').value="";
+      document.getElementById('msg-admin').innerText="";
+      document.getElementById('modal-admin-bg').classList.add('show');
+    }
+    function cerrarModalAdmin(){
+      document.getElementById('modal-admin-bg').classList.remove('show');
+    }
+    function adminLogin(e){
+      e.preventDefault();
+      let code = document.getElementById('codigo-admin').value.trim();
+      let msg = document.getElementById('msg-admin');
+      if(!COD_ADMIN.includes(code)){
+        msg.innerText="Código incorrecto.";
+        return;
+      }
+      app.usuario.rol="Administrador";
+      app.admin=true;
+      guardarEstado();
+      cerrarModalAdmin();
+      showSection('admin');
+      cargarAdmin();
+    }
+    function cargarAdmin(){
+      document.getElementById('admin-servidores').innerText=app.usuarios.reduce((t,u)=>t+u.servers.length,0);
+      document.getElementById('admin-users').innerText=app.usuarios.length;
+      document.getElementById('admin-codes').innerText=app.codigos.length;
+      // Lista usuarios
+      let tabla = `<tr><th>Usuario</th><th>Email</th><th>Rol</th><th>Editar</th></tr>`;
+      app.usuarios.forEach((u,i)=>{
+        tabla+=`<tr>
+        <td><input style="width:70px;" value="${u.nombre}" onchange="editarUsuario(${i},'nombre',this.value)"></td>
+        <td><input style="width:120px;" value="${u.email}" onchange="editarUsuario(${i},'email',this.value)"></td>
+        <td>
+          <select onchange="editarUsuario(${i},'rol',this.value)">
+            <option${u.rol=="Usuario"?" selected":""}>Usuario</option>
+            <option${u.rol=="Administrador"?" selected":""}>Administrador</option>
+          </select>
+        </td>
+        <td><button class="btn small" style="font-size:0.92em;padding:3px 10px;" onclick="borrarUsuario(${i})">🗑</button></td>
+        </tr>`;
+      });
+      document.getElementById('admin-usuarios').innerHTML=tabla;
+      // Lista códigos
+      let codigos = app.codigos.map(c=>`<div>${c.code} - <b>${c.cantidad} coins</b> ${c.usado?"<span style='color:#e17055'>(Usado)</span>":""}</div>`).reverse().join("");
+      document.getElementById('admin-codigos-list').innerHTML=codigos||"No hay códigos aún";
+    }
+    function editarUsuario(i, campo, val){
+      app.usuarios[i][campo]=val;
+      guardarEstado();
+      cargarAdmin();
+      cargarUsuario();
+    }
+    function borrarUsuario(i){
+      if(!confirm("¿Seguro que quieres borrar este usuario?"))return;
+      let u = app.usuarios[i];
+      if(app.usuario.id===u.id){
+        alert("No puedes borrarte a ti mismo.");
+        return;
+      }
+      app.usuarios.splice(i,1);
+      guardarEstado();
+      cargarAdmin();
+    }
+    function generarCodigoAdmin(){
+      let cant = parseInt(document.getElementById('admin-coins-cantidad').value);
+      if(isNaN(cant)||cant<1){alert("Cantidad inválida.");return;}
+      let code = "C"+Math.random().toString(36).substr(2,6).toUpperCase();
+      app.codigos.push({code:code,cantidad:cant,usado:false});
+      guardarEstado();
+      cargarAdmin();
+      document.getElementById('admin-coins-cantidad').value="";
+      alert("Código generado: "+code);
+    }
+    // --- INICIO APP ---
+    window.onload = function(){
+      cargarEstado();
+      if(!app.sesion){
+        document.getElementById('register-bg').style.display="flex";
+      }else{
+        document.getElementById('register-bg').style.display="none";
+        cargarUsuario();
+      }
+      cargarUsuario();
+      showSection('inicio');
+    };
+    // --- GESTIÓN UX ---
+    window.onclick = function(e){
+      if(e.target==document.getElementById('modal-server-bg')) cerrarModalServidor();
+      if(e.target==document.getElementById('modal-admin-bg')) cerrarModalAdmin();
+    }
+    // --- GUARDAR DATOS USUARIO EN ESTADO GLOBAL Y LOCALSTORAGE ---
+    function syncUsuario(){
+      // Actualiza usuario en usuarios[]
+      let idx = app.usuarios.findIndex(u=>u.id===app.usuario.id);
+      if(idx>=0) app.usuarios[idx]=app.usuario;
+      guardarEstado();
     }
   </script>
 </body>
