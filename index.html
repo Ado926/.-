@@ -1,63 +1,226 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-	<title>Mantenimiento</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #007bff; /* Azul brillante */
-			text-align: center;
-			color: #ffffff; /* Texto blanco */
-			margin: 0;
-			padding: 0;
-			height: 100vh; /* Altura de la pantalla */
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-		}
-		
-		.mensaje {
-			font-size: 96px; /* Tamaño de fuente más grande */
-			font-weight: bold;
-			margin-bottom: 20px;
-		}
-		
-		.detalle {
-			font-size: 36px; /* Tamaño de fuente más grande */
-			margin-bottom: 40px;
-		}
-		
-		.boton {
-			background-color: #ffffff; /* Fondo blanco */
-			color: #007bff; /* Texto azul */
-			padding: 20px 40px;
-			border: none;
-			border-radius: 10px;
-			cursor: pointer;
-			font-size: 24px;
-			margin-bottom: 40px;
-		}
-		
-		.boton:hover {
-			background-color: #f2f2f2; /* Fondo gris claro al pasar el mouse */
-		}
-		
-		.footer {
-			position: fixed;
-			bottom: 0;
-			width: 100%;
-			padding: 20px;
-			background-color: #0069d9; /* Azul más oscuro */
-			color: #ffffff; /* Texto blanco */
-			font-size: 18px;
-		}
-	</style>
+  <meta charset="UTF-8">
+  <title>Hosting Dashboard - Panel Completo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --main-bg: #232946;
+      --sidebar-bg: #121629;
+      --accent: #eebbc3;
+      --white: #f4faff;
+      --gray: #b8c1ec;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    * {box-sizing: border-box; margin: 0; padding: 0;}
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--main-bg);
+      color: var(--gray);
+      height: 100vh;
+      display: flex;
+    }
+    .sidebar {
+      background: var(--sidebar-bg);
+      width: 220px;
+      min-height: 100vh;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+    }
+    .sidebar h2 {
+      color: var(--accent);
+      text-align: center;
+      margin: 30px 0 20px 0;
+      font-size: 1.5em;
+      letter-spacing: 2px;
+    }
+    .sidebar nav {
+      flex: 1;
+    }
+    .sidebar a {
+      display: block;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 16px 30px;
+      transition: background 0.2s, color 0.2s;
+      font-size: 1.08em;
+      border-left: 4px solid transparent;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: var(--main-bg);
+      color: var(--accent);
+      border-left: 4px solid var(--accent);
+    }
+    .main {
+      margin-left: 220px;
+      padding: 40px 5vw;
+      width: 100%;
+    }
+    section {
+      display: none;
+      animation: fadeIn 0.6s;
+    }
+    section.active {display: block;}
+    @keyframes fadeIn {from{opacity:0;} to{opacity:1;}}
+
+    /* Simple Card Styles */
+    .cards {display: flex; gap: 32px; flex-wrap: wrap;}
+    .card {
+      background: var(--sidebar-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      min-width: 220px;
+      flex: 1;
+      margin: 12px 0;
+    }
+    .card h3 {color: var(--accent); margin-bottom: 10px;}
+    .btn {
+      background: var(--accent);
+      color: var(--sidebar-bg);
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    .btn:hover {background: var(--white);}
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--sidebar-bg);
+      margin-top: 16px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid #232946;
+    }
+    th {color: var(--accent);}
+    /* Responsive */
+    @media (max-width: 850px) {
+      .main {padding: 20px 2vw;}
+      .cards {flex-direction: column;}
+    }
+    @media (max-width: 600px) {
+      .sidebar {width: 70px;}
+      .sidebar h2 {font-size: 1em;}
+      .sidebar a {padding: 10px 10px;}
+      .main {margin-left: 70px;}
+    }
+  </style>
 </head>
 <body>
-	<div class="mensaje">🛠️ MANTENIMIENTO</div>
-	<div class="detalle">El hosting está recibiendo un arduo mantenimiento debido a un fallo que hubo en el nodo.</div>
-	<button class="boton" onclick="alert('Este panel está protegido por derechos de autor.')">Ver proceso</button>
-	<div class="footer">&copy; 2025 - Maki Host | Todos los derechos reservados</div>
+  <aside class="sidebar">
+    <h2>HOSTING PRO</h2>
+    <nav>
+      <a href="#" class="active" onclick="showSection('home')">Inicio</a>
+      <a href="#" onclick="showSection('admin')">Admin Panel</a>
+      <a href="#" onclick="showSection('users')">Usuarios</a>
+      <a href="#" onclick="showSection('shop')">Tienda</a>
+      <a href="#" onclick="showSection('servers')">Servidores</a>
+      <a href="#" onclick="showSection('tickets')">Tickets</a>
+    </nav>
+  </aside>
+  <main class="main">
+    <section id="home" class="active">
+      <h1>Bienvenido a Hosting Pro</h1>
+      <p>Tu panel de control todo en uno para administrar servicios de hosting, usuarios y mucho más.</p>
+      <div class="cards">
+        <div class="card">
+          <h3>Usuarios</h3>
+          <p>Administra usuarios y permisos</p>
+        </div>
+        <div class="card">
+          <h3>Servidores</h3>
+          <p>Gestiona, monitorea y despliega tus servidores</p>
+        </div>
+        <div class="card">
+          <h3>Tickets</h3>
+          <p>Soporte rápido y seguimiento a incidencias</p>
+        </div>
+      </div>
+    </section>
+    <section id="admin">
+      <h1>Panel de Administración</h1>
+      <div class="cards">
+        <div class="card">
+          <h3>Estadísticas</h3>
+          <p>Usuarios: 128<br>Servidores activos: 42<br>Tickets abiertos: 5</p>
+        </div>
+        <div class="card">
+          <h3>Configuraciones</h3>
+          <button class="btn">Editar Configuración</button>
+        </div>
+      </div>
+    </section>
+    <section id="users">
+      <h1>Gestión de Usuarios</h1>
+      <table>
+        <tr><th>ID</th><th>Usuario</th><th>Email</th><th>Rol</th></tr>
+        <tr><td>1</td><td>admin</td><td>admin@mail.com</td><td>Administrador</td></tr>
+        <tr><td>2</td><td>juanp</td><td>juanp@mail.com</td><td>Usuario</td></tr>
+        <tr><td>3</td><td>mariax</td><td>mariax@mail.com</td><td>Usuario</td></tr>
+      </table>
+    </section>
+    <section id="shop">
+      <h1>Tienda de Servicios</h1>
+      <div class="cards">
+        <div class="card">
+          <h3>Hosting Básico</h3>
+          <p>1 sitio, 20GB SSD<br><b>$4.99/mes</b></p>
+          <button class="btn">Comprar</button>
+        </div>
+        <div class="card">
+          <h3>Hosting Pro</h3>
+          <p>5 sitios, 100GB SSD<br><b>$12.99/mes</b></p>
+          <button class="btn">Comprar</button>
+        </div>
+        <div class="card">
+          <h3>Servidor Dedicado</h3>
+          <p>CPU 8 cores, 32GB RAM<br><b>$49.99/mes</b></p>
+          <button class="btn">Comprar</button>
+        </div>
+      </div>
+    </section>
+    <section id="servers">
+      <h1>Listado de Servidores</h1>
+      <table>
+        <tr><th>Nombre</th><th>IP</th><th>Estado</th><th>Acción</th></tr>
+        <tr><td>VPS-01</td><td>192.168.1.10</td><td>Activo</td><td><button class="btn">Reiniciar</button></td></tr>
+        <tr><td>DEDICADO-02</td><td>192.168.1.24</td><td>Mantenimiento</td><td><button class="btn">Ver</button></td></tr>
+        <tr><td>SHARED-03</td><td>192.168.1.34</td><td>Activo</td><td><button class="btn">Suspender</button></td></tr>
+      </table>
+    </section>
+    <section id="tickets">
+      <h1>Soporte y Tickets</h1>
+      <table>
+        <tr><th>#</th><th>Asunto</th><th>Estado</th><th>Acción</th></tr>
+        <tr><td>101</td><td>Problema con servidor</td><td>Abierto</td><td><button class="btn">Ver</button></td></tr>
+        <tr><td>102</td><td>Factura no recibida</td><td>Cerrado</td><td><button class="btn">Ver</button></td></tr>
+      </table>
+      <br>
+      <button class="btn">Crear nuevo ticket</button>
+    </section>
+  </main>
+
+  <!-- Pequeño script para mostrar/ocultar secciones sin recargar -->
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+      const idx = ['home','admin','users','shop','servers','tickets'].indexOf(id);
+      document.querySelectorAll('.sidebar a')[idx].classList.add('active');
+    }
+  </script>
 </body>
 </html>
