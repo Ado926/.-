@@ -301,8 +301,8 @@
         li.onclick = () => selectFile(idx);
         li.innerHTML = `<span title="${file.name}">${file.name}</span>
           <span class="file-actions">
-            <button title="Descargar" onclick="event.stopPropagation(); selectFile(${idx}); downloadFile();"><b>⬇️</b></button>
-            <button title="Eliminar" onclick="event.stopPropagation(); deleteFile(${idx});"><b>🗑️</b></button>
+            <button title="Descargar" onclick="event.stopPropagation(); selectFile(${idx}); downloadFile();"><b>Descargar 🛠️</b></button>
+            <button title="Eliminar" onclick="event.stopPropagation(); deleteFile(${idx});"><b>Borrar 🛠️</b></button>
           </span>`;
         list.appendChild(li);
       });
