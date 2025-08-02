@@ -1,54 +1,106 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Descubre la nueva forma de comunicarte con [Nombre de la aplicación]</title>
+ <title>GitHub LocalStorage</title>
  <style>
- .contenedor {
- width: 80%;
- margin: 40px auto;
- text-align: center;
- }
-
- #prueba {
- background-color: #4CAF50;
- color: #fff;
- padding: 10px 20px;
- border: none;
- border-radius: 5px;
- cursor: pointer;
- }
-
- #demo {
- width: 80%;
- height: 600px;
- margin: 40px auto;
- border: 1px solid #ddd;
- border-radius: 5px;
- padding: 20px;
+ body {
+ font-family: Arial, sans-serif;
  }
  </style>
 </head>
 <body>
- <div class="contenedor">
- <h1>Descubre la nueva forma de comunicarte con [Nombre de la aplicación]</h1>
- <p>La aplicación de mensajería más segura y innovadora del mercado.</p>
- <button id="prueba">Prueba</button>
- <div id="demo" style="display:none;">
- <!-- Aquí iría la interfaz de la aplicación -->
- <h2>Demo de la aplicación</h2>
- <p>Esta es una demo de la aplicación, puedes interactuar con ella como si estuvieras usando la aplicación real.</p>
- <div style="background-color:                                                  
- <h3>Chat con bot</h3>
- <p>Hola, soy un bot. ¿En qué puedo ayudarte?</p>
- <input type="text" placeholder="Escribe un mensaje...">
- <button>Enviar</button>
+ <h1>GitHub LocalStorage</h1>
+ <div id="repo">
+ <h2>Repositorio de código</h2>
+ <textarea id="code" placeholder="Escribe tu código aquí..."></textarea>
+ <button id="save-code">Guardar código</button>
+ <button id="load-code">Cargar código</button>
+ <div id="code-history"></div>
  </div>
+ <div id="issues">
+ <h2>Issues</h2>
+ <input id="issue-title" placeholder="Título del issue...">
+ <textarea id="issue-description" placeholder="Descripción del issue..."></textarea>
+ <button id="report-issue">Reportar issue</button>
+ <div id="issues-list"></div>
  </div>
+ <div id="pull-requests">
+ <h2>Pull requests</h2>
+ <input id="pr-title" placeholder="Título del pull request...">
+ <textarea id="pr-description" placeholder="Descripción del pull request..."></textarea>
+ <button id="submit-pr">Enviar pull request</button>
+ <div id="prs-list"></div>
  </div>
 
  <script>
- document.getElementById("prueba").addEventListener("click", function() {
- document.getElementById("demo").style.display = "block";
+ // Repositorio de código
+ const codeTextarea = document.getElementById('code');
+ const saveCodeButton = document.getElementById('save-code');
+ const loadCodeButton = document.getElementById('load-code');
+ const codeHistoryDiv = document.getElementById('code-history');
+
+ saveCodeButton.addEventListener('click', () => {
+ const code = codeTextarea.value;
+ const version = new Date().getTime();
+ localStorage.setItem(`code-${version}`, code);
+ codeHistoryDiv.innerHTML += `<p>Versión ${version}: <button onclick="loadCode(${version})">Cargar</button></p>`;
+ });
+
+ loadCodeButton.addEventListener('click', () => {
+ const versions = Object.keys(localStorage).filter(key => key.startsWith('code-'));
+ const latestVersion = versions[versions.length - 1];
+ const code = localStorage.getItem(latestVersion);
+ codeTextarea.value = code;
+ });
+
+ window.loadCode = (version) => {
+ const code = localStorage.getItem(`code-${version}`);
+ codeTextarea.value = code;
+ };
+
+ // Issues
+ const issueTitleInput = document.getElementById('issue-title');
+ const issueDescriptionTextarea = document.getElementById('issue-description');
+ const reportIssueButton = document.getElementById('report-issue');
+ const issuesListDiv = document.getElementById('issues-list');
+
+ reportIssueButton.addEventListener('click', () => {
+ const issue = {
+ title: issueTitleInput.value,
+ description: issueDescriptionTextarea.value
+ };
+ const issues = JSON.parse(localStorage.getItem('issues')) || [];
+ issues.push(issue);
+ localStorage.setItem('issues', JSON.stringify(issues));
+ issuesListDiv.innerHTML += `<p>${issue.title}: ${issue.description}</p>`;
+ });
+
+ // Pull requests
+ const prTitleInput = document.getElementById('pr-title');
+ const prDescriptionTextarea = document.getElementById('pr-description');
+ const submitPrButton = document.getElementById('submit-pr');
+ const prsListDiv = document.getElementById('prs-list');
+
+ submitPrButton.addEventListener('click', () => {
+ const pr = {
+ title: prTitleInput.value,
+ description: prDescriptionTextarea.value
+ };
+ const prs = JSON.parse(localStorage.getItem('prs')) || [];
+ prs.push(pr);
+ localStorage.setItem('prs', JSON.stringify(prs));
+ prsListDiv.innerHTML += `<p>${pr.title}: ${pr.description}</p>`;
+ });
+
+ // Cargar issues y pull requests existentes
+ const issues = JSON.parse(localStorage.getItem('issues')) || [];
+ issues.forEach(issue => {
+ issuesListDiv.innerHTML += `<p>${issue.title}: ${issue.description}</p>`;
+ });
+
+ const prs = JSON.parse(localStorage.getItem('prs')) || [];
+ prs.forEach(pr => {
+ prsListDiv.innerHTML += `<p>${pr.title}: ${pr.description}</p>`;
  });
  </script>
 </body>
