@@ -2,413 +2,97 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Git Landa</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Mundo Oculto Oficial - Comunidad WhatsApp</title>
   <style>
-    :root {
-      --purple: #6e44ff;
-      --blue: #3584e4;
-      --pink: #ff6e91;
-      --yellow: #fff685;
-      --gray: #353353;
-      --white: #f9f9f9;
-      --shadow: 0 2px 14px 0 rgba(110,68,255,0.14);
-      --radius: 14px;
-    }
     body {
-      margin: 0;
-      background: linear-gradient(120deg, #6e44ff 0%, #ff6e91 100%);
+      background: #15141a;
+      color: #e0e0e0;
       font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
       min-height: 100vh;
-      color: var(--gray);
-      transition: background .4s;
-    }
-    header {
-      background: linear-gradient(95deg, #3584e4 60%, #6e44ff 100%);
-      color: var(--white);
-      padding: 38px 0 22px 0;
-      text-align: center;
-      box-shadow: var(--shadow);
-    }
-    header h1 {
-      font-size: 2.6em;
-      margin-bottom: 7px;
-      letter-spacing: 1.8px;
-      font-family: 'Segoe UI Bold', Arial, sans-serif;
-    }
-    header p {
-      font-size: 1.18em;
-      opacity: 0.95;
-      margin-top: 0;
-      margin-bottom: 0;
-      letter-spacing: 1.1px;
     }
     .container {
-      max-width: 1050px;
-      margin: 40px auto;
-      background: var(--white);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 36px 28px 32px 28px;
-      display: flex;
-      gap: 38px;
-      flex-wrap: wrap;
-      min-height: 480px;
-      animation: fadeIn .5s;
-    }
-    @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-    .files-panel {
-      min-width: 220px;
-      max-width: 300px;
-      background: linear-gradient(120deg, #fff685 0%, #ff6e91 100%);
-      color: #4e2577;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px 12px 18px 12px;
-      margin-bottom: 9px;
-      flex:1;
-      height: fit-content;
-    }
-    .files-panel h2 {
-      font-size: 1.15em;
-      margin-bottom: 13px;
-      color: var(--purple);
-      letter-spacing: 1.1px;
+      max-width: 580px;
+      margin: 60px auto;
+      background: #232136;
+      border-radius: 14px;
+      padding: 34px 28px 28px 28px;
+      box-shadow: 0 6px 32px #000a;
       text-align: center;
     }
-    .file-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 18px 0;
+    .profile-img {
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #c77dff;
+      box-shadow: 0 2px 16px #c77dff44;
+      margin-bottom: 18px;
+    }
+    h1 {
+      color: #c77dff;
+      margin-bottom: 10px;
+      font-size: 2.2em;
+    }
+    .subtitle {
+      color: #6e6a86;
+      margin-bottom: 24px;
       font-size: 1.07em;
-      max-height: 260px;
-      overflow-y: auto;
     }
-    .file-list li {
-      background: #fff7;
-      margin-bottom: 7px;
-      border-radius: 7px;
-      padding: 6px 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: background .18s;
-      border: 1px solid #6e44ff22;
+    p {
+      font-size: 1.16em;
+      color: #e0e1dd;
+      margin-bottom: 30px;
+      line-height: 1.6;
     }
-    .file-list li.selected {
-      background: #6e44ff15;
-      color: var(--purple);
+    .btn-whatsapp {
+      display: inline-block;
+      background: linear-gradient(90deg,#25d366 40%,#128c7e 100%);
+      color: #fff;
       font-weight: bold;
-      border: 1.7px solid var(--purple);
-    }
-    .file-list li:hover {
-      background: #fff685;
-      color: var(--pink);
-    }
-    .file-actions {
-      display: flex;
-      gap: 6px;
-    }
-    .file-actions button {
-      background: none;
+      padding: 16px 34px;
+      font-size: 1.1em;
       border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.2s;
+      box-shadow: 0 2px 14px #25d36655;
       cursor: pointer;
-      color: #ff6e91;
-      font-size: 1em;
-    }
-    .file-actions button:hover { color: #6e44ff; }
-    .new-file {
-      display: flex;
-      gap: 7px;
-      margin-top: 10px;
-    }
-    .new-file input {
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: 1.2px solid var(--purple);
-      font-size: 1em;
-      min-width: 0;
-      flex: 1;
-    }
-    .new-file button {
-      background: linear-gradient(90deg, #6e44ff 0%, #ff6e91 100%);
-      color: var(--white);
-      border: none;
-      padding: 6px 18px;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      font-size: 1em;
-      transition: background .18s;
-    }
-    .new-file button:hover { background: var(--purple); }
-    .editor-panel {
-      flex: 2;
-      min-width: 320px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .editor-label {
-      font-size: 1.08em;
-      color: var(--purple);
-      margin-bottom: 3px;
-      letter-spacing: 1px;
-      font-weight: 500;
-      margin-top: 2px;
-      text-shadow: 0 1.5px 8px #6e44ff11;
-    }
-    .editor-area {
-      width: 100%;
-      min-height: 320px;
-      font-size: 1.09em;
-      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
-      border-radius: 10px;
-      border: 1.7px solid #6e44ff33;
-      padding: 16px 14px;
-      outline: none;
-      resize: vertical;
-      background: linear-gradient(120deg, #fff685 0%, #ff6e91 100%);
-      color: #332266;
-      box-shadow: var(--shadow);
-      transition: border .18s;
-    }
-    .editor-area:focus {
-      border: 2.2px solid var(--purple);
-      background: #fff685;
-    }
-    .editor-actions {
-      display: flex;
-      gap: 10px;
       margin-top: 8px;
     }
-    .editor-actions button {
-      background: linear-gradient(90deg, #6e44ff 0%, #ff6e91 100%);
-      color: var(--white);
-      border: none;
-      padding: 9px 24px;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      font-size: 1em;
-      transition: background .18s;
+    .btn-whatsapp:hover {
+      background: linear-gradient(90deg,#128c7e 40%,#25d366 100%);
       letter-spacing: 1px;
     }
-    .editor-actions button:hover { background: var(--purple); }
-    .status-message {
-      color: var(--pink);
-      font-weight: bold;
-      font-size: 1.02em;
-      min-height: 22px;
-      margin-top: 4px;
+    .logo {
+      width: 54px;
+      margin-bottom: 13px;
+      opacity: 0.93;
     }
-    .lang-select {
-      margin-bottom: 12px;
-      font-size: 1em;
-      background: var(--white);
-      color: var(--purple);
-      border-radius: 8px;
-      padding: 7px 12px;
-      border: 1.2px solid #6e44ff44;
+    @media (max-width: 600px) {
+      .container { padding: 16px 4vw; }
+      h1 { font-size: 1.5em;}
+      .profile-img { width: 86px; height: 86px;}
     }
-    footer {
-      text-align: center;
-      color: #fff;
-      background: linear-gradient(90deg, #6e44ff 80%, #ff6e91 100%);
-      padding: 23px 0 15px 0;
-      margin-top: 70px;
-      font-size: 1.13em;
-      letter-spacing: 1px;
-      border-radius: 0 0 18px 18px;
-    }
-    @media (max-width:900px) {
-      .container {flex-direction: column;gap:12px;}
-      .files-panel {max-width:100%;}
-      .editor-panel {min-width:0;}
-    }
-    ::-webkit-scrollbar{width:9px; background: #3584e4;}
-    ::-webkit-scrollbar-thumb{background: #6e44ff55; border-radius:6px;}
   </style>
 </head>
 <body>
-  <header>
-    <h1>Git Landa</h1>
-    <p>Tu espacio personal de edición, gestión y almacenamiento de archivos de código, ¡todo offline y persistente!</p>
-  </header>
   <div class="container">
-    <div class="files-panel">
-      <h2>Archivos del repositorio</h2>
-      <ul class="file-list" id="fileList"></ul>
-      <form class="new-file" onsubmit="addFile(event)">
-        <input type="text" id="newFileName" placeholder="Nuevo archivo (ej: main.js)" autocomplete="off" required>
-        <button type="submit">Crear</button>
-      </form>
-    </div>
-    <div class="editor-panel">
-      <div class="editor-label" id="editorLabel">Selecciona un archivo para editar</div>
-      <select class="lang-select" id="langSelect" onchange="changeLang()">
-        <option value="js">JavaScript</option>
-        <option value="py">Python</option>
-        <option value="html">HTML</option>
-        <option value="css">CSS</option>
-        <option value="txt">Texto</option>
-      </select>
-      <textarea class="editor-area" id="editorArea" disabled placeholder="Abre o crea un archivo para editar"></textarea>
-      <div class="editor-actions">
-        <button type="button" onclick="saveFile()" id="saveBtn" disabled>Guardar</button>
-        <button type="button" onclick="downloadFile()" id="downloadBtn" disabled>Descargar</button>
-        <button type="button" onclick="deleteFile()" id="deleteBtn" disabled>Eliminar</button>
-      </div>
-      <div class="status-message" id="statusMsg"></div>
-    </div>
+    <img src="https://qu.ax/uRWlM.jpg" alt="Foto de perfil Comunidad Mundo Oculto" class="profile-img">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp logo" class="logo">
+    <h1>Mundo Oculto Oficial</h1>
+    <div class="subtitle">Comunidad exclusiva de WhatsApp</div>
+    <p>
+      ¡Bienvenido a <strong>Mundo Oculto Oficial</strong>!<br>
+      Somos una <b>comunidad nocturna de WhatsApp</b> donde encontrarás <b>bots exclusivos</b>, herramientas, soporte, novedades y mucho más.<br>
+      Únete y descubre todo lo que tenemos para ti: ayuda, diversión, automatización y una comunidad activa.<br><br>
+      <em>Explora el <b>Mundo Oculto</b> y lleva tu WhatsApp al siguiente nivel.</em>
+    </p>
+    <a href="https://chat.whatsapp.com/HuKxDT6DPOT9igt7gRMGMT?mode=ac_t" class="btn-whatsapp" target="_blank">
+      Unirme a la comunidad
+    </a>
   </div>
-  <footer>
-    Git Landa &copy; 2025 | Todos los archivos y cambios se guardan en tu navegador usando LocalStorage.
-  </footer>
-  <script>
-    // --- STATE ---
-    let repo = {
-      files: [
-        // Demo example file
-        { name: 'README.md', lang: 'txt', content: "# Bienvenido a Git Landa\n\nEste es tu espacio personal para crear, editar y guardar archivos de código.\nTus archivos se guardarán automáticamente aquí usando LocalStorage.\n\n¡Empieza creando o editando tus archivos!" }
-      ],
-      selected: null
-    };
-    // --- LOCALSTORAGE ---
-    function loadRepo() {
-      let data = localStorage.getItem('git-landa-repo');
-      if (data) repo = JSON.parse(data);
-      renderFileList();
-      if (repo.selected !== null && repo.files[repo.selected]) {
-        selectFile(repo.selected);
-      } else {
-        clearEditor();
-      }
-    }
-    function saveRepo() {
-      localStorage.setItem('git-landa-repo', JSON.stringify(repo));
-    }
-    // --- FILES ---
-    function renderFileList() {
-      const list = document.getElementById('fileList');
-      list.innerHTML = '';
-      repo.files.forEach((file, idx) => {
-        const li = document.createElement('li');
-        li.className = (repo.selected === idx ? 'selected' : '');
-        li.onclick = () => selectFile(idx);
-        li.innerHTML = `<span title="${file.name}">${file.name}</span>
-          <span class="file-actions">
-            <button title="Descargar" onclick="event.stopPropagation(); selectFile(${idx}); downloadFile();"><b>Descargar 🛠️</b></button>
-            <button title="Eliminar" onclick="event.stopPropagation(); deleteFile(${idx});"><b>Borrar 🛠️</b></button>
-          </span>`;
-        list.appendChild(li);
-      });
-    }
-    function addFile(e) {
-      e.preventDefault();
-      let name = document.getElementById('newFileName').value.trim();
-      if (!name) return;
-      if (repo.files.some(f => f.name === name)) {
-        showStatus('Ya existe un archivo con ese nombre.', true);
-        return;
-      }
-      let lang = detectLang(name);
-      repo.files.push({ name, lang, content: '' });
-      repo.selected = repo.files.length - 1;
-      saveRepo();
-      renderFileList();
-      selectFile(repo.selected);
-      document.getElementById('newFileName').value = '';
-      showStatus('Archivo creado.');
-    }
-    function selectFile(idx) {
-      repo.selected = idx;
-      let file = repo.files[idx];
-      document.getElementById('editorArea').disabled = false;
-      document.getElementById('editorArea').value = file.content;
-      document.getElementById('editorLabel').innerText = `Editando: ${file.name}`;
-      document.getElementById('langSelect').value = file.lang;
-      document.getElementById('saveBtn').disabled = false;
-      document.getElementById('downloadBtn').disabled = false;
-      document.getElementById('deleteBtn').disabled = false;
-      renderFileList();
-      showStatus('');
-    }
-    function clearEditor() {
-      document.getElementById('editorArea').disabled = true;
-      document.getElementById('editorArea').value = '';
-      document.getElementById('editorLabel').innerText = 'Selecciona un archivo para editar';
-      document.getElementById('saveBtn').disabled = true;
-      document.getElementById('downloadBtn').disabled = true;
-      document.getElementById('deleteBtn').disabled = true;
-      showStatus('');
-    }
-    function saveFile() {
-      let idx = repo.selected;
-      if (idx === null || !repo.files[idx]) return;
-      repo.files[idx].content = document.getElementById('editorArea').value;
-      repo.files[idx].lang = document.getElementById('langSelect').value;
-      saveRepo();
-      renderFileList();
-      showStatus('Guardado ✔️');
-    }
-    function downloadFile(idx = null) {
-      if (idx === null) idx = repo.selected;
-      if (idx === null || !repo.files[idx]) return;
-      let file = repo.files[idx];
-      let blob = new Blob([file.content], { type: 'text/plain' });
-      let a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = file.name;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => { document.body.removeChild(a); }, 1200);
-      showStatus('Archivo descargado.');
-    }
-    function deleteFile(idx = null) {
-      if (idx === null) idx = repo.selected;
-      if (idx === null || !repo.files[idx]) return;
-      if (!confirm('¿Seguro que quieres borrar este archivo?')) return;
-      repo.files.splice(idx, 1);
-      if (repo.files.length === 0) {
-        repo.selected = null;
-        clearEditor();
-      } else {
-        repo.selected = Math.max(0, idx - 1);
-        selectFile(repo.selected);
-      }
-      saveRepo();
-      renderFileList();
-      showStatus('Archivo eliminado.');
-    }
-    function changeLang() {
-      let idx = repo.selected;
-      if (idx === null || !repo.files[idx]) return;
-      repo.files[idx].lang = document.getElementById('langSelect').value;
-      saveRepo();
-      showStatus('Lenguaje cambiado.');
-    }
-    function detectLang(name) {
-      let ext = name.split('.').pop().toLowerCase();
-      if (ext === 'js') return 'js';
-      if (ext === 'py') return 'py';
-      if (ext === 'html') return 'html';
-      if (ext === 'css') return 'css';
-      return 'txt';
-    }
-    function showStatus(msg, err = false) {
-      let el = document.getElementById('statusMsg');
-      el.innerText = msg;
-      el.style.color = err ? '#ff6e91' : '#6e44ff';
-    }
-    document.getElementById('editorArea').addEventListener('input', () => {
-      showStatus('Cambios sin guardar...');
-    });
-    // --- INIT ---
-    window.onload = loadRepo;
-  </script>
 </body>
 </html>
