@@ -2,315 +2,504 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Mundo Oculto Oficial</title>
+  <title>Panel Git Landa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --menu-bg: #27293d;
+      --menu-active: #5f72bd;
+      --menu-hover: #35365a;
+      --main-bg: linear-gradient(120deg,#6e44ff 0%,#ff6e91 100%);
+      --panel-bg: #f9f9fb;
+      --accent: #ffbe76;
+      --btn: linear-gradient(90deg,#6e44ff 0%,#ff6e91 100%);
+      --console-bg: #15131e;
+      --console-txt: #f9f9fb;
+      --radius: 14px;
+      --shadow: 0 2px 14px 0 rgba(110,68,255,0.13);
+      --icon-size: 22px;
+    }
     body {
       margin: 0;
-      background: #181825;
-      color: #e0e0e0;
       font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--main-bg);
+      min-height: 100vh;
+      color: #27293d;
+      transition: background .3s;
     }
-    .menu-hamburguesa {
-      position: fixed;
-      top: 0; left: 0;
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    /* MENÚ LATERAL */
+    .sidebar {
+      background: var(--menu-bg);
       width: 220px;
-      height: 100%;
-      background: #fff;
-      color: #232136;
-      box-shadow: 2px 0 18px #000a;
-      transform: translateX(-220px);
-      transition: .3s cubic-bezier(.77,.2,.05,1.0);
-      z-index: 1000;
+      min-width: 180px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding-top: 26px;
-    }
-    .menu-hamburguesa.abierto {
-      transform: translateX(0);
-    }
-    .menu-hamburguesa .menu-foto {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #c77dff;
-      margin-bottom: 8px;
-      box-shadow: 0 2px 10px #c77dff55;
-    }
-    .menu-hamburguesa .menu-titulo {
-      font-size: 1em;
-      color: #c77dff;
-      margin-bottom: 16px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      text-align: center;
-    }
-    .menu-lista {
-      list-style: none;
       padding: 0;
-      margin: 0;
-      width: 90%;
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 2;
     }
-    .menu-lista li {
-      margin: 12px 0;
+    .sidebar .logo {
+      text-align: center;
+      font-size: 1.7em;
+      font-weight: bold;
+      color: var(--accent);
+      padding: 32px 0 28px 0;
+      letter-spacing: 2px;
+      font-family: 'Segoe UI Semibold', Arial, sans-serif;
+      text-shadow: 0 2px 8px #0002;
     }
-    .menu-lista button {
-      width: 100%;
+    .menu {
+      flex: 1;
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 16px 32px;
+      font-size: 1.08em;
+      color: #ccc;
       background: none;
-      color: #232136;
       border: none;
-      padding: 10px 0;
-      font-size: 1.09em;
-      text-align: left;
+      outline: none;
       cursor: pointer;
-      border-radius: 8px;
-      transition: background .2s, color .2s;
+      border-left: 4px solid transparent;
+      transition: background .15s,color .18s,border .15s;
+      font-weight: 500;
     }
-    .menu-lista button:hover, .menu-lista button.active {
-      background: #c77dff22;
-      color: #c77dff;
-    }
-    .hamburguesa-icono {
-      position: fixed;
-      top: 18px;
-      left: 18px;
-      z-index: 2001;
-      width: 38px;
-      height: 38px;
-      background: #fff;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 10px #23213699;
-      flex-direction: column;
-    }
-    .hamburguesa-icono span {
-      display: block;
-      width: 6px;
-      height: 6px;
-      background: #c77dff;
-      margin: 3px 0;
-      border-radius: 50%;
-      box-shadow: 0 1px 2px #23213644;
-    }
-    .contenido {
-      max-width: 430px;
-      margin: 100px auto 0 auto;
-      padding: 0 6vw;
-      min-height: 60vh;
-      transition: .2s;
-      text-align: center;
-    }
-    .principal-foto {
-      width: 110px;
-      height: 110px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 4px solid #c77dff;
-      box-shadow: 0 2px 16px #c77dff44;
-      margin-bottom: 18px;
-      margin-top: 24px;
-    }
-    .principal-nombre {
-      font-size: 2.2em;
-      color: #c77dff;
-      margin-bottom: 34px;
-      margin-top: 12px;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-    .btn-comunidad {
+    .menu-btn .icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
       display: inline-block;
-      background: linear-gradient(90deg,#25d366 40%,#128c7e 100%);
-      color: #fff;
-      font-weight: bold;
-      padding: 18px 38px;
+      text-align: center;
       font-size: 1.2em;
-      border: none;
-      border-radius: 50px;
-      text-decoration: none;
-      transition: background 0.2s;
-      box-shadow: 0 2px 14px #25d36655;
-      cursor: pointer;
+    }
+    .menu-btn.active,
+    .menu-btn:hover {
+      background: var(--menu-hover);
+      color: var(--accent);
+      border-left: 4px solid var(--menu-active);
+    }
+    /* MAIN PANEL */
+    .main {
+      flex: 1;
+      background: var(--panel-bg);
+      min-height: 100vh;
+      padding: 0;
+      transition: background .3s;
+      position: relative;
+      z-index: 1;
+      box-shadow: var(--shadow);
+      border-radius: 0 0 0 var(--radius);
+    }
+    .panel-section {display: none; padding: 36px 6vw 38px 6vw;}
+    .panel-section.active {display: block;}
+    /* PANEL DE CONTROL */
+    .dashboard {
+      text-align: left;
+      margin-top: 10px;
+      max-width: 760px;
+      margin-left: 10px;
+    }
+    .dashboard h1 {
+      font-size: 2.2em;
+      margin-bottom: 19px;
+      color: #6e44ff;
+      letter-spacing: 1.1px;
+      font-weight: bold;
+    }
+    .dashboard .card {
+      background: linear-gradient(120deg,#fff68566 0%,#ff6e9111 100%);
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+      padding: 24px 30px 19px 30px;
+      margin-bottom: 22px;
+      color: #27293d;
+      font-size: 1.12em;
+      line-height: 1.6em;
+      border: 1.2px solid #fff4;
+    }
+    /* SERVIDORES */
+    .servers-wrap {
+      max-width: 720px;
+      margin-left: 10px;
       margin-top: 16px;
-      margin-bottom: 18px;
     }
-    .btn-comunidad:hover {
-      background: linear-gradient(90deg,#128c7e 40%,#25d366 100%);
-      letter-spacing: 2px;
-    }
-    .oculto { display: none; }
-    /* Redes sociales */
-    .redes-botones {
+    .server-form {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 32px 30px 12px 30px;
+      margin-bottom: 22px;
+      border: 1.5px solid #6e44ff22;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      gap: 18px;
+      max-width: 430px;
+    }
+    .server-form label {
+      font-weight: 500;
+      color: #6e44ff;
+      margin-bottom: 6px;
+      font-size: 1.06em;
+    }
+    .server-form input, .server-form select {
+      padding: 11px 10px;
+      border-radius: 9px;
+      border: 1.2px solid #6e44ff44;
+      font-size: 1.08em;
+      background: #f7f8fa;
+      width: 100%;
+      margin-bottom: 4px;
+      color: #27293d;
+    }
+    .server-form button {
+      background: var(--btn);
+      color: #fff;
+      border: none;
+      padding: 13px 0;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1.12em;
+      margin-top: 14px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background .18s;
+    }
+    .server-form button:disabled {filter: grayscale(.9) brightness(.9);}
+    /* SERVERS CARDS */
+    .servers-list {
+      display: flex;
       gap: 22px;
-      margin-top: 40px;
-      margin-bottom: 36px;
+      flex-wrap: wrap;
+      margin-top: 28px;
     }
-    .redes-botones a {
-      display: inline-block;
-      width: 170px;
-      background: #c77dff;
-      color: #232136;
+    .server-card {
+      background: linear-gradient(120deg,#fff685 0%,#ff6e91 100%);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      padding: 24px 28px 15px 28px;
+      min-width: 240px;
+      max-width: 340px;
+      color: #27293d;
+      margin-bottom: 18px;
+      border: 1.3px solid #6e44ff33;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .server-card .name {
+      font-size: 1.23em;
       font-weight: bold;
+      color: #6e44ff;
+      margin-bottom: 6px;
+    }
+    .server-card .info {font-size: 1.07em;}
+    .server-card .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 9px;
+    }
+    .server-card .actions button {
+      flex: 1;
+      background: var(--btn);
+      color: #fff;
+      border: none;
+      padding: 9px 0;
+      border-radius: 7px;
+      font-weight: 500;
+      font-size: 1em;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background .18s;
+    }
+    .server-card .actions button.delete {background: #ff6e91;}
+    /* CONSOLA */
+    .console-wrap {
+      background: var(--console-bg);
+      color: var(--console-txt);
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+      padding: 24px 18px 13px 18px;
+      max-width: 700px;
+      margin-left: 10px;
+      margin-top: 18px;
+      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
       font-size: 1.15em;
-      border-radius: 48px;
-      padding: 16px 0;
-      text-decoration: none;
-      box-shadow: 0 2px 10px #c77dff44;
-      transition: background .2s, color .2s;
-      text-align: center;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .redes-botones a:hover {
-      background: #232136;
-      color: #c77dff;
-      border: 2px solid #c77dff;
-    }
-    /* CEO */
-    .ceo-foto {
-      width: 110px;
-      height: 110px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 4px solid #c77dff;
-      margin: 28px 0 14px 0;
-      box-shadow: 0 2px 18px #c77dff44;
-    }
-    .ceo-nombre {
-      font-size: 2em;
-      color: #c77dff;
-      font-weight: bold;
-      margin-bottom: 10px;
-      letter-spacing: 1px;
-    }
-    /* Bots */
-    .bots-lista {
-      margin: 42px 0 34px 0;
-      padding: 0;
-      list-style: none;
+    .console-title {
+      color: #fff685;
       font-size: 1.15em;
-      color: #c77dff;
+      margin-bottom: 7px;
       font-weight: bold;
     }
-    /* Animación fondo */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: radial-gradient(circle at 18% 22%, #c77dff22 0%, #181825 70%);
-      z-index: -1;
+    .console-output {
+      flex: 1;
+      overflow-y: auto;
+      background: #15131e;
+      border-radius: 8px;
+      padding: 9px 12px;
+      margin-bottom: 9px;
+      font-size: 1.09em;
+      min-height: 140px;
+      max-height: 220px;
     }
-    @media (max-width: 600px) {
-      .contenido { padding: 0 2vw;}
-      .principal-nombre { font-size: 1.2em; }
-      .menu-hamburguesa { width: 77vw; transform: translateX(-77vw);}
-      .menu-hamburguesa.abierto { transform: translateX(0);}
+    .console-input-area {
+      display: flex;
+      gap: 8px;
+      margin-top: 3px;
     }
+    .console-input {
+      flex: 1;
+      background: #232946;
+      color: #fff;
+      border: 1.2px solid #fff68555;
+      border-radius: 7px;
+      padding: 10px 10px;
+      font-size: 1.04em;
+      font-family: inherit;
+      outline: none;
+    }
+    .console-btn {
+      background: var(--btn);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 7px;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background .18s;
+    }
+    .console-btn:hover {background: #fff685;color:var(--console-bg);}
+    /* RESPONSIVE */
+    @media (max-width:900px) {
+      .layout {flex-direction: column;}
+      .sidebar {width:100vw;min-width:0;flex-direction:row;padding:0;}
+      .main {border-radius:0;}
+    }
+    @media (max-width:600px){
+      .panel-section {padding: 12px 2vw 18px 2vw;}
+      .console-wrap,.servers-wrap {margin-left:0;}
+    }
+    ::-webkit-scrollbar{width:9px; background: #3584e4;}
+    ::-webkit-scrollbar-thumb{background: #6e44ff55; border-radius:6px;}
   </style>
 </head>
 <body>
-  <!-- Menú hamburguesa -->
-  <div class="hamburguesa-icono" id="abrirMenu" onclick="abrirMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-  <nav class="menu-hamburguesa" id="menuHamburguesa">
-    <img src="https://qu.ax/Xzyqi.jpg" alt="Foto Dash Mundo Oculto" class="menu-foto">
-    <div class="menu-titulo">Dash Mundo Oculto oficial</div>
-    <ul class="menu-lista">
-      <li><button onclick="mostrarSeccion('principal')" id="btnPrincipal">Principal</button></li>
-      <li><button onclick="mostrarSeccion('redes')" id="btnRedes">Redes Sociales</button></li>
-      <li><button onclick="mostrarSeccion('info')" id="btnInfo">Información</button></li>
-      <li><button onclick="mostrarSeccion('ceo')" id="btnCeo">CEO principal</button></li>
-      <li><button onclick="mostrarSeccion('bots')" id="btnBots">Bots</button></li>
-    </ul>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="logo">Git Landa</div>
+    <div class="menu">
+      <button class="menu-btn active" id="menu-panel" onclick="setSection('panel')">
+        <span class="icon">🏠</span> Panel de control
+      </button>
+      <button class="menu-btn" id="menu-servers" onclick="setSection('servers')">
+        <span class="icon">🖥️</span> Servidores
+      </button>
+    </div>
   </nav>
-
-  <main>
-    <!-- Página principal -->
-    <section id="principal" class="contenido">
-      <img src="https://qu.ax/uRWlM.jpg" alt="Foto de perfil Comunidad Mundo Oculto" class="principal-foto">
-      <div class="principal-nombre">Mundo Oculto Oficial</div>
-      <a href="https://chat.whatsapp.com/HuKxDT6DPOT9igt7gRMGMT?mode=ac_t" class="btn-comunidad" target="_blank">
-        Unirme a la comunidad
-      </a>
-    </section>
-
-    <!-- Sección Redes -->
-    <section id="redes" class="contenido oculto">
-      <h2 style="color:#c77dff;">Redes sociales</h2>
-      <div class="redes-botones">
-        <a href="https://youtube.com/shorts/8AJdBB9x2p8?feature=shared" target="_blank">YouTube</a>
-        <a href="https://www.instagram.com/stories/mundo_oculto01oficial/3651310085141239944?igsh=MWdxcndrbm1vazF5YQ==" target="_blank">Instagram</a>
+  <main class="main">
+    <!-- PANEL DE CONTROL -->
+    <section class="panel-section active" id="section-panel">
+      <div class="dashboard">
+        <h1>Panel de control</h1>
+        <div class="card">
+          Bienvenido a tu Panel de control. Desde aquí puedes gestionar tus servidores, acceder a la consola interactiva y administrar tu espacio personal de Git Landa.
+        </div>
+        <div class="card">
+          <b>¿Qué puedes hacer?</b><br>
+          <ul>
+            <li>Crear y administrar servidores.</li>
+            <li>Entrar a una consola interactiva por cada servidor.</li>
+            <li>Eliminar servidores que ya no uses.</li>
+            <li>Todo se guarda automáticamente en tu navegador.</li>
+          </ul>
+        </div>
       </div>
     </section>
-
-    <!-- Sección Información -->
-    <section id="info" class="contenido oculto">
-      <h2 style="color:#c77dff;">Información</h2>
-      <p>
-        ¡Bienvenido a <strong>Mundo Oculto Oficial</strong>!<br>
-        Somos una comunidad nocturna de WhatsApp donde encontrarás <b>bots exclusivos</b>, herramientas, soporte, novedades y mucho más.<br>
-        Únete y descubre todo lo que tenemos para ti: ayuda, diversión, automatización y una comunidad activa.<br><br>
-        <em>Explora el <b>Mundo Oculto</b> y lleva tu WhatsApp al siguiente nivel.</em>
-      </p>
+    <!-- SERVIDORES -->
+    <section class="panel-section" id="section-servers">
+      <div class="servers-wrap">
+        <form class="server-form" id="serverForm" onsubmit="crearServidor(event)">
+          <label>Nombre del servidor</label>
+          <input id="sv-nombre" maxlength="16" required placeholder="Ej: MiServidor01">
+          <label>Ubicación</label>
+          <select id="sv-ubicacion" required>
+            <option value="">Selecciona</option>
+            <option>Argentina</option>
+            <option>Chile</option>
+            <option>México</option>
+            <option>España</option>
+            <option>Estados Unidos</option>
+          </select>
+          <label>Tipo de servidor</label>
+          <select id="sv-tipo" required>
+            <option value="">Selecciona</option>
+            <option>VPS</option>
+            <option>Dedicado</option>
+            <option>Compartido</option>
+          </select>
+          <label>Usuario administrador</label>
+          <input id="sv-admin" maxlength="16" required placeholder="Ej: admin">
+          <label>Contraseña</label>
+          <input type="password" id="sv-pass" maxlength="16" required placeholder="Contraseña segura">
+          <button type="submit">Crear servidor</button>
+        </form>
+        <div class="servers-list" id="serversList"></div>
+      </div>
     </section>
-
-    <!-- Sección CEO -->
-    <section id="ceo" class="contenido oculto">
-      <h2 style="color:#c77dff;">CEO Principal</h2>
-      <img src="https://qu.ax/hKeLL.jpg" alt="MATTHEW CEO" class="ceo-foto">
-      <div class="ceo-nombre">MATTHEW</div>
-    </section>
-
-    <!-- Sección Bots -->
-    <section id="bots" class="contenido oculto">
-      <h2 style="color:#c77dff;">Bots</h2>
-      <ul class="bots-lista">
-        <li>Deymoon Club</li>
-        <li>Neko's club</li>
-      </ul>
+    <!-- CONSOLA -->
+    <section class="panel-section" id="section-console">
+      <div class="console-wrap">
+        <div class="console-title" id="consoleTitle"></div>
+        <div class="console-output" id="consoleOutput"></div>
+        <div class="console-input-area">
+          <input class="console-input" id="consoleInput" placeholder="Escribe un comando..." autocomplete="off" onkeydown="if(event.key==='Enter'){enviarComando();return false;}">
+          <button class="console-btn" onclick="enviarComando()">Enviar</button>
+        </div>
+      </div>
     </section>
   </main>
+</div>
+<script>
+  // ESTADO LOCALSTORAGE
+  let app = {
+    section: "panel",
+    servers: [],
+    consoleHistory: {}
+  };
 
-  <script>
-    const menu = document.getElementById('menuHamburguesa');
-    const icono = document.getElementById('abrirMenu');
-    // Mostrar/ocultar menú hamburguesa
-    function abrirMenu() { menu.classList.toggle('abierto'); }
-    // Cierra menú al hacer click fuera del menú
-    document.addEventListener('click', function(event){
-      if(!menu.contains(event.target) && !icono.contains(event.target)){
-        menu.classList.remove('abierto');
-      }
-    });
-    // Navegación entre secciones
-    function mostrarSeccion(id){
-      for(const sec of ['principal','redes','info','ceo','bots']){
-        document.getElementById(sec).classList.add('oculto');
-      }
-      document.getElementById(id).classList.remove('oculto');
-      menu.classList.remove('abierto');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Marcar activo en el menú
-      document.querySelectorAll('.menu-lista button').forEach(btn => btn.classList.remove('active'));
-      switch(id) {
-        case 'principal': document.getElementById('btnPrincipal').classList.add('active'); break;
-        case 'redes': document.getElementById('btnRedes').classList.add('active'); break;
-        case 'info': document.getElementById('btnInfo').classList.add('active'); break;
-        case 'ceo': document.getElementById('btnCeo').classList.add('active'); break;
-        case 'bots': document.getElementById('btnBots').classList.add('active'); break;
-      }
+  function guardarApp() {
+    localStorage.setItem("gitlanda-app", JSON.stringify(app));
+  }
+
+  function cargarApp() {
+    let data = localStorage.getItem("gitlanda-app");
+    if (data) app = JSON.parse(data);
+  }
+
+  // NAVEGACIÓN
+  function setSection(sec) {
+    app.section = sec;
+    guardarApp();
+    document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(`section-${sec}`).classList.add('active');
+    document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`menu-${sec}`).classList.add('active');
+    if (sec === "servers") renderServers();
+    if (sec === "console") renderConsole();
+  }
+
+  // SERVIDORES
+  function crearServidor(e) {
+    e.preventDefault();
+    let nombre = document.getElementById('sv-nombre').value.trim();
+    let ubicacion = document.getElementById('sv-ubicacion').value;
+    let tipo = document.getElementById('sv-tipo').value;
+    let admin = document.getElementById('sv-admin').value.trim();
+    let pass = document.getElementById('sv-pass').value;
+    if (!nombre || !ubicacion || !tipo || !admin || !pass) return;
+
+    // Evita duplicados
+    if (app.servers.some(s => s.nombre === nombre)) {
+      alert("Ya existe un servidor con ese nombre.");
+      return;
     }
-    mostrarSeccion('principal');
-  </script>
+
+    let servidor = {
+      id: Date.now(),
+      nombre,
+      ubicacion,
+      tipo,
+      admin,
+      pass
+    };
+    app.servers.push(servidor);
+    guardarApp();
+    document.getElementById('serverForm').reset();
+    renderServers();
+  }
+
+  function renderServers() {
+    let cont = document.getElementById('serversList');
+    cont.innerHTML = "";
+    if (app.servers.length === 0) {
+      cont.innerHTML = `<div class="server-card" style="text-align:center;">
+        <div class="name">No hay servidores creados</div>
+        <div class="info">Crea un servidor para empezar.</div>
+      </div>`;
+      return;
+    }
+    app.servers.forEach((s, i) => {
+      let card = document.createElement('div');
+      card.className = "server-card";
+      card.innerHTML = `<div class="name">${s.nombre}</div>
+        <div class="info"><b>Ubicación:</b> ${s.ubicacion}</div>
+        <div class="info"><b>Tipo:</b> ${s.tipo}</div>
+        <div class="info"><b>Admin:</b> ${s.admin}</div>
+        <div class="info"><b>ID:</b> ${s.id}</div>
+        <div class="actions">
+          <button onclick="entrarConsola('${s.id}')">Entrar</button>
+          <button class="delete" onclick="eliminarServidor('${s.id}')">Eliminar</button>
+        </div>`;
+      cont.appendChild(card);
+    });
+  }
+
+  function eliminarServidor(id) {
+    if (!confirm("¿Seguro que quieres eliminar este servidor?")) return;
+    app.servers = app.servers.filter(s => s.id != id);
+    delete app.consoleHistory[id];
+    guardarApp();
+    renderServers();
+  }
+
+  // CONSOLA
+  let currentServerId = null;
+  function entrarConsola(id) {
+    currentServerId = id;
+    setSection('console');
+    renderConsole();
+  }
+  function renderConsole() {
+    let server = app.servers.find(s => s.id == currentServerId);
+    document.getElementById('consoleTitle').innerText = server ? `Consola servidor: ${server.nombre}` : "Consola";
+    let output = document.getElementById('consoleOutput');
+    let history = app.consoleHistory[currentServerId] || [];
+    output.innerHTML = history.map(line => `<div>> ${line}</div>`).join("");
+    document.getElementById('consoleInput').value = "";
+    document.getElementById('consoleInput').focus();
+  }
+  function enviarComando() {
+    let input = document.getElementById('consoleInput');
+    let cmd = input.value.trim();
+    if (!cmd) return;
+    if (!app.consoleHistory[currentServerId]) app.consoleHistory[currentServerId] = [];
+    app.consoleHistory[currentServerId].push(cmd);
+    guardarApp();
+    renderConsole();
+  }
+
+  // INICIO
+  window.onload = function() {
+    cargarApp();
+    setSection(app.section || "panel");
+  }
+</script>
 </body>
 </html>
