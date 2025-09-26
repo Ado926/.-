@@ -5,12 +5,21 @@
   <title>NavegadorD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {
+    html, body {
       background: #121212;
       color: #0F0;
       font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    body {
       min-height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      position: relative;
     }
     .verdeNeon {
       background: #39ff14;
@@ -32,7 +41,7 @@
       background: #181818;
       padding: 8px 16px;
       position: fixed;
-      width: 100%;
+      width: 100vw;
       top: 0;
       left: 0;
       z-index: 100;
@@ -53,41 +62,50 @@
       cursor: pointer;
       margin-left: auto;
     }
-    .menu {
-      position: fixed;
-      top: 0;
-      left: -220px;
-      width: 220px;
-      height: 100%;
-      background: #181818;
-      color: #0F0;
-      box-shadow: 2px 0 10px #0008;
-      transition: left 0.25s;
-      z-index: 200;
+    .buscador {
       display: flex;
-      flex-direction: column;
-      padding-top: 60px;
+      align-items: center;
+      gap: 8px;
+      margin-left: 10px;
+      flex: 1 1 auto;
     }
-    .menu.open {
-      left: 0;
-    }
-    .menu a {
-      color: #39ff14;
-      padding: 18px 24px;
-      text-decoration: none;
-      font-size: 1.1em;
-      border-bottom: 1px solid #222;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .menu a:hover {
+    .buscador input {
       background: #222;
+      color: #39ff14;
+      border: none;
+      padding: 10px;
+      border-radius: 7px;
+      font-size: 1em;
+      width: 220px;
+      outline: none;
+      box-shadow: 0 2px 8px #0006;
+    }
+    main {
+      position: absolute;
+      top: 56px;
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 56px);
+      overflow: hidden;
+      background: #121212;
+    }
+    iframe {
+      background: #222;
+      border: none;
+      width: 100vw;
+      height: 100%;
+      border-radius: 0;
+      margin: 0;
+      display: none;
+    }
+    iframe.active {
+      display: block;
     }
     .pantalla {
       display: none;
       padding: 24px 10px;
-      min-height: 70vh;
-      margin-top: 56px;
+      min-height: calc(100vh - 56px);
+      overflow-y: auto;
     }
     .pantalla.active {
       display: block;
@@ -127,24 +145,35 @@
       width: 40px;
       height: 40px;
     }
-    .buscador {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 28px auto 18px auto;
-      max-width: 400px;
-      justify-content: center;
-    }
-    .buscador input {
-      background: #222;
-      color: #39ff14;
-      border: none;
-      padding: 10px;
-      border-radius: 7px;
-      font-size: 1em;
+    .menu {
+      position: fixed;
+      top: 0;
+      left: -220px;
       width: 220px;
-      outline: none;
-      box-shadow: 0 2px 8px #0006;
+      height: 100%;
+      background: #181818;
+      color: #0F0;
+      box-shadow: 2px 0 10px #0008;
+      transition: left 0.25s;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+    }
+    .menu.open {
+      left: 0;
+    }
+    .menu a {
+      color: #39ff14;
+      padding: 18px 24px;
+      text-decoration: none;
+      font-size: 1.1em;
+      border-bottom: 1px solid #222;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .menu a:hover {
+      background: #222;
     }
     .historial-lista {
       background: #191919;
@@ -209,29 +238,15 @@
       word-break: break-all;
       margin-top: 2px;
     }
-    /* IFRAME EN MODO FULLSCREEN */
-    .visor-fullscreen {
-      position: fixed;
-      top: 56px;
-      left: 0;
-      width: 100vw;
-      height: calc(100vh - 56px);
-      border: none;
-      margin: 0;
-      z-index: 99;
-      background: #222;
-      display: block;
-      border-radius: 0;
-      box-shadow: none;
-    }
-    iframe {
-      display: none;
-    }
   </style>
 </head>
 <body>
   <header>
     <span class="lupa" onclick="toggleBuscador()" title="Buscar">&#128269;</span>
+    <div class="buscador" id="buscador">
+      <input id="urlInput" type="text" placeholder="Escribe una URL o término..." spellcheck="false" autofocus>
+      <button class="verdeNeon" onclick="buscarWeb()">Buscar</button>
+    </div>
     <button class="menu-btn" onclick="toggleMenu()">&#9776;</button>
   </header>
   <!-- MENÚ HAMBURGUESA -->
@@ -240,7 +255,6 @@
     <a onclick="mostrarPantalla('pestañas')">Pestañas</a>
     <a onclick="mostrarPantalla('bienvenida')">Inicio</a>
   </nav>
-  <!-- PANTALLAS -->
   <main>
     <!-- Bienvenida -->
     <section class="pantalla bienvenida active" id="bienvenida">
@@ -259,11 +273,6 @@
           <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/snapchat.svg" alt="Snapchat">
         </div>
       </div>
-    </section>
-    <!-- Buscador -->
-    <section class="buscador" id="buscador" style="display:none;">
-      <input id="urlInput" type="text" placeholder="Escribe una URL o término..." spellcheck="false" autofocus>
-      <button class="verdeNeon" onclick="buscarWeb()">Buscar</button>
     </section>
     <!-- Historial -->
     <section class="pantalla" id="historial">
@@ -287,7 +296,6 @@
       document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
       document.getElementById(pantallaId).classList.add('active');
       viewerSalir();
-      document.getElementById('buscador').style.display = 'none';
       closeMenu();
     }
     // ---- MENÚ HAMBURGUESA ----
@@ -297,12 +305,9 @@
     function closeMenu() {
       document.getElementById('menu').classList.remove('open');
     }
-    // ---- BUSCADOR ----
+    // ---- BUSCADOR (lupa muestra foco en input) ----
     function toggleBuscador() {
-      document.getElementById('buscador').style.display = 'flex';
       document.getElementById('urlInput').focus();
-      document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
-      viewerSalir();
       closeMenu();
     }
     function buscarWeb() {
@@ -316,13 +321,12 @@
       mostrarWeb(url);
       agregarHistorial(url);
     }
-    // ---- MOSTRAR WEB EN FULLSCREEN ----
+    // ---- MOSTRAR WEB ----
     function mostrarWeb(url) {
       let iframe = document.getElementById('viewer');
       iframe.src = url;
-      iframe.className = "visor-fullscreen";
+      iframe.className = "active";
       document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
-      document.getElementById('buscador').style.display = 'none';
       closeMenu();
     }
     function viewerSalir() {
