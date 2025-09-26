@@ -1,253 +1,157 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
+  <title>Navegador LocalStorage</title>
   <meta charset="UTF-8">
-  <title>Estado Kurayami Hosting</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #0a1a34 60%, #1e3c72 100%);
-      color: #fff;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    .video-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: -1;
-      overflow: hidden;
-    }
-    .video-bg video {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      opacity: 0.22;
-      filter: blur(2px) brightness(0.9) contrast(1.2);
-    }
-    header {
-      padding: 18px 24px 0 24px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-    }
-    .menu-icon {
-      cursor: pointer;
-      display: inline-block;
-      width: 44px;
-      height: 44px;
-      position: relative;
-    }
-    .menu-icon span {
-      display: block;
-      width: 8px;
-      height: 8px;
-      background: #fff;
-      border-radius: 50%;
-      margin: 6px auto;
-    }
-    .menu {
-      position: fixed;
-      top: 16px; /* Un poco abajo del top */
-      right: 24px;
-      width: 210px;
-      background: rgba(20, 30, 70, 0.97);
-      border-radius: 14px;
-      box-shadow: -2px 0 18px rgba(0,0,0,0.18);
-      transform: scaleY(0);
-      transform-origin: top right;
-      transition: transform 0.3s;
-      z-index: 999;
-      padding: 18px 18px 18px 24px;
-      min-height: 0;
-    }
-    .menu.open {
-      transform: scaleY(1);
-      min-height: 210px;
-    }
-    .menu a, .menu div {
-      display: block;
-      color: #fff;
-      text-decoration: none;
-      font-size: 1.08em;
-      margin: 18px 0;
-      cursor: pointer;
-      padding: 7px 6px;
-      border-radius: 6px;
-      transition: background .2s;
-    }
-    .menu a:hover, .menu div:hover {
-      background: #253d6c;
-    }
-    main {
-      max-width: 520px;
-      margin: 70px auto 0 auto;
-      background: rgba(14, 32, 70, 0.86);
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-      padding: 32px 24px;
-      min-height: 340px;
-      animation: fadeIn 0.8s;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.98);}
-      to { opacity: 1; transform: scale(1);}
-    }
-    .estado-box {
-      text-align: center;
-      margin: 32px 0 0 0;
-      padding: 18px 0 0 0;
-      border-top: 1px solid #394d85;
-    }
-    .estado-box h2 {
-      margin-bottom: 18px;
-      font-size: 1.3em;
-      letter-spacing: 1px;
-      color: #3ca1ff;
-      text-shadow: 0 2px 12px #1118;
-    }
-    .estado-item {
-      font-size: 1.12em;
-      margin: 10px 0;
-      color: #fff;
-    }
-    /* Barras animadas estado de servicio */
-    .status-bars {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin: 36px 0 0 0;
-      height: 60px;
-      padding: 0 16px;
-    }
-    .barra {
-      width: 30px;
-      background: linear-gradient(180deg, #1e90ff 80%, #60b0ff 100%);
-      border-radius: 9px 9px 0 0;
-      box-shadow: 0 2px 10px #1e90ff55;
-      animation: moveBar 1.6s infinite ease-in-out;
-      margin: 0 4px;
-      opacity: 0.95;
-    }
-    .status-bars .barra:nth-child(1) { height: 40px; animation-delay: 0s;}
-    .status-bars .barra:nth-child(2) { height: 54px; animation-delay: 0.3s;}
-    .status-bars .barra:nth-child(3) { height: 32px; animation-delay: 0.6s;}
-    .status-bars .barra:nth-child(4) { height: 48px; animation-delay: 0.9s;}
-    .status-bars .barra:nth-child(5) { height: 36px; animation-delay: 1.2s;}
-    .status-bars .barra:nth-child(6) { height: 50px; animation-delay: 1.5s;}
-    @keyframes moveBar {
-      0%, 100% { transform: scaleY(1);}
-      50% { transform: scaleY(1.4);}
-    }
-    .section {
-      display: none;
-      animation: fadeIn 0.6s;
-    }
-    .section.active {
-      display: block;
-    }
-    .redes-link {
-      color: #4eb2ff;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    .dashboard-link {
-      color: #7ad6ff;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    @media (max-width: 700px) {
-      main { max-width: 98vw; padding: 20px 6px;}
-      .status-bars {padding: 0 2px;}
-      .barra { width: 20px; margin: 0 2px;}
-      .menu { width: 90vw; right: 5vw; padding-left: 10px;}
-      .menu-icon { width: 38px; height: 38px;}
-    }
+    body { font-family: sans-serif; }
+    #tabs button { margin: 2px; }
+    #viewer { width: 100%; height: 400px; border: 1px solid #ccc; }
+    #urlInput { width: 60%; }
+    .section { margin-bottom: 20px; }
+    h1 { font-size: 1.5em; }
+    button { cursor: pointer; }
   </style>
 </head>
 <body>
-  <div class="video-bg">
-    <video src="https://www.w3schools.com/howto/rain.mp4" autoplay loop muted></video>
+  <h1>Navegador Web LocalStorage</h1>
+
+  <div class="section">
+    <div id="tabs"></div>
+    <input id="urlInput" placeholder="URL aquí..." />
+    <button onclick="openTab()">Abrir pestaña</button>
+    <button onclick="addFavorite()">Favorito</button>
+    <button onclick="newTab()">Nueva pestaña</button>
+    <button onclick="closeTab()">Cerrar pestaña</button>
   </div>
-  <header>
-    <div class="menu-icon" onclick="toggleMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  </header>
-  <nav class="menu" id="menu">
-    <div onclick="showSection('inicio')">Inicio</div>
-    <div onclick="showSection('estado')">Estado de servicios</div>
-    <div onclick="showSection('redes')">Redes</div>
-    <div onclick="showSection('anuncio')">Anuncio</div>
-  </nav>
-  <main>
-    <!-- INICIO -->
-    <section id="inicio" class="section active">
-      <h1 style="text-align:center; color:#60b0ff;">¡Bienvenido al estado de servicios de Kurayami Host!</h1>
-      <p style="margin-top:19px; font-size:1.13em;">
-        Aquí puedes visualizar toda la actividad de nuestro hosting y también las próximas actualizaciones.<br>
-        Puedes seguirnos en nuestras redes.
-      </p>
-    </section>
-    <!-- ESTADO DE SERVICIOS -->
-    <section id="estado" class="section">
-      <div class="estado-box">
-        <h2>ESTADO DE KURAYAMI HOSTING</h2>
-        <div class="estado-item">Usuarios: <b>54</b></div>
-        <div class="estado-item">Servidores: <b>24</b></div>
-        <div class="estado-item">Pagos: <b>2</b></div>
-        <!-- Barras animadas debajo de los datos -->
-        <div class="status-bars">
-          <div class="barra"></div>
-          <div class="barra"></div>
-          <div class="barra"></div>
-          <div class="barra"></div>
-          <div class="barra"></div>
-          <div class="barra"></div>
-        </div>
-      </div>
-    </section>
-    <!-- REDES -->
-    <section id="redes" class="section">
-      <h2 style="color:#4eb2ff;">Redes</h2>
-      <div style="margin-top: 22px;">
-        Canal oficial: <a class="redes-link" href="https://whatsapp.com/channel/0029VbAa5sNCsU9Hlzsn651S" target="_blank">aquí</a>
-      </div>
-      <div style="margin-top: 14px;">
-        Dashboard: <a class="dashboard-link" href="https://dash.kurayamihost.dpdns.org/home" target="_blank">¡aquí!</a>
-      </div>
-    </section>
-    <!-- ANUNCIO -->
-    <section id="anuncio" class="section">
-      <h2 style="color:#c5dafd;">Anuncio</h2>
-      <div style="margin-top: 22px; font-size:1.13em;">
-        A los <b>600 seguidores</b> en el canal regalaremos <b>coins</b>
-      </div>
-    </section>
-  </main>
+
+  <iframe id="viewer"></iframe>
+
+  <div class="section">
+    <h2>Historial</h2>
+    <button onclick="clearHistory()">Borrar historial</button>
+    <ul id="history"></ul>
+  </div>
+  <div class="section">
+    <h2>Favoritos</h2>
+    <button onclick="clearFavorites()">Borrar favoritos</button>
+    <ul id="favorites"></ul>
+  </div>
+
   <script>
-    function toggleMenu() {
-      const menu = document.getElementById('menu');
-      menu.classList.toggle('open');
+    // ----- Data -----
+    let tabs = JSON.parse(localStorage.getItem('tabs') || '[]');
+    let history = JSON.parse(localStorage.getItem('history') || '[]');
+    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    let currentTab = parseInt(localStorage.getItem('currentTab')) || 0;
+
+    function saveAll() {
+      localStorage.setItem('tabs', JSON.stringify(tabs));
+      localStorage.setItem('history', JSON.stringify(history));
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      localStorage.setItem('currentTab', currentTab);
     }
-    function showSection(sectionId) {
-      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-      document.getElementById(sectionId).classList.add('active');
-      document.getElementById('menu').classList.remove('open');
-      window.scrollTo({top:0, behavior:"smooth"});
+
+    // ----- Render -----
+    function renderTabs() {
+      const tabDiv = document.getElementById('tabs');
+      tabDiv.innerHTML = '';
+      tabs.forEach((url, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = url ? url : 'Nueva';
+        btn.style.fontWeight = (i === currentTab) ? 'bold' : 'normal';
+        btn.onclick = () => { currentTab = i; openTab(url); };
+        tabDiv.appendChild(btn);
+      });
     }
-    // Cerrar menú si haces click fuera, pero solo si el menú está abierto y no haces click en el icono ni dentro del menú
-    document.addEventListener('click', function(e) {
-      const menu = document.getElementById('menu');
-      const icon = document.querySelector('.menu-icon');
-      if (menu.classList.contains('open') && !menu.contains(e.target) && !icon.contains(e.target)) {
-        menu.classList.remove('open');
+
+    function renderHistory() {
+      const ul = document.getElementById('history');
+      ul.innerHTML = '';
+      history.slice(-30).reverse().forEach(url => {
+        const li = document.createElement('li');
+        li.textContent = url;
+        li.onclick = () => openTab(url);
+        ul.appendChild(li);
+      });
+    }
+
+    function renderFavorites() {
+      const ul = document.getElementById('favorites');
+      ul.innerHTML = '';
+      favorites.forEach(url => {
+        const li = document.createElement('li');
+        li.textContent = url;
+        li.onclick = () => openTab(url);
+        ul.appendChild(li);
+      });
+    }
+
+    // ----- Actions -----
+    function openTab(url) {
+      url = url || document.getElementById('urlInput').value;
+      if (!url) return;
+      tabs[currentTab] = url;
+      document.getElementById('viewer').src = url;
+      document.getElementById('urlInput').value = url;
+      history.push(url);
+      saveAll();
+      renderTabs();
+      renderHistory();
+      renderFavorites();
+    }
+
+    function addFavorite() {
+      const url = tabs[currentTab];
+      if (url && !favorites.includes(url)) {
+        favorites.push(url);
+        saveAll();
+        renderFavorites();
       }
-    });
+    }
+
+    function newTab() {
+      tabs.push('');
+      currentTab = tabs.length - 1;
+      saveAll();
+      renderTabs();
+      document.getElementById('urlInput').value = '';
+      document.getElementById('viewer').src = '';
+    }
+
+    function closeTab() {
+      if (tabs.length > 1) {
+        tabs.splice(currentTab, 1);
+        currentTab = Math.max(0, currentTab - 1);
+        saveAll();
+        renderTabs();
+        let url = tabs[currentTab];
+        document.getElementById('urlInput').value = url || '';
+        document.getElementById('viewer').src = url || '';
+      }
+    }
+
+    function clearHistory() {
+      history = [];
+      saveAll();
+      renderHistory();
+    }
+
+    function clearFavorites() {
+      favorites = [];
+      saveAll();
+      renderFavorites();
+    }
+
+    // ----- INIT -----
+    if (tabs.length === 0) tabs = [''];
+    renderTabs();
+    renderHistory();
+    renderFavorites();
+    let url = tabs[currentTab] || '';
+    document.getElementById('urlInput').value = url;
+    document.getElementById('viewer').src = url;
+
   </script>
 </body>
 </html>
