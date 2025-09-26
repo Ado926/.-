@@ -31,9 +31,13 @@
       align-items: center;
       background: #181818;
       padding: 8px 16px;
-      position: relative;
-      z-index: 10;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 100;
       box-shadow: 0 2px 8px #000a;
+      height: 56px;
     }
     .lupa {
       font-size: 1.8em;
@@ -59,7 +63,7 @@
       color: #0F0;
       box-shadow: 2px 0 10px #0008;
       transition: left 0.25s;
-      z-index: 20;
+      z-index: 200;
       display: flex;
       flex-direction: column;
       padding-top: 60px;
@@ -83,6 +87,7 @@
       display: none;
       padding: 24px 10px;
       min-height: 70vh;
+      margin-top: 56px;
     }
     .pantalla.active {
       display: block;
@@ -204,18 +209,23 @@
       word-break: break-all;
       margin-top: 2px;
     }
-    iframe {
-      background: #222;
+    /* IFRAME EN MODO FULLSCREEN */
+    .visor-fullscreen {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 56px);
       border: none;
-      width: 100%;
-      height: 420px;
-      border-radius: 10px;
-      margin-top: 14px;
-      box-shadow: 0 2px 14px #0005;
-      display: none;
-    }
-    iframe.active {
+      margin: 0;
+      z-index: 99;
+      background: #222;
       display: block;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    iframe {
+      display: none;
     }
   </style>
 </head>
@@ -255,8 +265,6 @@
       <input id="urlInput" type="text" placeholder="Escribe una URL o término..." spellcheck="false" autofocus>
       <button class="verdeNeon" onclick="buscarWeb()">Buscar</button>
     </section>
-    <!-- Navegador (iframe) -->
-    <iframe id="viewer"></iframe>
     <!-- Historial -->
     <section class="pantalla" id="historial">
       <div class="historial-lista">
@@ -270,13 +278,15 @@
       <h3 style="text-align:center;">Pestañas (miniaturas)</h3>
       <div class="pestañas-grid" id="pestañasGrid"></div>
     </section>
+    <!-- IFRAME VISOR -->
+    <iframe id="viewer"></iframe>
   </main>
   <script>
     // ---- Navegación de pantallas ----
     function mostrarPantalla(pantallaId) {
       document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
       document.getElementById(pantallaId).classList.add('active');
-      document.getElementById('viewer').classList.remove('active');
+      viewerSalir();
       document.getElementById('buscador').style.display = 'none';
       closeMenu();
     }
@@ -292,7 +302,7 @@
       document.getElementById('buscador').style.display = 'flex';
       document.getElementById('urlInput').focus();
       document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
-      document.getElementById('viewer').classList.remove('active');
+      viewerSalir();
       closeMenu();
     }
     function buscarWeb() {
@@ -306,13 +316,19 @@
       mostrarWeb(url);
       agregarHistorial(url);
     }
-    // ---- MOSTRAR WEB ----
+    // ---- MOSTRAR WEB EN FULLSCREEN ----
     function mostrarWeb(url) {
-      document.getElementById('viewer').classList.add('active');
-      document.getElementById('viewer').src = url;
+      let iframe = document.getElementById('viewer');
+      iframe.src = url;
+      iframe.className = "visor-fullscreen";
       document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
       document.getElementById('buscador').style.display = 'none';
       closeMenu();
+    }
+    function viewerSalir() {
+      let iframe = document.getElementById('viewer');
+      iframe.className = "";
+      iframe.src = "";
     }
     function irUrl(url) {
       mostrarWeb(url);
