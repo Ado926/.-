@@ -1,157 +1,388 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>Navegador LocalStorage</title>
   <meta charset="UTF-8">
+  <title>NavegadorD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: sans-serif; }
-    #tabs button { margin: 2px; }
-    #viewer { width: 100%; height: 400px; border: 1px solid #ccc; }
-    #urlInput { width: 60%; }
-    .section { margin-bottom: 20px; }
-    h1 { font-size: 1.5em; }
-    button { cursor: pointer; }
+    body {
+      background: #121212;
+      color: #0F0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .verdeNeon {
+      background: #39ff14;
+      color: #121212;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #39ff1440;
+      transition: background 0.2s;
+    }
+    .verdeNeon:hover {
+      background: #2cff10;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      background: #181818;
+      padding: 8px 16px;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 2px 8px #000a;
+    }
+    .lupa {
+      font-size: 1.8em;
+      color: #39ff14;
+      cursor: pointer;
+      margin-right: 15px;
+    }
+    .menu-btn {
+      background: none;
+      border: none;
+      color: #0F0;
+      font-size: 2em;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .menu {
+      position: fixed;
+      top: 0;
+      left: -220px;
+      width: 220px;
+      height: 100%;
+      background: #181818;
+      color: #0F0;
+      box-shadow: 2px 0 10px #0008;
+      transition: left 0.25s;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+    }
+    .menu.open {
+      left: 0;
+    }
+    .menu a {
+      color: #39ff14;
+      padding: 18px 24px;
+      text-decoration: none;
+      font-size: 1.1em;
+      border-bottom: 1px solid #222;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .menu a:hover {
+      background: #222;
+    }
+    .pantalla {
+      display: none;
+      padding: 24px 10px;
+      min-height: 70vh;
+    }
+    .pantalla.active {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .bienvenida {
+      text-align: center;
+    }
+    .cuadros-sociales {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .cuadro-social {
+      width: 60px;
+      height: 60px;
+      background: #191919;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 5px;
+      box-shadow: 0 2px 8px #0008;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .cuadro-social:hover {
+      background: #232323;
+    }
+    .cuadro-social img {
+      width: 40px;
+      height: 40px;
+    }
+    .buscador {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 28px auto 18px auto;
+      max-width: 400px;
+      justify-content: center;
+    }
+    .buscador input {
+      background: #222;
+      color: #39ff14;
+      border: none;
+      padding: 10px;
+      border-radius: 7px;
+      font-size: 1em;
+      width: 220px;
+      outline: none;
+      box-shadow: 0 2px 8px #0006;
+    }
+    .historial-lista {
+      background: #191919;
+      padding: 16px;
+      border-radius: 10px;
+      max-width: 420px;
+      margin: auto;
+      box-shadow: 0 2px 12px #0008;
+    }
+    .historial-lista ul {
+      padding-left: 0;
+      list-style: none;
+    }
+    .historial-lista li {
+      color: #39ff14;
+      padding: 8px 0;
+      border-bottom: 1px solid #222;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .historial-lista li:hover {
+      background: #232323;
+    }
+    .historial-lista .verdeNeon {
+      margin-top: 14px;
+      width: 100%;
+    }
+    .pestañas-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .pestaña-card {
+      background: #191919;
+      border-radius: 12px;
+      width: 140px;
+      height: 110px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px #0008;
+      cursor: pointer;
+      overflow: hidden;
+      transition: background 0.18s;
+      padding: 6px;
+    }
+    .pestaña-card:hover {
+      background: #232323;
+    }
+    .pestaña-card .favicon {
+      width: 28px;
+      height: 28px;
+      margin-bottom: 6px;
+    }
+    .pestaña-card .url {
+      color: #39ff14;
+      font-size: 0.98em;
+      text-align: center;
+      word-break: break-all;
+      margin-top: 2px;
+    }
+    iframe {
+      background: #222;
+      border: none;
+      width: 100%;
+      height: 420px;
+      border-radius: 10px;
+      margin-top: 14px;
+      box-shadow: 0 2px 14px #0005;
+      display: none;
+    }
+    iframe.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <h1>Navegador Web LocalStorage</h1>
-
-  <div class="section">
-    <div id="tabs"></div>
-    <input id="urlInput" placeholder="URL aquí..." />
-    <button onclick="openTab()">Abrir pestaña</button>
-    <button onclick="addFavorite()">Favorito</button>
-    <button onclick="newTab()">Nueva pestaña</button>
-    <button onclick="closeTab()">Cerrar pestaña</button>
-  </div>
-
-  <iframe id="viewer"></iframe>
-
-  <div class="section">
-    <h2>Historial</h2>
-    <button onclick="clearHistory()">Borrar historial</button>
-    <ul id="history"></ul>
-  </div>
-  <div class="section">
-    <h2>Favoritos</h2>
-    <button onclick="clearFavorites()">Borrar favoritos</button>
-    <ul id="favorites"></ul>
-  </div>
-
+  <header>
+    <span class="lupa" onclick="toggleBuscador()" title="Buscar">&#128269;</span>
+    <button class="menu-btn" onclick="toggleMenu()">&#9776;</button>
+  </header>
+  <!-- MENÚ HAMBURGUESA -->
+  <nav class="menu" id="menu">
+    <a onclick="mostrarPantalla('historial')">Historial</a>
+    <a onclick="mostrarPantalla('pestañas')">Pestañas</a>
+    <a onclick="mostrarPantalla('bienvenida')">Inicio</a>
+  </nav>
+  <!-- PANTALLAS -->
+  <main>
+    <!-- Bienvenida -->
+    <section class="pantalla bienvenida active" id="bienvenida">
+      <h2>Bienvenido al <span style="color:#39ff14;">NavegadorD</span></h2>
+      <div class="cuadros-sociales">
+        <div class="cuadro-social" onclick="irUrl('https://facebook.com')">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook">
+        </div>
+        <div class="cuadro-social" onclick="irUrl('https://youtube.com')">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube">
+        </div>
+        <div class="cuadro-social" onclick="irUrl('https://instagram.com')">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram">
+        </div>
+        <div class="cuadro-social" onclick="irUrl('https://snapchat.com')">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/snapchat.svg" alt="Snapchat">
+        </div>
+      </div>
+    </section>
+    <!-- Buscador -->
+    <section class="buscador" id="buscador" style="display:none;">
+      <input id="urlInput" type="text" placeholder="Escribe una URL o término..." spellcheck="false" autofocus>
+      <button class="verdeNeon" onclick="buscarWeb()">Buscar</button>
+    </section>
+    <!-- Navegador (iframe) -->
+    <iframe id="viewer"></iframe>
+    <!-- Historial -->
+    <section class="pantalla" id="historial">
+      <div class="historial-lista">
+        <h3>Historial</h3>
+        <ul id="historyList"></ul>
+        <button class="verdeNeon" onclick="clearHistory()">Borrar historial</button>
+      </div>
+    </section>
+    <!-- Pestañas -->
+    <section class="pantalla" id="pestañas">
+      <h3 style="text-align:center;">Pestañas (miniaturas)</h3>
+      <div class="pestañas-grid" id="pestañasGrid"></div>
+    </section>
+  </main>
   <script>
-    // ----- Data -----
-    let tabs = JSON.parse(localStorage.getItem('tabs') || '[]');
-    let history = JSON.parse(localStorage.getItem('history') || '[]');
-    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    let currentTab = parseInt(localStorage.getItem('currentTab')) || 0;
-
-    function saveAll() {
-      localStorage.setItem('tabs', JSON.stringify(tabs));
-      localStorage.setItem('history', JSON.stringify(history));
-      localStorage.setItem('favorites', JSON.stringify(favorites));
-      localStorage.setItem('currentTab', currentTab);
+    // ---- Navegación de pantallas ----
+    function mostrarPantalla(pantallaId) {
+      document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
+      document.getElementById(pantallaId).classList.add('active');
+      document.getElementById('viewer').classList.remove('active');
+      document.getElementById('buscador').style.display = 'none';
+      closeMenu();
     }
-
-    // ----- Render -----
-    function renderTabs() {
-      const tabDiv = document.getElementById('tabs');
-      tabDiv.innerHTML = '';
-      tabs.forEach((url, i) => {
-        const btn = document.createElement('button');
-        btn.textContent = url ? url : 'Nueva';
-        btn.style.fontWeight = (i === currentTab) ? 'bold' : 'normal';
-        btn.onclick = () => { currentTab = i; openTab(url); };
-        tabDiv.appendChild(btn);
-      });
+    // ---- MENÚ HAMBURGUESA ----
+    function toggleMenu() {
+      document.getElementById('menu').classList.toggle('open');
     }
-
-    function renderHistory() {
-      const ul = document.getElementById('history');
-      ul.innerHTML = '';
-      history.slice(-30).reverse().forEach(url => {
-        const li = document.createElement('li');
-        li.textContent = url;
-        li.onclick = () => openTab(url);
-        ul.appendChild(li);
-      });
+    function closeMenu() {
+      document.getElementById('menu').classList.remove('open');
     }
-
-    function renderFavorites() {
-      const ul = document.getElementById('favorites');
-      ul.innerHTML = '';
-      favorites.forEach(url => {
-        const li = document.createElement('li');
-        li.textContent = url;
-        li.onclick = () => openTab(url);
-        ul.appendChild(li);
-      });
+    // ---- BUSCADOR ----
+    function toggleBuscador() {
+      document.getElementById('buscador').style.display = 'flex';
+      document.getElementById('urlInput').focus();
+      document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
+      document.getElementById('viewer').classList.remove('active');
+      closeMenu();
     }
-
-    // ----- Actions -----
-    function openTab(url) {
-      url = url || document.getElementById('urlInput').value;
-      if (!url) return;
-      tabs[currentTab] = url;
+    function buscarWeb() {
+      let input = document.getElementById('urlInput').value.trim();
+      if (!input) return;
+      let url = input;
+      if (!/^https?:\/\//.test(url)) {
+        // Si no es URL, busca en Google
+        url = "https://www.google.com/search?q=" + encodeURIComponent(input);
+      }
+      mostrarWeb(url);
+      agregarHistorial(url);
+    }
+    // ---- MOSTRAR WEB ----
+    function mostrarWeb(url) {
+      document.getElementById('viewer').classList.add('active');
       document.getElementById('viewer').src = url;
-      document.getElementById('urlInput').value = url;
-      history.push(url);
-      saveAll();
-      renderTabs();
-      renderHistory();
-      renderFavorites();
+      document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
+      document.getElementById('buscador').style.display = 'none';
+      closeMenu();
     }
-
-    function addFavorite() {
-      const url = tabs[currentTab];
-      if (url && !favorites.includes(url)) {
-        favorites.push(url);
-        saveAll();
-        renderFavorites();
-      }
+    function irUrl(url) {
+      mostrarWeb(url);
+      agregarHistorial(url);
     }
-
-    function newTab() {
-      tabs.push('');
-      currentTab = tabs.length - 1;
-      saveAll();
-      renderTabs();
-      document.getElementById('urlInput').value = '';
-      document.getElementById('viewer').src = '';
+    // ---- HISTORIAL ----
+    let historial = JSON.parse(localStorage.getItem('historial') || '[]');
+    function agregarHistorial(url) {
+      historial.push(url);
+      localStorage.setItem('historial', JSON.stringify(historial));
+      renderizarHistorial();
+      renderizarPestañas();
     }
-
-    function closeTab() {
-      if (tabs.length > 1) {
-        tabs.splice(currentTab, 1);
-        currentTab = Math.max(0, currentTab - 1);
-        saveAll();
-        renderTabs();
-        let url = tabs[currentTab];
-        document.getElementById('urlInput').value = url || '';
-        document.getElementById('viewer').src = url || '';
-      }
+    function renderizarHistorial() {
+      let ul = document.getElementById('historyList');
+      ul.innerHTML = '';
+      let arr = historial.slice(-30).reverse(); // últimos 30
+      arr.forEach(url => {
+        let li = document.createElement('li');
+        li.textContent = url;
+        li.onclick = () => mostrarWeb(url);
+        ul.appendChild(li);
+      });
     }
-
     function clearHistory() {
-      history = [];
-      saveAll();
-      renderHistory();
+      if (!confirm("¿Seguro que quieres borrar el historial?")) return;
+      historial = [];
+      localStorage.setItem('historial', '[]');
+      renderizarHistorial();
+      renderizarPestañas();
     }
-
-    function clearFavorites() {
-      favorites = [];
-      saveAll();
-      renderFavorites();
+    // ---- PESTAÑAS ----
+    function renderizarPestañas() {
+      let grid = document.getElementById('pestañasGrid');
+      grid.innerHTML = '';
+      let arr = historial.slice(-30).reverse();
+      arr.forEach(url => {
+        let card = document.createElement('div');
+        card.className = 'pestaña-card';
+        // Favicon: solo para HTTP/HTTPS
+        let faviconSrc = '';
+        try {
+          let u = new URL(url);
+          faviconSrc = u.origin + '/favicon.ico';
+        } catch(e) { faviconSrc = ''; }
+        let favicon = document.createElement('img');
+        favicon.className = 'favicon';
+        favicon.src = faviconSrc;
+        favicon.onerror = function() { this.style.display='none'; };
+        card.appendChild(favicon);
+        let urlDiv = document.createElement('div');
+        urlDiv.className = 'url';
+        urlDiv.textContent = url;
+        card.appendChild(urlDiv);
+        card.onclick = () => mostrarWeb(url);
+        grid.appendChild(card);
+      });
     }
-
-    // ----- INIT -----
-    if (tabs.length === 0) tabs = [''];
-    renderTabs();
-    renderHistory();
-    renderFavorites();
-    let url = tabs[currentTab] || '';
-    document.getElementById('urlInput').value = url;
-    document.getElementById('viewer').src = url;
-
+    // ---- INICIO ----
+    renderizarHistorial();
+    renderizarPestañas();
+    mostrarPantalla('bienvenida');
+    // Cerrar menú al click fuera
+    document.body.addEventListener('click', function(e) {
+      if (!e.target.closest('#menu') && !e.target.closest('.menu-btn')) closeMenu();
+    });
+    // Enter en input de búsqueda
+    document.getElementById('urlInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') buscarWeb();
+    });
   </script>
 </body>
 </html>
