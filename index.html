@@ -1,129 +1,140 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KakTak Proveedor</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #0f0;
-            font-family: Arial, sans-serif;
-        }
-
-        .menu-hamburguesa {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 200px;
-            height: 100vh;
-            background-color: #0f0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .menu-hamburguesa img {
-            width: 50px;
-            height: 50px;
-            margin-bottom: 20px;
-        }
-
-        .menu-hamburguesa ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .menu-hamburguesa li {
-            margin-bottom: 20px;
-        }
-
-        .menu-hamburguesa a {
-            color: #000;
-            text-decoration: none;
-        }
-
-        main {
-            margin-left: 200px;
-            padding: 20px;
-        }
-
-        section {
-            display: none;
-        }
-
-        section#inicio {
-            display: block;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Proveedor KakTak</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { background: #111; color: #0f0; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; }
+    .center { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 90vh; }
+    .btn { background: #0f0; color: #111; padding: 12px 40px; border: none; border-radius: 9px; font-size: 22px; cursor: pointer; font-weight: bold; margin-top: 28px; }
+    h1, h2 { color: #0f0; margin-bottom: 16px; }
+    .menu-btn { position: fixed; top: 20px; right: 20px; z-index: 100; background: #0f0; border: none; border-radius: 6px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .menu-btn span { display: block; width: 32px; height: 5px; background: #111; margin: 4px 0; border-radius: 2px;}
+    .menu { position: fixed; top: 0; right: 0; width: 320px; max-width: 92vw; height: 100vh; background: #161616; color: #0f0; box-shadow: -2px 0 16px #000; z-index: 200; transform: translateX(100%); transition: transform 0.2s; padding: 18px 0 0; display: flex; flex-direction: column; align-items: center;}
+    .menu.open { transform: translateX(0);}
+    .menu-img { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; margin: 10px 0 8px;}
+    .menu-title { font-size: 19px; font-weight: bold; color: #0f0; margin-bottom: 23px; }
+    .menu-list { width: 100%; }
+    .menu-list button { width: 80%; background: #0f0; color: #161616; border: none; padding: 17px; margin: 10px 0; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; transition: background 0.2s, color 0.2s; display: block; margin-left: auto; margin-right: auto;}
+    .menu-list button.active { background: #161616; color: #0f0; border: 2px solid #0f0; }
+    .close-menu { position: absolute; top: 10px; right: 12px; font-size: 32px; background: none; border: none; color: #0f0; cursor: pointer;}
+    .content { max-width: 750px; margin: 55px auto 0; padding: 25px; background: #111; border-radius: 24px; box-shadow: 0 2px 18px #0007; }
+    a { color: #0f0; word-break: break-all; }
+    ul { padding-left: 28px; margin-bottom: 18px;}
+    li { margin-bottom: 10px;}
+    @media (max-width: 600px) {
+      .content { padding: 7vw 3vw; border-radius: 12px; }
+      .menu { width: 100vw; max-width: 100vw; }
+      .menu-list button { font-size: 17px; padding: 12px; }
+      h1, h2 { font-size: 27px; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="menu-hamburguesa">
-                <img src="https:                              
-                <span>Dash KakTak Proveedor</span>
-                <ul>
-                    <li><a href="#vps">VPS</a></li>
-                    <li><a href="                          
-                    <li><a href="#panel">Hosting Panel</a></li>
-                    <li><a href="                            
-                </ul>
-            </div>
-        </nav>
-    </header>
-    <main>
-        <section id="inicio">
-            <h1>Proveedor KakTak</h1>
-            <button onclick="mostrarBienvenida()">Entrar</button>
-        </section>
-        <section id="bienvenida" style="display: none;">
-            <h1>Bienvenido a KatTak</h1>
-            <p>El proveedor gratis que necesitas.</p>
-            <p>Por el momento estamos disponiendo solo de VPS y dominios gratis.</p>
-        </section>
-        <section id="vps" style="display: none;">
-            <h1>VPS</h1>
-            <ul>
-                <li><a href="https://www.example.com/vps-gratis">Proveedor 1</a></li>
-                <li><a href="https:                                                  
-                <!-- Agrega más proveedores aquí -->
-            </ul>
-        </section>
-        <section id="dominio" style="display: none;">
-            <h1>Dominio</h1>
-            <ul>
-                <li><a href="https://www.example.com/dominio-gratis">Proveedor 1</a></li>
-                <li><a href="https:                                                      
-                <!-- Agrega más proveedores aquí -->
-            </ul>
-        </section>
-        <section id="panel" style="display: none;">
-            <h1>Hosting Panel</h1>
-            <p>Nuestros Paneles están en proceso de creación junto con un dominio para que alojes tu host.</p>
-        </section>
-        <section id="dash" style="display: none;">
-            <h1>Hosting Dash</h1>
-            <p>Nuestras Dash están en proceso de creación junto con un dominio para que alojes tu host.</p>
-        </section>
-    </main>
-    <script>
-        function mostrarBienvenida() {
-            document.getElementById('inicio').style.display = 'none';
-            document.getElementById('bienvenida').style.display = 'block';
+  <!-- Pantalla de inicio -->
+  <div id="inicio" class="center">
+    <h1>Proveedor KakTak</h1>
+    <button class="btn" id="entrarBtn">Entrar</button>
+  </div>
+  <!-- Pantalla principal -->
+  <div id="mainScreen" class="hidden">
+    <button class="menu-btn" id="openMenuBtn" title="Menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="content" id="mainContent">
+      <h2>Bienvenido a KatTak el proveedor gratis que necesitas.</h2>
+      <p>
+        Por el momento estamos disponiendo solo de <b>VPS</b> y <b>dominios gratis</b> pero más adelante estaremos actualizando para más cosas, puedes acceder a nuestro menú para más información.
+      </p>
+    </div>
+  </div>
+  <!-- Menú hamburguesa -->
+  <div id="menu" class="menu">
+    <button class="close-menu" id="closeMenuBtn" title="Cerrar menú">&times;</button>
+    <img src="https://qu.ax/YCAKN.jpg" alt="Dash KakTak" class="menu-img" />
+    <div class="menu-title">Dash KakTak Proveedor</div>
+    <div class="menu-list">
+      <button id="menuVpsBtn">Vps</button>
+      <button id="menuDominioBtn">Dominio</button>
+      <button id="menuPanelBtn">Hosting Panel</button>
+      <button id="menuDashBtn">Hosting Dash</button>
+    </div>
+  </div>
+  <script>
+    // Pantalla de inicio y navegación
+    const inicioDiv = document.getElementById('inicio');
+    const mainScreen = document.getElementById('mainScreen');
+    const entrarBtn = documentBtn');
+    const mainContent = document.getElementById('mainContent');
+    // Menú botones
+    const menuVpsBtn = document.getElementById('menuVpsBtn');
+    const menuDominioBtn = document.getElementById('menuDominioBtn');
+    const menuPanelBtn = document.getElementById('menuPanelBtn');
+    const menuDashBtn = document.getElementById('menuDashBtn');
+    // Lista de VPS gratis y de prueba
+    const vpsLinks = [
+      {name: "Oracle Cloud Free Tier", url: "https://www.oracle.com/cloud/free/"},
+      {name: "Google Cloud Free", url: "https://cloud.google.com/free"},
+      {name: "Microsoft Azure Free", url: "https://azure.microsoft.com/free/"},
+      {name: "AWS Free Tier", url: "https://aws.amazon.com/free/"},
+      {name: "GHCloud Free: "https://www.ovhcloud.com/en/free-trial/"    ];
+    // dominios gratis y de prueba
+    const domainLinks = [
+      {name: "Freenom "https://www.freenom.com/"},
+      {name: "Dot.tk", url: "https://www.dot.tk/en/"},
+      {name: "InfinityFree (subdominios gratis)", url: "https://www.infinityfree.net/"},
+      {name: "AwardSpace (dominio gratis por 1 año)", url: "https://www.awardspace.com/free-domain-name/"},
+      {name: "Eu.org (dominio gratis .eu.org)", url: "https://eu.org/"},
+      {name: "Namecheap Free Trials", url: "https://www.namecheap.com/promos/free-trial/"},
+      {name: "Hostinger Prueba de Dominio", url: "https://www.hostinger.com/domains"},
+      {name: "Get.tech (prueba de dominio)", url: "httpsli><a href="${vps.url}" target="_blank">${vps.name}</a></li>`;
         }
-
-        document.querySelector('.menu-hamburguesa').addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') {
-                const idSeccion = e.target.getAttribute('href').replace('        
-                document.querySelectorAll('section').forEach((seccion) => {
-                    seccion.style.display = 'none';
-                });
-                document.getElementById(idSeccion).style.display = 'block';
-            }
-        });
-    </script>
+        html += `</ul><p style="margin-top:20px;">¿Conoces más proveedores? ¡Contáctanos para agregarlos!</p>`;
+        mainContent.innerHTML = html;
+      } else if (type === 'dominio') {
+        menuDominioBtn.classList.add('active');
+        let html = `<h2>Proveedores de Dominios Gratis y de Prueba</h2><ul>`;
+        for (const d of domainLinks) {
+          html += `<li><a href="${d.url}" target="_blank">${d.name}</a></li>`;
+        }
+        html += `</ul>`;
+        mainContent.innerHTML = html;
+      } else if (type === 'panel') {
+        menuPanelBtn.classList.add('active');
+        mainContent.innerHTML = `<h2>Hosting Panel</h2><p>Nuestros Paneles están en proceso de creación al junto de un dominio para que alojes tu host.</p>`;
+      } else if (type === 'dash') {
+        menuDashBtn.classList.add('active');
+        mainContent.innerHTML = `<h2>Hosting Dash</h2><p>Nuestras Dash están en proceso de creación al junto de un dominio para que alojes tu host.</p>`;
+      }
+      // Cerrar menú al hacer click en opción
+      menu.classList.remove('open');
+    }
+    // Eventos
+    entrarBtn.onclick = function() {
+      inicioDiv.style.display = 'none';
+      mainScreen.classList.remove('hidden');
+      document.body.style.background = "#111";
+    };
+    openMenuBtn.onclick = function() {
+      menu.classList.add('open');
+    };
+    closeMenuBtn.onclick = function() {
+      menu.classList.remove('open');
+    };
+    //vps');
+    menuDominioBtn.onclick = () => showContent('dominio');
+    menuPanelBtn.onclick = () => showContent('panel');
+    menuDashBtn.onclick = () => showContent('dash');
+    // Al cargar, pantalla de inicio
+    window.onload = () => {
+      inicioDiv.style.display = 'flex';
+      mainScreen.classList.add('hidden');
+      menu.classList.remove('open');
+      document.body.style.background = "#111";
+    };
+  </script>
 </body>
 </html>
