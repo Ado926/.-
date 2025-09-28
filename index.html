@@ -1,388 +1,124 @@
 <!DOCTYPE html>
-<html lang="es">
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
 <head>
-  <meta charset="UTF-8">
-  <title>NavegadorD</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      background: #121212;
-      color: #0F0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      min-height: 100vh;
-    }
-    .verdeNeon {
-      background: #39ff14;
-      color: #121212;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #39ff1440;
-      transition: background 0.2s;
-    }
-    .verdeNeon:hover {
-      background: #2cff10;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      background: #181818;
-      padding: 8px 16px;
-      position: relative;
-      z-index: 10;
-      box-shadow: 0 2px 8px #000a;
-    }
-    .lupa {
-      font-size: 1.8em;
-      color: #39ff14;
-      cursor: pointer;
-      margin-right: 15px;
-    }
-    .menu-btn {
-      background: none;
-      border: none;
-      color: #0F0;
-      font-size: 2em;
-      cursor: pointer;
-      margin-left: auto;
-    }
-    .menu {
-      position: fixed;
-      top: 0;
-      left: -220px;
-      width: 220px;
-      height: 100%;
-      background: #181818;
-      color: #0F0;
-      box-shadow: 2px 0 10px #0008;
-      transition: left 0.25s;
-      z-index: 20;
-      display: flex;
-      flex-direction: column;
-      padding-top: 60px;
-    }
-    .menu.open {
-      left: 0;
-    }
-    .menu a {
-      color: #39ff14;
-      padding: 18px 24px;
-      text-decoration: none;
-      font-size: 1.1em;
-      border-bottom: 1px solid #222;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .menu a:hover {
-      background: #222;
-    }
-    .pantalla {
-      display: none;
-      padding: 24px 10px;
-      min-height: 70vh;
-    }
-    .pantalla.active {
-      display: block;
-      animation: fadeIn 0.3s;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    .bienvenida {
-      text-align: center;
-    }
-    .cuadros-sociales {
-      margin-top: 32px;
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-    .cuadro-social {
-      width: 60px;
-      height: 60px;
-      background: #191919;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 5px;
-      box-shadow: 0 2px 8px #0008;
-      cursor: pointer;
-      transition: background 0.18s;
-    }
-    .cuadro-social:hover {
-      background: #232323;
-    }
-    .cuadro-social img {
-      width: 40px;
-      height: 40px;
-    }
-    .buscador {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 28px auto 18px auto;
-      max-width: 400px;
-      justify-content: center;
-    }
-    .buscador input {
-      background: #222;
-      color: #39ff14;
-      border: none;
-      padding: 10px;
-      border-radius: 7px;
-      font-size: 1em;
-      width: 220px;
-      outline: none;
-      box-shadow: 0 2px 8px #0006;
-    }
-    .historial-lista {
-      background: #191919;
-      padding: 16px;
-      border-radius: 10px;
-      max-width: 420px;
-      margin: auto;
-      box-shadow: 0 2px 12px #0008;
-    }
-    .historial-lista ul {
-      padding-left: 0;
-      list-style: none;
-    }
-    .historial-lista li {
-      color: #39ff14;
-      padding: 8px 0;
-      border-bottom: 1px solid #222;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .historial-lista li:hover {
-      background: #232323;
-    }
-    .historial-lista .verdeNeon {
-      margin-top: 14px;
-      width: 100%;
-    }
-    .pestañas-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-      margin-top: 18px;
-    }
-    .pestaña-card {
-      background: #191919;
-      border-radius: 12px;
-      width: 140px;
-      height: 110px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 12px #0008;
-      cursor: pointer;
-      overflow: hidden;
-      transition: background 0.18s;
-      padding: 6px;
-    }
-    .pestaña-card:hover {
-      background: #232323;
-    }
-    .pestaña-card .favicon {
-      width: 28px;
-      height: 28px;
-      margin-bottom: 6px;
-    }
-    .pestaña-card .url {
-      color: #39ff14;
-      font-size: 0.98em;
-      text-align: center;
-      word-break: break-all;
-      margin-top: 2px;
-    }
-    iframe {
-      background: #222;
-      border: none;
-      width: 100%;
-      height: 420px;
-      border-radius: 10px;
-      margin-top: 14px;
-      box-shadow: 0 2px 14px #0005;
-      display: none;
-    }
-    iframe.active {
-      display: block;
-    }
-  </style>
+
+<title>sylphy.xyz | 522: Connection timed out</title>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" id="cf_styles-css" href="/cdn-cgi/styles/main.css" />
 </head>
 <body>
-  <header>
-    <span class="lupa" onclick="toggleBuscador()" title="Buscar">&#128269;</span>
-    <button class="menu-btn" onclick="toggleMenu()">&#9776;</button>
-  </header>
-  <!-- MENÚ HAMBURGUESA -->
-  <nav class="menu" id="menu">
-    <a onclick="mostrarPantalla('historial')">Historial</a>
-    <a onclick="mostrarPantalla('pestañas')">Pestañas</a>
-    <a onclick="mostrarPantalla('bienvenida')">Inicio</a>
-  </nav>
-  <!-- PANTALLAS -->
-  <main>
-    <!-- Bienvenida -->
-    <section class="pantalla bienvenida active" id="bienvenida">
-      <h2>Bienvenido al <span style="color:#39ff14;">NavegadorD</span></h2>
-      <div class="cuadros-sociales">
-        <div class="cuadro-social" onclick="irUrl('https://facebook.com')">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook">
+<div id="cf-wrapper">
+    <div id="cf-error-details" class="p-0">
+        <header class="mx-auto pt-10 lg:pt-6 lg:px-8 w-240 lg:w-full mb-8">
+            <h1 class="inline-block sm:block sm:mb-2 font-light text-60 lg:text-4xl text-black-dark leading-tight mr-2">
+                <span class="inline-block">Connection timed out</span>
+                <span class="code-label">Error code 522</span>
+            </h1>
+            <div>
+                Visit <a href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_522&utm_campaign=sylphy.xyz" target="_blank" rel="noopener noreferrer">cloudflare.com</a> for more information.
+            </div>
+            <div class="mt-3">2025-09-28 21:16:23 UTC</div>
+        </header>
+        <div class="my-8 bg-gradient-gray">
+            <div class="w-240 lg:w-full mx-auto">
+                <div class="clearfix md:px-8">
+                    <div id="cf-browser-status" class=" relative w-1/3 md:w-full py-15 md:p-0 md:py-8 md:text-left md:border-solid md:border-0 md:border-b md:border-gray-400 overflow-hidden float-left md:float-none text-center">
+  <div class="relative mb-10 md:m-0">
+    
+    <span class="cf-icon-browser block md:hidden h-20 bg-center bg-no-repeat"></span>
+    <span class="cf-icon-ok w-12 h-12 absolute left-1/2 md:left-auto md:right-0 md:top-0 -ml-6 -bottom-4"></span>
+    
+  </div>
+  <span class="md:block w-full truncate">You</span>
+  <h3 class="md:inline-block mt-3 md:mt-0 text-2xl text-gray-600 font-light leading-1.3">
+  
+    Browser
+  
+  </h3>
+  
+  <span class="leading-1.3 text-2xl text-green-success">Working</span>
+  
+</div>
+                    <div id="cf-cloudflare-status" class=" relative w-1/3 md:w-full py-15 md:p-0 md:py-8 md:text-left md:border-solid md:border-0 md:border-b md:border-gray-400 overflow-hidden float-left md:float-none text-center">
+  <div class="relative mb-10 md:m-0">
+    <a href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_522&#38;utm_campaign=sylphy.xyz" target="_blank" rel="noopener noreferrer">
+    <span class="cf-icon-cloud block md:hidden h-20 bg-center bg-no-repeat"></span>
+    <span class="cf-icon-ok w-12 h-12 absolute left-1/2 md:left-auto md:right-0 md:top-0 -ml-6 -bottom-4"></span>
+    </a>
+  </div>
+  <span class="md:block w-full truncate">Kansas City</span>
+  <h3 class="md:inline-block mt-3 md:mt-0 text-2xl text-gray-600 font-light leading-1.3">
+  <a href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_522&utm_campaign=sylphy.xyz" target="_blank" rel="noopener noreferrer">
+    Cloudflare
+  </a>
+  </h3>
+  
+  <span class="leading-1.3 text-2xl text-green-success">Working</span>
+  
+</div>
+                    <div id="cf-host-status" class="cf-error-source relative w-1/3 md:w-full py-15 md:p-0 md:py-8 md:text-left md:border-solid md:border-0 md:border-b md:border-gray-400 overflow-hidden float-left md:float-none text-center">
+  <div class="relative mb-10 md:m-0">
+    
+    <span class="cf-icon-server block md:hidden h-20 bg-center bg-no-repeat"></span>
+    <span class="cf-icon-error w-12 h-12 absolute left-1/2 md:left-auto md:right-0 md:top-0 -ml-6 -bottom-4"></span>
+    
+  </div>
+  <span class="md:block w-full truncate">sylphy.xyz</span>
+  <h3 class="md:inline-block mt-3 md:mt-0 text-2xl text-gray-600 font-light leading-1.3">
+  
+    Host
+  
+  </h3>
+  
+  <span class="leading-1.3 text-2xl text-red-error">Error</span>
+  
+</div>
+                </div>
+            </div>
         </div>
-        <div class="cuadro-social" onclick="irUrl('https://youtube.com')">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube">
+
+        <div class="w-240 lg:w-full mx-auto mb-8 lg:px-8">
+            <div class="clearfix">
+                <div class="w-1/2 md:w-full float-left pr-6 md:pb-10 md:pr-0 leading-relaxed">
+                    <h2 class="text-3xl font-normal leading-1.3 mb-4">What happened?</h2>
+                    <p>The initial connection between Cloudflare's network and the origin web server timed out. As a result, the web page can not be displayed.</p>
+                </div>
+                <div class="w-1/2 md:w-full float-left leading-relaxed">
+                    <h2 class="text-3xl font-normal leading-1.3 mb-4">What can I do?</h2>
+                    
+                <h3 class="text-15 font-semibold mb-2">If you're a visitor of this website:</h3>
+                <p class="mb-6">Please try again in a few minutes.</p>
+
+                <h3 class="text-15 font-semibold mb-2">If you're the owner of this website:</h3>
+                <p><span>Contact your hosting provider letting them know your web server is not completing requests. An Error 522 means that the request was able to connect to your web server, but that the request didn't finish. The most likely cause is that something on your server is hogging resources.</span> <a rel="noopener noreferrer" href="https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-522/">Additional troubleshooting information here.</a></p>
+                </div>
+            </div>
         </div>
-        <div class="cuadro-social" onclick="irUrl('https://instagram.com')">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram">
-        </div>
-        <div class="cuadro-social" onclick="irUrl('https://snapchat.com')">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/snapchat.svg" alt="Snapchat">
-        </div>
-      </div>
-    </section>
-    <!-- Buscador -->
-    <section class="buscador" id="buscador" style="display:none;">
-      <input id="urlInput" type="text" placeholder="Escribe una URL o término..." spellcheck="false" autofocus>
-      <button class="verdeNeon" onclick="buscarWeb()">Buscar</button>
-    </section>
-    <!-- Navegador (iframe) -->
-    <iframe id="viewer"></iframe>
-    <!-- Historial -->
-    <section class="pantalla" id="historial">
-      <div class="historial-lista">
-        <h3>Historial</h3>
-        <ul id="historyList"></ul>
-        <button class="verdeNeon" onclick="clearHistory()">Borrar historial</button>
-      </div>
-    </section>
-    <!-- Pestañas -->
-    <section class="pantalla" id="pestañas">
-      <h3 style="text-align:center;">Pestañas (miniaturas)</h3>
-      <div class="pestañas-grid" id="pestañasGrid"></div>
-    </section>
-  </main>
-  <script>
-    // ---- Navegación de pantallas ----
-    function mostrarPantalla(pantallaId) {
-      document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
-      document.getElementById(pantallaId).classList.add('active');
-      document.getElementById('viewer').classList.remove('active');
-      document.getElementById('buscador').style.display = 'none';
-      closeMenu();
-    }
-    // ---- MENÚ HAMBURGUESA ----
-    function toggleMenu() {
-      document.getElementById('menu').classList.toggle('open');
-    }
-    function closeMenu() {
-      document.getElementById('menu').classList.remove('open');
-    }
-    // ---- BUSCADOR ----
-    function toggleBuscador() {
-      document.getElementById('buscador').style.display = 'flex';
-      document.getElementById('urlInput').focus();
-      document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
-      document.getElementById('viewer').classList.remove('active');
-      closeMenu();
-    }
-    function buscarWeb() {
-      let input = document.getElementById('urlInput').value.trim();
-      if (!input) return;
-      let url = input;
-      if (!/^https?:\/\//.test(url)) {
-        // Si no es URL, busca en Google
-        url = "https://www.google.com/search?q=" + encodeURIComponent(input);
-      }
-      mostrarWeb(url);
-      agregarHistorial(url);
-    }
-    // ---- MOSTRAR WEB ----
-    function mostrarWeb(url) {
-      document.getElementById('viewer').classList.add('active');
-      document.getElementById('viewer').src = url;
-      document.querySelectorAll('.pantalla').forEach(x => x.classList.remove('active'));
-      document.getElementById('buscador').style.display = 'none';
-      closeMenu();
-    }
-    function irUrl(url) {
-      mostrarWeb(url);
-      agregarHistorial(url);
-    }
-    // ---- HISTORIAL ----
-    let historial = JSON.parse(localStorage.getItem('historial') || '[]');
-    function agregarHistorial(url) {
-      historial.push(url);
-      localStorage.setItem('historial', JSON.stringify(historial));
-      renderizarHistorial();
-      renderizarPestañas();
-    }
-    function renderizarHistorial() {
-      let ul = document.getElementById('historyList');
-      ul.innerHTML = '';
-      let arr = historial.slice(-30).reverse(); // últimos 30
-      arr.forEach(url => {
-        let li = document.createElement('li');
-        li.textContent = url;
-        li.onclick = () => mostrarWeb(url);
-        ul.appendChild(li);
-      });
-    }
-    function clearHistory() {
-      if (!confirm("¿Seguro que quieres borrar el historial?")) return;
-      historial = [];
-      localStorage.setItem('historial', '[]');
-      renderizarHistorial();
-      renderizarPestañas();
-    }
-    // ---- PESTAÑAS ----
-    function renderizarPestañas() {
-      let grid = document.getElementById('pestañasGrid');
-      grid.innerHTML = '';
-      let arr = historial.slice(-30).reverse();
-      arr.forEach(url => {
-        let card = document.createElement('div');
-        card.className = 'pestaña-card';
-        // Favicon: solo para HTTP/HTTPS
-        let faviconSrc = '';
-        try {
-          let u = new URL(url);
-          faviconSrc = u.origin + '/favicon.ico';
-        } catch(e) { faviconSrc = ''; }
-        let favicon = document.createElement('img');
-        favicon.className = 'favicon';
-        favicon.src = faviconSrc;
-        favicon.onerror = function() { this.style.display='none'; };
-        card.appendChild(favicon);
-        let urlDiv = document.createElement('div');
-        urlDiv.className = 'url';
-        urlDiv.textContent = url;
-        card.appendChild(urlDiv);
-        card.onclick = () => mostrarWeb(url);
-        grid.appendChild(card);
-      });
-    }
-    // ---- INICIO ----
-    renderizarHistorial();
-    renderizarPestañas();
-    mostrarPantalla('bienvenida');
-    // Cerrar menú al click fuera
-    document.body.addEventListener('click', function(e) {
-      if (!e.target.closest('#menu') && !e.target.closest('.menu-btn')) closeMenu();
-    });
-    // Enter en input de búsqueda
-    document.getElementById('urlInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') buscarWeb();
-    });
-  </script>
+
+        <div class="cf-error-footer cf-wrapper w-240 lg:w-full py-10 sm:py-4 sm:px-8 mx-auto text-center sm:text-left border-solid border-0 border-t border-gray-300">
+    <p class="text-13">
+      <span class="cf-footer-item sm:block sm:mb-1">Cloudflare Ray ID: <strong class="font-semibold">9866427d5a4557b6</strong></span>
+      <span class="cf-footer-separator sm:hidden">&bull;</span>
+      <span id="cf-footer-item-ip" class="cf-footer-item hidden sm:block sm:mb-1">
+        Your IP:
+        <button type="button" id="cf-footer-ip-reveal" class="cf-footer-ip-reveal-btn">Click to reveal</button>
+        <span class="hidden" id="cf-footer-ip">69.30.206.226</span>
+        <span class="cf-footer-separator sm:hidden">&bull;</span>
+      </span>
+      <span class="cf-footer-item sm:block sm:mb-1"><span>Performance &amp; security by</span> <a rel="noopener noreferrer" href="https://www.cloudflare.com/5xx-error-landing?utm_source=errorcode_522&#38;utm_campaign=sylphy.xyz" id="brand_link" target="_blank">Cloudflare</a></span>
+      
+    </p>
+    <script>(function(){function d(){var b=a.getElementById("cf-footer-item-ip"),c=a.getElementById("cf-footer-ip-reveal");b&&"classList"in b&&(b.classList.remove("hidden"),c.addEventListener("click",function(){c.classList.add("hidden");a.getElementById("cf-footer-ip").classList.remove("hidden")}))}var a=document;document.addEventListener&&a.addEventListener("DOMContentLoaded",d)})();</script>
+  </div><!-- /.error-footer -->
+
+    </div>
+</div>
 </body>
 </html>
