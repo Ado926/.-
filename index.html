@@ -5,9 +5,14 @@
   <title>Proveedor KakTak</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <style>
+    :root {
+      --azul-brillante: #1e90ff;
+      --azul-brillante-hover: #0070e0;
+      --gris-fondo: #f8f8f8;
+    }
     body {
       background: #fff;
-      color: #111;
+      color: var(--azul-brillante);
       font-family: Arial,sans-serif;
       margin: 0;
       min-height: 100vh;
@@ -21,7 +26,7 @@
       text-align: center;
     }
     .btn {
-      background: #111;
+      background: var(--azul-brillante);
       color: #fff;
       border: none;
       padding: 12px 32px;
@@ -30,20 +35,31 @@
       font-size: 1.1em;
       font-weight: bold;
       cursor: pointer;
-      transition: box-shadow .2s;
-      box-shadow: 0 2px 8px #0003;
+      box-shadow: 0 2px 8px #0002;
+      transition: background .2s, box-shadow .2s;
     }
     .btn:hover {
-      box-shadow: 0 4px 24px #1112;
-      background: #222;
+      background: var(--azul-brillante-hover);
+      box-shadow: 0 4px 24px #1e90ff55;
+    }
+    input[type=text], input[type=email], input[type=password] {
+      width: 90%;
+      padding: 10px;
+      margin: 12px 0;
+      border: 2px solid var(--azul-brillante);
+      border-radius: 6px;
+      color: #111;
+      font-size: 1em;
+      background: #fff;
+      box-sizing: border-box;
     }
     .menu-btn {
       position: fixed;
       top: 18px;
       left: 18px;
       background: #fff;
-      border: 2px solid #111;
-      color: #111;
+      border: 2px solid var(--azul-brillante);
+      color: var(--azul-brillante);
       width: 52px;
       height: 52px;
       border-radius: 50%;
@@ -59,7 +75,7 @@
       display: block;
       width: 30px;
       height: 5px;
-      background: #111;
+      background: var(--azul-brillante);
       margin: 4px 0;
       border-radius: 3px;
       transition: .3s;
@@ -69,8 +85,8 @@
       top: 0; left: 0;
       width: 50vw; max-width: 360px;
       height: 100vh;
-      background: #f8f8f8;
-      color: #111;
+      background: var(--gris-fondo);
+      color: var(--azul-brillante);
       box-shadow: 2px 0 24px #0002;
       z-index: 99;
       transform: translateX(-100%);
@@ -89,30 +105,32 @@
       border-radius: 50%;
       object-fit: cover;
       background: #fff;
-      border: 2px solid #111;
+      border: 2px solid var(--azul-brillante);
     }
     .menu-drawer .menu-title {
       margin: 14px 0 30px 0;
       font-size: 1.1em;
       font-weight: bold;
-      color: #111;
+      color: var(--azul-brillante);
       text-align: center;
     }
     .menu-drawer .menu-option {
       width: 90%;
       border: none;
       background: none;
-      color: #111;
+      color: var(--azul-brillante);
       font-size: 1.1em;
       padding: 13px 0;
       margin: 3px 0;
       text-align: left;
       cursor: pointer;
-      border-bottom: 1px solid #eee;
-      transition: background .2s;
+      border-bottom: 1px solid #e0e0e0;
+      transition: background .2s, color .2s;
+      border-radius: 4px;
     }
     .menu-drawer .menu-option:hover {
-      background: #eee;
+      background: #e0eefe;
+      color: var(--azul-brillante-hover);
     }
     .close-menu {
       position: absolute;
@@ -121,7 +139,7 @@
       background: none;
       border: none;
       font-size: 2em;
-      color: #111;
+      color: var(--azul-brillante);
       cursor: pointer;
     }
     .content-area {
@@ -136,9 +154,32 @@
       text-align: center;
     }
     a {
-      color: #111;
+      color: var(--azul-brillante);
       text-decoration: underline;
       word-break: break-all;
+    }
+    .perfil-foto {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 60px;
+      border: 3px solid var(--azul-brillante);
+      margin-bottom: 12px;
+      background: #fff;
+      cursor: pointer;
+    }
+    label.input-foto {
+      display: block;
+      margin-top: 10px;
+      color: var(--azul-brillante);
+      cursor: pointer;
+      font-size: 0.95em;
+      text-decoration: underline;
+    }
+    .error {
+      color: #f00;
+      font-size: 0.97em;
+      margin-top: 8px;
     }
     @media (max-width: 600px) {
       .content-area { padding: 32px 6px 6px 6px; }
@@ -168,6 +209,14 @@
   <div id="pantallaContenido" class="hidden">
     <div class="content-area" id="contenidoDinamico"></div>
   </div>
+  <!-- Pantalla de Login/Registro -->
+  <div id="pantallaAcceder" class="hidden">
+    <div class="content-area" id="pantallaAccederContenido"></div>
+  </div>
+  <!-- Pantalla de Perfil -->
+  <div id="pantallaPerfil" class="hidden">
+    <div class="content-area" id="pantallaPerfilContenido"></div>
+  </div>
   <!-- Botón menú hamburguesa -->
   <button id="menuBtn" class="menu-btn hidden" title="Menú">
     <span></span>
@@ -177,29 +226,43 @@
   <!-- Menú Drawer -->
   <div id="menuDrawer" class="menu-drawer">
     <button class="close-menu" onclick="toggleMenu(false)">×</button>
-    <img src="https://qu.ax/YCAKN.jpg" alt="KakTak">
+    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="KakTak" id="menuDrawerFoto">
     <div class="menu-title">Dash KakTak Proveedor</div>
     <button class="menu-option" onclick="cargarOpcion('vps')">Vps</button>
     <button class="menu-option" onclick="cargarOpcion('dominio')">Dominio</button>
     <button class="menu-option" onclick="cargarOpcion('panel')">Hosting Panel</button>
     <button class="menu-option" onclick="cargarOpcion('dash')">Hosting Dash</button>
+    <button class="menu-option" id="menuAccederBtn" onclick="mostrarAcceder()">Acceder</button>
+    <button class="menu-option" id="menuPerfilBtn" onclick="mostrarPerfil()">Perfil</button>
   </div>
   <script>
-    // Mostrar/ocultar pantallas
+    // Storage de usuarios y sesión
+    let users = JSON.parse(localStorage.getItem("users")||"[]");
+    let session = JSON.parse(localStorage.getItem("session")||"null");
+    // Foto perfil por defecto (Google)
+    let defaultFoto = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png";
+
+    function saveUsers() { localStorage.setItem("users",JSON.stringify(users)); }
+    function saveSession() { localStorage.setItem("session",JSON.stringify(session)); }
+
     function entrar(){
       document.getElementById('pantallaInicio').classList.add('hidden');
       document.getElementById('pantallaBienvenida').classList.remove('hidden');
       document.getElementById('menuBtn').classList.remove('hidden');
+      actualizarMenu();
     }
+
     function toggleMenu(show){
       document.getElementById('menuDrawer').classList.toggle('open', show);
+      // Actualiza la foto del menú
+      let foto = session?.foto || defaultFoto;
+      document.getElementById('menuDrawerFoto').src = foto;
     }
     document.getElementById('menuBtn').onclick = function(){ toggleMenu(true); };
 
-    // Opciones del menú
     function cargarOpcion(opc){
       toggleMenu(false);
-      document.getElementById('pantallaBienvenida').classList.add('hidden');
+      ocultarTodasPantallas();
       document.getElementById('pantallaContenido').classList.remove('hidden');
       let contenido = "";
       if(opc === 'vps'){
@@ -247,17 +310,149 @@
       document.getElementById('contenidoDinamico').innerHTML = contenido + `<br><button class="btn" onclick="volverInicio()">Volver</button>`;
     }
     function volverInicio(){
-      document.getElementById('pantallaContenido').classList.add('hidden');
+      ocultarTodasPantallas();
       document.getElementById('pantallaBienvenida').classList.remove('hidden');
     }
-    // Helper para ocultar/mostrar pantallas
-    function updatePantallas(){
-      document.getElementById('pantallaInicio').style.display = document.getElementById('pantallaInicio').classList.contains('hidden') ? 'none' : 'flex';
-      document.getElementById('pantallaBienvenida').style.display = document.getElementById('pantallaBienvenida').classList.contains('hidden') ? 'none' : 'block';
-      document.getElementById('pantallaContenido').style.display = document.getElementById('pantallaContenido').classList.contains('hidden') ? 'none' : 'block';
-      document.getElementById('menuBtn').style.display = document.getElementById('pantallaBienvenida').classList.contains('hidden') ? 'none' : 'flex';
+
+    function mostrarAcceder(){
+      toggleMenu(false);
+      ocultarTodasPantallas();
+      document.getElementById('pantallaAcceder').classList.remove('hidden');
+      mostrarLogin();
     }
-    setInterval(updatePantallas, 100);
+
+    function mostrarLogin(){
+      document.getElementById('pantallaAccederContenido').innerHTML = `
+        <h2>Acceder</h2>
+        <form id="formLogin">
+          <input type="text" id="loginNombre" placeholder="Nombre" autocomplete="username">
+          <input type="email" id="loginCorreo" placeholder="Correo" autocomplete="email">
+          <input type="password" id="loginPass" placeholder="Contraseña" autocomplete="current-password">
+          <button type="submit" class="btn">Acceder</button>
+        </form>
+        <button class="btn" style="margin-top:16px;" onclick="mostrarRegistro()">¿No tienes cuenta? Crear una</button>
+        <div id="loginError" class="error"></div>
+      `;
+      document.getElementById('formLogin').onsubmit = login;
+    }
+
+    function mostrarRegistro(){
+      document.getElementById('pantallaAccederContenido').innerHTML = `
+        <h2>Crear cuenta</h2>
+        <form id="formRegistro">
+          <input type="text" id="regNombre" placeholder="Nombre" autocomplete="username">
+          <input type="email" id="regCorreo" placeholder="Correo" autocomplete="email">
+          <input type="password" id="regPass" placeholder="Contraseña" autocomplete="new-password">
+          <button type="submit" class="btn">Crear cuenta</button>
+        </form>
+        <button class="btn" style="margin-top:16px;" onclick="mostrarLogin()">¿Tienes cuenta? Acceder</button>
+        <div id="regError" class="error"></div>
+      `;
+      document.getElementById('formRegistro').onsubmit = registro;
+    }
+
+    function login(e){
+      e.preventDefault();
+      let nombre = document.getElementById("loginNombre").value.trim();
+      let correo = document.getElementById("loginCorreo").value.trim();
+      let pass = document.getElementById("loginPass").value.trim();
+      if(!nombre || !correo || !pass) return mostrarError("loginError","Todos los campos son obligatorios.");
+      let user = users.find(u => u.nombre === nombre && u.correo === correo && u.pass === pass);
+      if(!user) return mostrarError("loginError","Datos incorrectos o usuario no existe.");
+      session = {nombre:user.nombre, correo:user.correo, foto:user.foto || defaultFoto};
+      saveSession();
+      actualizarMenu();
+      mostrarPerfil();
+    }
+
+    function registro(e){
+      e.preventDefault();
+      let nombre = document.getElementById("regNombre").value.trim();
+      let correo = document.getElementById("regCorreo").value.trim();
+      let pass = document.getElementById("regPass").value.trim();
+      if(!nombre || !correo || !pass) return mostrarError("regError","Todos los campos son obligatorios.");
+      if(users.find(u => u.correo === correo)) return mostrarError("regError","Ya existe una cuenta con ese correo.");
+      users.push({nombre, correo, pass, foto:defaultFoto});
+      saveUsers();
+      session = {nombre, correo, foto:defaultFoto};
+      saveSession();
+      actualizarMenu();
+      mostrarPerfil();
+    }
+
+    function mostrarError(id, msg){
+      document.getElementById(id).textContent = msg;
+    }
+
+    function mostrarPerfil(){
+      ocultarTodasPantallas();
+      document.getElementById('pantallaPerfil').classList.remove('hidden');
+      let user = session;
+      let foto = user?.foto || defaultFoto;
+      document.getElementById('pantallaPerfilContenido').innerHTML = `
+        <h2>Perfil</h2>
+        <img src="${foto}" class="perfil-foto" id="fotoUsuario" alt="Foto de perfil">
+        <label class="input-foto">
+          Cambiar foto
+          <input type="file" id="cambiarFoto" accept="image/*" style="display:none;">
+        </label>
+        <div style="margin-top:12px;">
+          <b>Nombre:</b> <span id="perfilNombre">${user?.nombre || ""}</span><br>
+          <b>Correo:</b> <span id="perfilCorreo">${user?.correo || ""}</span>
+        </div>
+        <button class="btn" style="margin-top:22px;" onclick="cerrarSesion()">Cerrar sesión</button>
+        <button class="btn" style="margin-top:10px;" onclick="volverInicio()">Volver</button>
+      `;
+      document.getElementById("cambiarFoto").onchange = cambiarFotoPerfil;
+      document.getElementById("fotoUsuario").onclick = ()=>document.getElementById("cambiarFoto").click();
+    }
+
+    function cambiarFotoPerfil(e){
+      let file = e.target.files[0];
+      if(file){
+        let reader = new FileReader();
+        reader.onload = function(ev){
+          let foto = ev.target.result;
+          session.foto = foto;
+          let userIdx = users.findIndex(u=>u.correo===session.correo);
+          if(userIdx !== -1) users[userIdx].foto = foto;
+          saveUsers(); saveSession();
+          document.getElementById("fotoUsuario").src = foto;
+          actualizarMenu();
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function cerrarSesion(){
+      session = null; saveSession();
+      actualizarMenu();
+      mostrarAcceder();
+    }
+
+    function ocultarTodasPantallas(){
+      document.getElementById('pantallaBienvenida').classList.add('hidden');
+      document.getElementById('pantallaContenido').classList.add('hidden');
+      document.getElementById('pantallaAcceder').classList.add('hidden');
+      document.getElementById('pantallaPerfil').classList.add('hidden');
+    }
+
+    // Ocultar/mostrar helper y menú dinámico
+    function actualizarMenu(){
+      let acc = document.getElementById("menuAccederBtn");
+      let perfil = document.getElementById("menuPerfilBtn");
+      if(session){
+        acc.classList.add("hidden");
+        perfil.classList.remove("hidden");
+      }else{
+        acc.classList.remove("hidden");
+        perfil.classList.remove("hidden");
+      }
+    }
+    // Inicialización
+    ocultarTodasPantallas();
+    document.getElementById('pantallaInicio').classList.remove('hidden');
+    actualizarMenu();
   </script>
 </body>
 </html>
