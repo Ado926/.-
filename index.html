@@ -2,185 +2,217 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Cyan-Seven Seguridad de Conexión</title>
+  <title>Cloud Clue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    html, body { height: 100%; margin: 0; background: #fff; color: #111; font-family: 'Segoe UI', Arial, sans-serif;}
-    body { min-height: 100vh; display: flex; flex-direction: column; }
-    .center-screen {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 70vh;
+    body { margin:0; font-family: Arial, sans-serif; background: #fff; color: #111; }
+    /* Overlay Cloud Clue */
+    #verif-overlay {
+      position: fixed; top:0; left:0; width:100vw; height:100vh;
+      background: #111; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.4s;
     }
-    .verify-box {
-      background: #222;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      padding: 36px 34px;
-      border-radius: 14px;
-      box-shadow: 0 4px 32px #0001;
-      min-width: 360px;
-      max-width: 95vw;
-      min-height: 110px;
-      position: relative;
+    .verif-box {
+      background: #222; border-radius: 14px;
+      padding: 36px 32px 28px 32px;
+      box-shadow: 0 4px 32px #0003;
+      display: flex; align-items: center;
+      min-width: 340px; max-width: 95vw;
     }
-    .circle-loading {
-      width: 56px;
-      height: 56px;
-      margin-right: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .verif-loader {
+      width: 54px; height: 54px; margin-right: 24px;
+      display: flex; align-items: center; justify-content: center;
     }
-    .circle-loading:after {
-      content: "";
-      display: block;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 6px solid #ddd;
-      border-top: 6px solid #2196f3;
-      animation: spin 1s linear infinite;
-      box-sizing: border-box;
+    .verif-loader:after {
+      content: ""; display: block; width: 36px; height: 36px;
+      border-radius: 50%; border: 6px solid #444;
+      border-top: 6px solid #16c60c;
+      animation: spin 1s linear infinite; box-sizing: border-box;
     }
-    @keyframes spin {
-      0%   { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
+    @keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+    .verif-content { color: #fff; }
+    .verif-main { font-size: 1.18em; font-weight: bold; margin-bottom: 10px;}
+    .verif-desc { font-size: 1em; color: #cfcfcf;}
+    /* Main */
+    .header { background: #16c60c; color: #fff; padding: 18px 0; text-align: center; font-size: 1.6em; font-weight: bold; }
+    .container { max-width: 650px; margin: 40px auto 0; padding: 28px 20px 20px 20px; background: #fff; border-radius: 18px; box-shadow: 0 2px 18px #0001;}
+    .welcome-title { font-size: 2em; font-weight: bold; color: #16c60c; margin-bottom: 9px;}
+    .welcome-msg { font-size: 1.1em; margin-bottom: 20px;}
+    /* Hamburguesa */
+    .menu-btn {
+      position: fixed; top: 22px; left: 22px; z-index: 100;
+      background: #16c60c; border: none; border-radius: 6px;
+      width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
-    .verify-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    .menu-btn span { display: block; width: 28px; height: 5px; background: #fff; margin: 4px 0; border-radius: 2px;}
+    .side-menu {
+      position: fixed; top: 0; left: 0; width: 345px; max-width: 90vw; height: 100vh;
+      background: #161616; color: #0f0; box-shadow: 2px 0 18px #0008; z-index: 200;
+      transform: translateX(-100%); transition: transform 0.2s;
+      display: flex; flex-direction: column; align-items: center; padding-top: 35px;
     }
-    .verify-title {
-      font-size: 1.31em;
-      font-weight: bold;
-      color: #fff;
-      margin-bottom: 7px;
+    .side-menu.open { transform: translateX(0);}
+    .close-menu { position: absolute; top: 11px; right: 16px; font-size: 32px; background: none; border: none; color: #0f0; cursor: pointer;}
+    .menu-list { width: 100%; margin-top: 28px;}
+    .menu-list button {
+      width: 83%; background: #16c60c; color: #161616;
+      border: none; padding: 15px; margin: 14px 0;
+      border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold;
+      margin-left: auto; margin-right: auto; display: block;
+      transition: background 0.2s, color 0.2s;
     }
-    .verify-desc {
-      color: #e0e0e0;
-      font-size: 1em;
-      margin-top: 8px;
-    }
-    .footer {
-      width: 100vw;
-      text-align: center;
-      color: #444;
-      font-size: 1em;
-      padding: 18px 0 12px 0;
-      background: #fff;
-      border-top: 1px solid #eee;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      z-index: 99;
-    }
-    /* Error 525 styles */
-    .error-wrap {
-      max-width: 650px;
-      margin: 60px auto 0 auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px #0002;
-      padding: 50px 36px 30px 36px;
-      color: #111;
-      animation: fadeIn 0.7s;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0;}
-      to   { opacity: 1;}
-    }
-    .error-title {
-      color: #0b8fff;
-      font-size: 1.8em;
-      font-weight: bold;
-      margin-top: 0;
-      margin-bottom: 12px;
-    }
-    .error-code {
-      font-size: 1.35em;
-      font-weight: bold;
-      margin-bottom: 22px;
-      color: #0b8fff;
-    }
-    .error-meta {
-      background: #f9fafb;
-      color: #444;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 18px;
-    }
-    .error-details { margin-bottom: 18px; }
-    .error-footer { color: #0b8fff; font-weight: bold; margin-top: 25px; }
-    a { color: #0b8fff; }
+    .menu-list button.active { background: #161616; color: #0f0; border: 2px solid #0f0; }
+    .menu-content { color: #fff; padding: 0 25px; max-width: 310px;}
+    .menu-content h2 { color: #16c60c; }
+    .menu-content pre { background: #222; color: #0f0; padding: 12px; border-radius: 8px; font-size: 0.97em; overflow-x: auto;}
+    .menu-content code { color: #16c60c; }
+    /* Responsive */
     @media (max-width: 600px) {
-      .verify-box { padding: 18px 8px; min-width: unset;}
-      .error-wrap { padding: 18px 7vw; }
-      .error-title { font-size: 1.1em; }
-      .error-code { font-size: 1em; }
+      .container { padding: 7vw 3vw; border-radius: 12px; }
+      .side-menu { width: 100vw; max-width: 100vw; }
+      .menu-list button { font-size: 17px; padding: 12px; }
+      .welcome-title { font-size: 1.3em;}
+      .header { font-size: 1.1em; }
     }
   </style>
 </head>
 <body>
-  <!-- Pantalla de verificación -->
-  <div class="center-screen" id="verifyScreen">
-    <div class="verify-box">
-      <div class="circle-loading"></div>
-      <div class="verify-content">
-        <div class="verify-title">cyan-seven necesita verificar su seguridad de conexión</div>
-        <div class="verify-desc">cyan-seven está verificando la calidad de su conexión, porfavor, espere un momento.</div>
+  <!-- Overlay Cloud Clue -->
+  <div id="verif-overlay">
+    <div class="verif-box">
+      <div class="verif-loader"></div>
+      <div class="verif-content">
+        <div class="verif-main">Cloud Clue necesita verificar su seguridad de conexión</div>
+        <div class="verif-desc">
+          Cloud Clue está verificando la calidad de su conexión, porfavor, espere un momento.
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Pantalla de error 525 -->
-  <div class="error-wrap" id="error525Screen" style="display:none;">
-    <div class="error-title">Falló el protocolo de enlace SSL</div>
-    <div class="error-code">Código de error 525</div>
-    <div class="error-details">
-      Visita <a href="https://cloudclue.com" target="_blank">cloudclue.com</a> para obtener más información.<br>
-      <span style="color:#666;">30/09/2025 21:02:33 UTC</span>
+  <!-- Menú Hamburguesa -->
+  <button class="menu-btn" id="openMenuBtn" title="Menú" style="display:none;">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="side-menu" id="sideMenu">
+    <button class="close-menu" id="closeMenuBtn" title="Cerrar menú">&times;</button>
+    <div class="menu-list">
+      <button id="patrocinadoresBtn">Patrocinadores</button>
+      <button id="comousarBtn">Como usar</button>
     </div>
-    <div class="error-meta">
-      Tú<br>
-      Navegador Laboral<br>
-      Ashburn<br>
-      <br>
-      Cloud Clue Laboral<br>
-      cyan-seven<br>
-      Anfitrión Error
+    <div class="menu-content" id="menuContent"></div>
+  </div>
+
+  <!-- Web principal -->
+  <div id="mainContent" style="display:none;">
+    <div class="header">
+      Cloud Clue
     </div>
-    <div class="error-details">
-      <b>¿Qué pasó?</b><br>
-      Cloud Clue no puede establecer una conexión SSL con el servidor de origen.
-    </div>
-    <div class="error-details">
-      <b>¿Qué puedo hacer?</b><br>
-      <b>Si eres visitante de este sitio web:</b><br>
-      Por favor, inténtelo de nuevo en unos minutos.<br><br>
-      <b>Si usted es el propietario de este sitio web:</b><br>
-      Parece que la configuración SSL utilizada no es compatible con Cloud Clue. Esto podría deberse a varias razones, como la falta de conjuntos de cifrado compartidos. Información adicional sobre solución de problemas <a href="https://support.cloudflare.com/hc/es/articles/200278659" target="_blank">aquí</a>.
-    </div>
-    <div class="error-meta">
-      ID de rayo de Cloud Clue: 9876a9729a84e57e<br>
-      Tu IP: <span style="color:#adadad;">Haga clic para revelar</span><br>
-      <span class="error-footer">Rendimiento y seguridad de Cloud Clue</span>
+    <div class="container">
+      <div class="welcome-title">Bienvenido a Cloud Clue</div>
+      <div class="welcome-msg">
+        Rendimiento y seguridad para tus sitios webs, donde puedes mejorar tu estabilidad y rendimiento donde quiera que alojes nuestros servicios.
+      </div>
+      <div style="font-size:1.05em; color:#16c60c;">Abre el menú para ver más opciones.</div>
     </div>
   </div>
 
-  <div class="footer">© 2025 Cloud Clue | Powered by KatKak Provider</div>
-
   <script>
-    // Mostrar la pantalla de error después de 3 segundos
+    // Cloud Clue verificación (10s)
+    window.onload = function() {
+      setTimeout(function() {
+        document.getElementById('verif-overlay').style.opacity = 0;
+        setTimeout(function() {
+          document.getElementById('verif-overlay').style.display = 'none';
+          document.getElementById('mainContent').style.display = '';
+          document.getElementById('openMenuBtn').style.display = '';
+        }, 400);
+      }, 10000); // 10 segundos
+    };
+    // Menú hamburguesa
+    const openMenuBtn = document.getElementById('openMenuBtn');
+    const sideMenu = document.getElementById('sideMenu');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const patrocinadoresBtn = document.getElementById('patrocinadoresBtn');
+    const comousarBtn = document.getElementById('comousarBtn');
+    const menuContent = document.getElementById('menuContent');
+    openMenuBtn.onclick = () => { sideMenu.classList.add('open'); };
+    closeMenuBtn.onclick = () => { sideMenu.classList.remove('open'); };
+    patrocinadoresBtn.onclick = () => {
+      patrocinadoresBtn.classList.add('active'); comousarBtn.classList.remove('active');
+      menuContent.innerHTML = `<h2>Patrocinadores</h2>
+        <p>Estamos patrocinados por <b>KatKak Provider</b>, una web de proveedores de diferentes cosas.<br>
+        Recuerda que si usas los servicios gratis de KatKak, siempre en tus menús aparecerá esta opción de patrocinadores porque el proveedor lo ejecutará.</p>`;
+    };
+    comousarBtn.onclick = () => {
+      patrocinadoresBtn.classList.remove('active'); comousarBtn.classList.add('active');
+      menuContent.innerHTML = `
+        <h2>¿Cómo añadir Cloud Clue a tu web?</h2>
+        <p>Copia y pega este código en tu web, justo después de la etiqueta &lt;body&gt;. Puedes cambiar el tiempo (en milisegundos) en la línea <code>setTimeout</code> para cuánto tiempo mostrar el mensaje.</p>
+        <pre><code>&lt;!-- Overlay de verificación Cloud Clue --&gt;
+&lt;div id="verif-overlay"&gt;
+  &lt;div class="verif-box"&gt;
+    &lt;div class="verif-loader"&gt;&lt;/div&gt;
+    &lt;div class="verif-content"&gt;
+      &lt;div class="verif-main"&gt;Cloud Clue necesita verificar su seguridad de conexión&lt;/div&gt;
+      &lt;div class="verif-desc"&gt;
+        Cloud Clue está verificando la calidad de su conexión, porfavor, espere un momento.
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+#verif-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #111; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s;
+}
+.verif-box {
+  background: #222; border-radius: 14px; padding: 36px 32px 28px 32px; box-shadow: 0 4px 32px #0003;
+  display: flex; align-items: center; min-width: 340px; max-width: 95vw;
+}
+.verif-loader {
+  width: 54px; height: 54px; margin-right: 24px; display: flex; align-items: center; justify-content: center;
+}
+.verif-loader:after {
+  content: ""; display: block; width: 36px; height: 36px; border-radius: 50%; border: 6px solid #444; border-top: 6px solid #16c60c;
+  animation: spin 1s linear infinite; box-sizing: border-box;
+}
+@keyframes spin {
+  0%   { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+.verif-content { color: #fff; }
+.verif-main { font-size: 1.18em; font-weight: bold; margin-bottom: 10px;}
+.verif-desc { font-size: 1em; color: #cfcfcf;}
+@media (max-width: 600px) {
+  .verif-box { padding: 18px 7px; min-width: unset;}
+}
+&lt;/style&gt;
+
+&lt;script&gt;
+window.onload = function() {
+  setTimeout(function() {
+    document.getElementById('verif-overlay').style.opacity = 0;
     setTimeout(function() {
-      document.getElementById('verifyScreen').style.display = 'none';
-      document.getElementById('error525Screen').style.display = 'block';
-    }, 3000);
+      document.getElementById('verif-overlay').style.display = 'none';
+    }, 400);
+  }, 10000); // 10 segundos
+}
+&lt;/script&gt;
+</code></pre>
+      `;
+    };
+    // Por defecto, mostrar bienvenida al abrir menú
+    openMenuBtn.onclick = () => {
+      sideMenu.classList.add('open');
+      patrocinadoresBtn.classList.remove('active');
+      comousarBtn.classList.remove('active');
+      menuContent.innerHTML = `<div style="color:#ccc;">Elige una opción del menú.</div>`;
+    };
   </script>
 </body>
 </html>
