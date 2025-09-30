@@ -39,16 +39,18 @@
     .container { max-width: 650px; margin: 40px auto 0; padding: 28px 20px 20px 20px; background: #fff; border-radius: 18px; box-shadow: 0 2px 18px #0001;}
     .welcome-title { font-size: 2em; font-weight: bold; color: #16c60c; margin-bottom: 9px;}
     .welcome-msg { font-size: 1.1em; margin-bottom: 20px;}
-    /* Hamburguesa */
+    /* Hamburguesa ┇ */
     .menu-btn {
       position: fixed; top: 22px; left: 22px; z-index: 100;
-      background: #16c60c; border: none; border-radius: 6px;
-      width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+      background: none; border: none;
+      color: #16c60c; font-size: 2.3em;
+      cursor: pointer; padding: 0; line-height: 1;
+      width: auto; height: auto; /* Sin fondo ni caja */
     }
-    .menu-btn span { display: block; width: 28px; height: 5px; background: #fff; margin: 4px 0; border-radius: 2px;}
+    /* Menú lateral */
     .side-menu {
       position: fixed; top: 0; left: 0; width: 345px; max-width: 90vw; height: 100vh;
-      background: #161616; color: #0f0; box-shadow: 2px 0 18px #0008; z-index: 200;
+      background: #111; color: #0f0; box-shadow: 2px 0 18px #0008; z-index: 200;
       transform: translateX(-100%); transition: transform 0.2s;
       display: flex; flex-direction: column; align-items: center; padding-top: 35px;
     }
@@ -62,7 +64,7 @@
       margin-left: auto; margin-right: auto; display: block;
       transition: background 0.2s, color 0.2s;
     }
-    .menu-list button.active { background: #161616; color: #0f0; border: 2px solid #0f0; }
+    .menu-list button.active { background: #111; color: #0f0; border: 2px solid #0f0; }
     .menu-content { color: #fff; padding: 0 25px; max-width: 310px;}
     .menu-content h2 { color: #16c60c; }
     .menu-content pre { background: #222; color: #0f0; padding: 12px; border-radius: 8px; font-size: 0.97em; overflow-x: auto;}
@@ -91,12 +93,8 @@
     </div>
   </div>
 
-  <!-- Menú Hamburguesa -->
-  <button class="menu-btn" id="openMenuBtn" title="Menú" style="display:none;">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
+  <!-- Menú Hamburguesa ┇ -->
+  <button class="menu-btn" id="openMenuBtn" title="Menú" style="display:none;">┇</button>
   <div class="side-menu" id="sideMenu">
     <button class="close-menu" id="closeMenuBtn" title="Cerrar menú">&times;</button>
     <div class="menu-list">
