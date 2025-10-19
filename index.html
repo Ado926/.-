@@ -1,54 +1,153 @@
+Entiendo, quieres el código HTML con la base de datos JSON incluida en el mismo archivo. Si bien es posible, no es la forma más común o eficiente de manejar bases de datos. Aquí te dejo el código, pero ten en cuenta que esto es solo para fines ilustrativos y la lógica real requerirá programación backend:
 
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Verifica tu cuenta</title>
+    <title>Mi sitio web</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
+        body { font-family: sans-serif; }
+        .container { width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; }
+        input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 10px; margin-bottom: 10px; }
+        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        #admin { display: none; }
+        #contenido { display: none; }
+        #login { display: block; }
+        #registro { display: block; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Verifica tu cuenta</h1>
-        <p>Hola,</p>
-        <p>Gracias por registrarte en nuestro sitio. Para completar el proceso de registro, por favor haz clic en el siguiente enlace para verificar tu dirección de correo electrónico:</p>
-        <p style="text-align: center;">
-            <a href="#" class="button">Verificar mi cuenta</a>
-        </p>
-        <p>Si no solicitaste este registro, puedes ignorar este correo electrónico.</p>
-        <p>Saludos,<br>El equipo de [Nombre de tu sitio]</p>
+
+    <!-- Formulario de registro -->
+    <div id="registro" class="container">
+        <h2>Registro</h2>
+        <form id="registro-form">
+            <input type="text" id="registro-usuario" placeholder="Nombre de usuario">
+            <input type="email" id="registro-correo" placeholder="Correo electrónico">
+            <input type="password" id="registro-clave" placeholder="Contraseña">
+            <button type="submit">Registrarse</button>
+        </form>
     </div>
+
+    <!-- Formulario de inicio de sesión -->
+    <div id="login" class="container">
+        <h2>Iniciar sesión</h2>
+        <form id="login-form">
+            <input type="email" id="login-correo" placeholder="Correo electrónico">
+            <input type="password" id="login-clave" placeholder="Contraseña">
+            <button type="submit">Iniciar sesión</button>
+        </form>
+        <p id="mensaje-suspendido" style="color: red; display: none;">Tu cuenta está suspendida.</p>
+    </div>
+
+    <!-- Panel de administración -->
+    <div id="admin" class="container">
+        <h2>Panel de administración</h2>
+        <p>Correo: sparts.wuaze@gmail.com</p>
+        <p>Contraseña: MANTIS MDD1</p>
+        <h3>Usuarios</h3>
+        <ul id="lista-usuarios">
+        </ul>
+    </div>
+
+    <!-- Contenido principal (Hola World) -->
+    <div id="contenido" class="container">
+        <h2>Hola World</h2>
+    </div>
+
+    <script>
+        const usuarios = [
+            { id: 1, usuario: "admin", correo: "sparts.wuaze@gmail.com", clave: "MANTIS MDD1", activo: true, rol: "admin" },
+            { id: 2, usuario: "usuario1", correo: "usuario1@example.com", clave: "clave1", activo: false, rol: "usuario" }
+        ];
+
+        const registroForm = document.getElementById('registro-form');
+        const loginForm = document.getElementById('login-form');
+        const adminDiv = document.getElementById('admin');
+        const contenidoDiv = document.getElementById('contenido');
+        const loginDiv = document.getElementById('login');
+        const registroDiv = document.getElementById('registro');
+        const listaUsuarios = document.getElementById('lista-usuarios');
+        const mensajeSuspendido = document.getElementById('mensaje-suspendido');
+
+        function mostrarUsuarios() {
+            listaUsuarios.innerHTML = '';
+            usuarios.forEach(usuario => {
+                const li = document.createElement('li');
+                li.textContent = `${usuario.usuario} - ${usuario.activo ? 'Activo' : 'Inactivo'} `;
+                const btnActivar = document.createElement('button');
+                btnActivar.textContent = 'Activar';
+                btnActivar.addEventListener('click', () => {
+                    usuario.activo = true;
+                    mostrarUsuarios();
+                });
+                const btnDesactivar = document.createElement('button');
+                btnDesactivar.textContent = 'Desactivar';
+                btnDesactivar.addEventListener('click', () => {
+                    usuario.activo = false;
+                    mostrarUsuarios();
+                });
+
+                li.appendChild(btnActivar);
+                li.appendChild(btnDesactivar);
+                listaUsuarios.appendChild(li);
+            });
+        }
+
+        registroForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const usuario = document.getElementById('registro-usuario').value;
+            const correo = document.getElementById('registro-correo').value;
+            const clave = document.getElementById('registro-clave').value;
+
+            const nuevoUsuario = {
+                id: usuarios.length + 1,
+                usuario: usuario,
+                correo: correo,
+                clave: clave,
+                activo: false,
+                rol: "usuario"
+            };
+            usuarios.push(nuevoUsuario);
+            alert('Usuario registrado. Espera la aprobación del administrador.');
+        });
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const correo = document.getElementById('login-correo').value;
+            const clave = document.getElementById('login-clave').value;
+
+            const usuario = usuarios.find(u => u.correo === correo && u.clave === clave);
+
+            if (usuario) {
+                if (usuario.activo) {
+                    loginDiv.style.display = 'none';
+                    registroDiv.style.display = 'none';
+                    contenidoDiv.style.display = 'block';
+                    if (usuario.rol === 'admin' && usuario.correo === 'sparts.wuaze@gmail.com' && usuario.clave === 'MANTIS MDD1') {
+                        adminDiv.style.display = 'block';
+                        mostrarUsuarios();
+                    } else {
+                        adminDiv.style.display = 'none';
+                    }
+                } else {
+                    mensajeSuspendido.style.display = 'block';
+                }
+            } else {
+                alert('Credenciales incorrectas');
+            }
+        });
+
+        // Inicialmente ocultar todo y mostrar solo login y registro
+        adminDiv.style.display = 'none';
+        contenidoDiv.style.display = 'none';
+    </script>
+
 </body>
 </html>
+```
+
+He incluido un ejemplo básico con JavaScript para simular el registro, inicio de sesión y la activación/desactivación de usuarios. Recuerda que esta es una simulación y no es segura ni escalable. ¿Te gustaría que te explique las limitaciones de este enfoque o te dé alternativas más seguras? 
+
+Generado por Zapia.com, tu IA personal
