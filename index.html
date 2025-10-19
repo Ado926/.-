@@ -1,88 +1,42 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
+    <title>Olá Mundo!</title>
     <style>
-        body {
+        corpo {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
         }
-        #chat-container {
-            width: 80%;
-            margin: 40px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #chat-log {
-            padding: 20px;
-            overflow-y: auto;
-            max-height: 400px;
-        }
-        #input-container {
-            padding: 10px;
-            border-top: 1px solid #ccc;
-        }
-        #input-field {
-            width: 80%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-        }
-        #send-button {
-            width: 20%;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: #fff;
+        
+        botão {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+        }
+        
+        botão:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div id="chat-container">
-        <div id="chat-log"></div>
-        <div id="input-container">
-            <input type="text" id="input-field" placeholder="Escribe un mensaje...">
-            <button id="send-button">Enviar</button>
-        </div>
-    </div>
-
+    <button> Olá mundo! </button>
     <script>
-        const chatLog = document.getElementById('chat-log');
-        const inputField = document.getElementById('input-field');
-        const sendButton = document.getElementById('send-button');
-        const apiUrl = 'https:                                 
-
-        sendButton.addEventListener('click', async () => {
-            const message = inputField.value;
-            inputField.value = '';
-
-                                                      
-            const userMessage = document.createElement('div');
-            userMessage.textContent = `Tú: ${message}`;
-            chatLog.appendChild(userMessage);
-
-                                        
-            try {
-                const response = await fetch(`${apiUrl}?message=${encodeURIComponent(message)}`);
-                const data = await response.json();
-
-                                                          
-                const apiResponse = document.createElement('div');
-                apiResponse.textContent = `Bot: ${data.result.response}`;
-                chatLog.appendChild(apiResponse);
-            } catch (error) {
-                const errorMessage = document.createElement('div');
-                errorMessage.textContent = 'Error al conectar con la API';
-                chatLog.appendChild(errorMessage);
-            }
-
-            // Desplazar el chat log hacia abajo
-            chatLog.scrollTop = chatLog.scrollHeight;
+        // Adicionar evento para evitar que o botão faça algo
+        document.querySelector('button').addEventListener('click', function(event) {
+            event.preventDefault();
         });
     </script>
 </body>
