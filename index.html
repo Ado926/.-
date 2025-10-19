@@ -24,13 +24,13 @@
             var inputbox = document.getElementById("inputbox");
             var chatbox = document.getElementById("chatbox");
             var message = inputbox.value;
-            chatbox.innerHTML += "<p>Tú: " + message + "</p>";
+            chatbox.innerHTML += "<p>Yo: " + message + "</p>";
             inputbox.value = "";
 
             // Aquí iría la lógica para conectar con una API de IA y obtener una respuesta.
             // Por ahora, solo mostraremos una respuesta predefinida.
             setTimeout(function() {
-                chatbox.innerHTML += "<p>Zapia: Lo siento, no puedo responder a eso en este momento.</p>";
+                chatbox.innerHTML += "<p>Zapia: Estoy en evolución, aún no tengo la función de leer mensajes.</p>";
             }, 1000);
         }
     </script>
