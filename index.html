@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat con ChatGPT</title>
+    <title>Descargar videos de YouTube</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
         }
-        
-        .contenedor {
+        #formulario {
             width: 80%;
             margin: 40px auto;
             padding: 20px;
@@ -19,144 +16,40 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        
-        .header {
-            display: flex;
-            justify-content: flex-end;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-        
-        .cerrar-btn {
-            background-color: #f44336;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        
-        .cerrar-btn:hover {
-            background-color: #e91e63;
-        }
-        
-        .chat-box {
-            padding: 20px;
-            overflow-y: auto;
-            max-height: 400px;
-        }
-        
-        .mensaje {
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-        
-        .usuario {
-            background-color: #2196f3; /* Azul oscuro */
-            color: #fff;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            text-align: right;
-        }
-        
-        .chatgpt {
-            background-color: #87ceeb; /* Azul claro */
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            text-align: left;
-        }
-        
-        .input-group {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #ccc;
-        }
-        
-        .input-group input {
-            width: 80%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-        }
-        
-        .enviar-btn {
-            width: 20%;
-            background-color: #4CAF50; /* Verde */
-            color: #fff;
-            border: none;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        
-        .enviar-btn:hover {
-            background-color: #3e8e41;
-        }
-        
-        @media (max-width: 768px) {
-            .contenedor {
-                width: 90%;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .contenedor {
-                width: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            .input-group input {
-                width: 70%;
-            }
-            .enviar-btn {
-                width: 30%;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="contenedor">
-        <div class="header">
-            <button class="cerrar-btn" onclick="reiniciar()">Cerrar</button>
-        </div>
-        <div class="chat-box" id="chat-box">
-        </div>
-        <div class="input-group">
-            <input type="text" id="mensaje" placeholder="Escribe tu mensaje...">
-            <button class="enviar-btn" onclick="enviarMensaje()">Enviar</button>
-        </div>
+    <div id="formulario">
+        <h2>Descargar video de YouTube</h2>
+        <input type="text" id="url" placeholder="Ingrese la URL del video">
+        <button id="descargar">Descargar</button>
+        <div id="resultado"></div>
     </div>
-    
+
     <script>
-        function enviarMensaje() {
-            const mensaje = document.getElementById("mensaje").value;
-            const chatBox = document.getElementById("chat-box");
-            
-            if (mensaje !== "") {
-                const usuarioMensaje = document.createElement("div");
-                usuarioMensaje.className = "usuario mensaje";
-                usuarioMensaje.textContent = mensaje;
-                chatBox.appendChild(usuarioMensaje);
-                
-                // Simulación de respuesta de ChatGPT
-                setTimeout(() => {
-                    const chatGptMensaje = document.createElement("div");
-                    chatGptMensaje.className = "chatgpt mensaje";
-                    chatGptMensaje.textContent = "Hola, aun estoy en proceso de creación. más <tarde> t÷e atiendo.";
-                    chatBox.appendChild(chatGptMensaje);
-                }, 1000);
-                
-                document.getElementById("mensaje").value = "";
-                chatBox.scrollTop = chatBox.scrollHeight;
+        const urlInput = document.getElementById('url');
+        const descargarButton = document.getElementById('descargar');
+        const resultadoDiv = document.getElementById('resultado');
+
+        descargarButton.addEventListener('click', async () => {
+            const url = urlInput.value;
+            const apiUrl = `https://ruby-core.vercel.app/api/download/youtube/dlv2?url=${encodeURIComponent(url)}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.status) {
+                    // Procesar la respuesta exitosa
+                    resultadoDiv.innerText = 'Video descargado con éxito';
+                } else {
+                    resultadoDiv.innerText = data.error;
+                }
+            } catch (error) {
+                console.error(error);
+                resultadoDiv.innerText = 'Error al descargar el video';
             }
-        }
-        
-        function reiniciar() {
-            const chatBox = document.getElementById("chat-box");
-            chatBox.innerHTML = "";
-        }
+        });
     </script>
 </body>
 </html>
