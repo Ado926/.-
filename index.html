@@ -1,63 +1,40 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meta AI</title>
+    <title>Anuncio</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
         }
         
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        .header {
-            background-color: #007bff;
-            color: #ffffff;
-            padding: 10px;
-            text-align: center;
+        .anuncio {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Meta AI</h1>
+    <div class="video-container">
+        <div class="anuncio">ANUNCIO</div>
+        <iframe src="https://www.youtube.com/embed/lw3ul4RI-zs?autoplay=1&controls=0&showinfo=0&modestbranding=1&loop=1&playlist=lw3ul4RI-zs" frameborder="0" allowfullscreen width="100%" height="100%"></iframe>
     </div>
-    <div class="container">
-        <h2>O que é o Meta AI?</h2>
-        <p>O Meta AI é uma inteligência artificial desenvolvida pela Meta, capaz de processar e gerar texto, imagens e outros conteúdos.</p>
-        
-        <h2>Funcionalidades</h2>
-        <ul>
-            <li>Resposta a perguntas</li>
-            <li>Geração de texto</li>
-            <li>Tradução de idiomas</li>
-            <li>E mais!</li>
-        </ul>
-        
-        <h2>Experimente agora</h2>
-        <textarea id="input" placeholder="Digite sua pergunta ou mensagem"></textarea>
-        <button id="enviar">Enviar</button>
-        <div id="resposta"></div>
-    </div>
-    
-    <script>
-        // Adicionar evento para enviar a pergunta
-        document.getElementById('enviar').addEventListener('click', function() {
-            const input = document.getElementById('input').value;
-            // Aqui você pode adicionar a lógica para processar a pergunta e exibir a resposta
-            document.getElementById('resposta').innerHTML = 'Resposta: ' + input;
-        });
-    </script>
 </body>
 </html>
