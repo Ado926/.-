@@ -67,13 +67,19 @@
             chatLog.appendChild(userMessage);
 
                                         
-            const response = await fetch(`${apiUrl}?message=${encodeURIComponent(message)}`);
-            const data = await response.json();
+            try {
+                const response = await fetch(`${apiUrl}?message=${encodeURIComponent(message)}`);
+                const data = await response.json();
 
-                                                      
-            const apiResponse = document.createElement('div');
-            apiResponse.textContent = `Bot: ${data.result.response}`;
-            chatLog.appendChild(apiResponse);
+                                                          
+                const apiResponse = document.createElement('div');
+                apiResponse.textContent = `Bot: ${data.result.response}`;
+                chatLog.appendChild(apiResponse);
+            } catch (error) {
+                const errorMessage = document.createElement('div');
+                errorMessage.textContent = 'Error al conectar con la API';
+                chatLog.appendChild(errorMessage);
+            }
 
             // Desplazar el chat log hacia abajo
             chatLog.scrollTop = chatLog.scrollHeight;
