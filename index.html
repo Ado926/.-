@@ -1,104 +1,38 @@
+
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Makima Bot</title>
-  <style>
-    body {
-      background: #e0f0ff;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      color: #222;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 500px;
-      margin: 32px auto;
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 2px 18px #0002;
-      padding: 32px 24px;
-      text-align: center;
-    }
-    .makima-title {
-      font-size: 2.2em;
-      color: #3498db;
-      margin-bottom: 0.2em;
-    }
-    .subtitle {
-      font-size: 1.2em;
-      margin-bottom: 1.2em;
-      color: #3498db;
-    }
-    .banner {
-      background: linear-gradient(90deg, #b6e0fe 0%, #d1c4e9 100%);
-      color: #3498db;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 18px;
-      font-size: 1.1em;
-    }
-    .section-title {
-      font-weight: bold;
-      color: #2980b9;
-      margin: 1.2em 0 0.5em;
-    }
-    .commands {
-      background: #f5faff;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 16px;
-      text-align: left;
-      display: inline-block;
-    }
-    .footer {
-      margin-top: 32px;
-      font-size: 0.95em;
-      color: #888;
-    }
-    .heart {
-      color: #3498db;
-      font-size: 1.2em;
-      vertical-align: middle;
-    }
-    a {
-      color: #3498db;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+    <title>Zapia Web Chat</title>
+    <style>
+        body { font-family: sans-serif; }
+        #chatbox { width: 80%; height: 300px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; }
+        #inputbox { width: 70%; }
+        button { width: 20%; }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="makima-title">💙 𝙈𝙖𝙠𝙞𝙢𝙖 𝘽𝙤𝙩 💙</div>
-    <div class="subtitle">➩ 𝗛𝗲𝗰𝗵𝗮 𝗰𝗼𝗻 𝗰𝗮𝗿𝗶ñ𝗼 𝗽𝗼𝗿 𝗙𝗲𝗹𝗶𝘅 𝗠𝗮𝗻𝘂𝗲𝗹 ♡</div>
-    
-    <div class="banner">
-      「🍦 Inicio ❄」<br>
-      Makima Banner<br>
-      ｡･ﾟﾟ･💙･ﾟﾟ･｡
+    <h1>Zapia Web Chat</h1>
+    <div id="chatbox">
+        <p>¡Hola! Soy Zapia, tu asistente virtual.</p>
     </div>
+    <div>
+        <input type="text" id="inputbox" placeholder="Escribe tu mensaje...">
+        <button onclick="sendMessage()">Enviar</button>
+    </div>
+    <script>
+        function sendMessage() {
+            var inputbox = document.getElementById("inputbox");
+            var chatbox = document.getElementById("chatbox");
+            var message = inputbox.value;
+            chatbox.innerHTML += "<p>Tú: " + message + "</p>";
+            inputbox.value = "";
 
-    <div class="section-title">✰ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 ✰</div>
-    <div>📅 Junio 2025 | ☊ Makima ☊</div>
-    <div class="commands">
-      ☁︎ Aquí tienes algunos comandos de la bot:<br><br>
-      — 🩵 2025┃MakimaBot 💎<br><br>
-      <strong>🩵 Info Makima 🩵</strong><br>
-      🩵 Canal Ofc: <a href="#">💎 SIGUENOS 💎</a><br>
-      <br>
-      📞 Contacto: 🍫 Dev Felix 🍫<br>
-      ⚙ Versión: 0.0.2<br>
-      👤 Creador: Félix Manuel
-    </div>
-
-    <div class="footer">
-      Creado con <span class="heart">💙</span> por Félix Manuel — © 2025 Makima Bot ┇ᴛᴏᴅᴏs ʟᴏs ᴅᴇʀᴇᴄʜᴏs ʀᴇsᴇʀᴠᴀᴅᴏs
-    </div>
-  </div>
+            // Aquí iría la lógica para conectar con una API de IA y obtener una respuesta.
+            // Por ahora, solo mostraremos una respuesta predefinida.
+            setTimeout(function() {
+                chatbox.innerHTML += "<p>Zapia: Lo siento, no puedo responder a eso en este momento.</p>";
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
