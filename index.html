@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descargar videos de YouTube</title>
+    <title>Chatbot</title>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
-        #formulario {
+        #chat-container {
             width: 80%;
             margin: 40px auto;
             padding: 20px;
@@ -16,39 +16,67 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        #chat-log {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        #input-container {
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        #input-field {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+        #send-button {
+            width: 20%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div id="formulario">
-        <h2>Descargar video de YouTube</h2>
-        <input type="text" id="url" placeholder="Ingrese la URL del video">
-        <button id="descargar">Descargar</button>
-        <div id="resultado"></div>
+    <div id="chat-container">
+        <div id="chat-log"></div>
+        <div id="input-container">
+            <input type="text" id="input-field" placeholder="Escribe un mensaje...">
+            <button id="send-button">Enviar</button>
+        </div>
     </div>
 
     <script>
-        const urlInput = document.getElementById('url');
-        const descargarButton = document.getElementById('descargar');
-        const resultadoDiv = document.getElementById('resultado');
+        const chatLog = document.getElementById('chat-log');
+        const inputField = document.getElementById('input-field');
+        const sendButton = document.getElementById('send-button');
+        const apiUrl = 'https:                                 
 
-        descargarButton.addEventListener('click', async () => {
-            const url = urlInput.value;
-            const apiUrl = `https://ruby-core.vercel.app/api/download/youtube/dlv2?url=${encodeURIComponent(url)}`;
+        sendButton.addEventListener('click', async () => {
+            const message = inputField.value;
+            inputField.value = '';
 
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
+                                                      
+            const userMessage = document.createElement('div');
+            userMessage.textContent = `Tú: ${message}`;
+            chatLog.appendChild(userMessage);
 
-                if (data.status) {
-                    // Procesar la respuesta exitosa
-                    resultadoDiv.innerText = 'Video descargado con éxito';
-                } else {
-                    resultadoDiv.innerText = data.error;
-                }
-            } catch (error) {
-                console.error(error);
-                resultadoDiv.innerText = 'Error al descargar el video';
-            }
+                                        
+            const response = await fetch(`${apiUrl}?message=${encodeURIComponent(message)}`);
+            const data = await response.json();
+
+                                                      
+            const apiResponse = document.createElement('div');
+            apiResponse.textContent = `Bot: ${data.result.response}`;
+            chatLog.appendChild(apiResponse);
+
+            // Desplazar el chat log hacia abajo
+            chatLog.scrollTop = chatLog.scrollHeight;
         });
     </script>
 </body>
