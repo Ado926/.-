@@ -3,40 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olá Mundo!</title>
+    <title>Meta AI</title>
     <style>
-        corpo {
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
         }
         
-        botão {
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
             background-color: #007bff;
             color: #ffffff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        botão:hover {
-            background-color: #0056b3;
+            padding: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <button> Olá mundo! </button>
+    <div class="header">
+        <h1>Meta AI</h1>
+    </div>
+    <div class="container">
+        <h2>O que é o Meta AI?</h2>
+        <p>O Meta AI é uma inteligência artificial desenvolvida pela Meta, capaz de processar e gerar texto, imagens e outros conteúdos.</p>
+        
+        <h2>Funcionalidades</h2>
+        <ul>
+            <li>Resposta a perguntas</li>
+            <li>Geração de texto</li>
+            <li>Tradução de idiomas</li>
+            <li>E mais!</li>
+        </ul>
+        
+        <h2>Experimente agora</h2>
+        <textarea id="input" placeholder="Digite sua pergunta ou mensagem"></textarea>
+        <button id="enviar">Enviar</button>
+        <div id="resposta"></div>
+    </div>
+    
     <script>
-        // Adicionar evento para evitar que o botão faça algo
-        document.querySelector('button').addEventListener('click', function(event) {
-            event.preventDefault();
+        // Adicionar evento para enviar a pergunta
+        document.getElementById('enviar').addEventListener('click', function() {
+            const input = document.getElementById('input').value;
+            // Aqui você pode adicionar a lógica para processar a pergunta e exibir a resposta
+            document.getElementById('resposta').innerHTML = 'Resposta: ' + input;
         });
     </script>
 </body>
