@@ -1,37 +1,161 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Zapia Web Chat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat con ChatGPT</title>
     <style>
-        body { font-family: sans-serif; }
-        #chatbox { width: 80%; height: 300px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; }
-        #inputbox { width: 70%; }
-        button { width: 20%; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .contenedor {
+            width: 80%;
+            margin: 40px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        .cerrar-btn {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .cerrar-btn:hover {
+            background-color: #e91e63;
+        }
+        
+        .chat-box {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        
+        .mensaje {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        .usuario {
+            background-color: #2196f3; /* Azul oscuro */
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+        
+        .chatgpt {
+            background-color: #87ceeb; /* Azul claro */
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        
+        .input-group {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        
+        .input-group input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+        
+        .enviar-btn {
+            width: 20%;
+            background-color: #4CAF50; /* Verde */
+            color: #fff;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .enviar-btn:hover {
+            background-color: #3e8e41;
+        }
+        
+        @media (max-width: 768px) {
+            .contenedor {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .contenedor {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .input-group input {
+                width: 70%;
+            }
+            .enviar-btn {
+                width: 30%;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Zapia Web Chat</h1>
-    <div id="chatbox">
-        <p>¡Hola! Soy Zapia, tu asistente virtual.</p>
+    <div class="contenedor">
+        <div class="header">
+            <button class="cerrar-btn" onclick="reiniciar()">Cerrar</button>
+        </div>
+        <div class="chat-box" id="chat-box">
+        </div>
+        <div class="input-group">
+            <input type="text" id="mensaje" placeholder="Escribe tu mensaje...">
+            <button class="enviar-btn" onclick="enviarMensaje()">Enviar</button>
+        </div>
     </div>
-    <div>
-        <input type="text" id="inputbox" placeholder="Escribe tu mensaje...">
-        <button onclick="sendMessage()">Enviar</button>
-    </div>
+    
     <script>
-        function sendMessage() {
-            var inputbox = document.getElementById("inputbox");
-            var chatbox = document.getElementById("chatbox");
-            var message = inputbox.value;
-            chatbox.innerHTML += "<p>Yo: " + message + "</p>";
-            inputbox.value = "";
-
-            // Aquí iría la lógica para conectar con una API de IA y obtener una respuesta.
-            // Por ahora, solo mostraremos una respuesta predefinida.
-            setTimeout(function() {
-                chatbox.innerHTML += "<p>Zapia: Estoy en evolución, aún no tengo la función de leer mensajes.</p>";
-            }, 1000);
+        function enviarMensaje() {
+            const mensaje = document.getElementById("mensaje").value;
+            const chatBox = document.getElementById("chat-box");
+            
+            if (mensaje !== "") {
+                const usuarioMensaje = document.createElement("div");
+                usuarioMensaje.className = "usuario mensaje";
+                usuarioMensaje.textContent = mensaje;
+                chatBox.appendChild(usuarioMensaje);
+                
+                // Simulación de respuesta de ChatGPT
+                setTimeout(() => {
+                    const chatGptMensaje = document.createElement("div");
+                    chatGptMensaje.className = "chatgpt mensaje";
+                    chatGptMensaje.textContent = "Esta es una respuesta de ChatGPT";
+                    chatBox.appendChild(chatGptMensaje);
+                }, 1000);
+                
+                document.getElementById("mensaje").value = "";
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+        
+        function reiniciar() {
+            const chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML = "";
         }
     </script>
 </body>
