@@ -1,145 +1,298 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Mi sitio web</title>
-    <style>
-        body { font-family: sans-serif; }
-        .container { width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; }
-        input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 10px; margin-bottom: 10px; }
-        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        #admin { display: none; }
-        #contenido { display: none; }
-        #login { display: block; }
-        #registro { display: block; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión — StellarWa API</title>
+  <link rel="stylesheet" href="/docs/css/ui.css">
+  <link rel="shortcut icon" href="/src/imagen/icon.png" />
+  <meta property="og:title" content="Login - Stellar API" />
+  <meta name="description" content="Iniciar sesión en Stellar API" />
+  <meta property="og:image" content="/src/imagen/icon.png" />
+  <style>
+      /* Estilos similares a los proporcionados anteriormente */
+      html, body {
+          height: 100%;
+      }
+      body {
+          background:
+              radial-gradient(1200px 800px at 10% 10%, rgba(37, 99, 235, .18), transparent 60%),
+              radial-gradient(1000px 700px at 90% 90%, rgba(236, 72, 153, .18), transparent 60%),
+              radial-gradient(900px 600px at 50% 20%, rgba(239, 68, 68, .12), transparent 60%),
+              linear-gradient(135deg, #0a0e17 0%, #101628 40%, #15122a 100%);
+          animation: bgShift 20s ease-in-out infinite alternate;
+      }
+      @keyframes bgShift {
+          from {
+              background-position: 0 0, 0 0, 0 0, 0 0;
+          }
+          to {
+              background-position: 20px -30px, -40px 30px, 30px 10px, 0 0;
+          }
+      }
+      .hero {
+          max-width: 980px;
+          margin: 0 auto;
+          padding: 24px;
+      }
+      .logo-wrap {
+          display: flex;
+          justify-content: center;
+      }
+      .logo {
+          width: 140px;
+          height: auto;
+          margin: 18px auto 8px auto;
+          display: block;
+          filter: drop-shadow(0 12px 36px rgba(0, 0, 0, .45));
+      }
+      .title {
+          text-align: center;
+          margin: 0 auto 12px;
+          font-size: 32px;
+          font-weight: 900;
+          letter-spacing: .6px;
+          background: linear-gradient(90deg, #60a5fa, #fff, #f472b6);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          text-shadow: 0 2px 24px rgba(96, 165, 250, .25);
+      }
+      .subtitle {
+          opacity: .92;
+          text-align: center;
+          margin-top: 6px;
+      }
+      .card-lg {
+          position: relative;
+          padding: 22px;
+          border-radius: 18px;
+          background: linear-gradient(180deg, rgba(17, 25, 40, .65), rgba(17, 25, 40, .5));
+          border: 1px solid transparent;
+          background-clip: padding-box;
+      }
+      .input {
+          background: #0c1324;
+          border: 1px solid #243244;
+          color: #eaf2ff;
+      }
+      .input:focus {
+          border-color: #2563eb;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, .25);
+      }
+      .pw-toggle {
+          background: #ec4899;
+          border: 0;
+          color: #050a14;
+      }
+      .btn {
+          background: #2563eb;
+          border-color: #1d4ed8;
+      }
+      .btn.alt {
+          background: #ef4444;
+          border-color: #b91c1c;
+      }
+      .btn.ghost {
+          border-color: #334155;
+          color: #e5eeff;
+          background: transparent;
+      }
+      .btn.linklike {
+          background: transparent;
+          border: 0;
+          color: #93c5fd;
+          text-decoration: underline;
+          padding: 0;
+      }
+      .btn.wa {
+          background: #25D366;
+          border-color: #128C7E;
+          color: #041b0e;
+      }
+      .btn.mail {
+          background: #60a5fa;
+          border-color: #1d4ed8;
+          color: #07111f;
+      }
+      .message-box {
+          padding: 10px;
+          border-radius: 5px;
+          margin: 15px 0;
+          text-align: center;
+      }
+      .success {
+          background-color: #d4edda;
+          color: #155724;
+          border: 1px solid #c3e6cb;
+      }
+      .error {
+          background-color: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+      }
+      .support {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          justify-content: center;
+          margin-top: 8px;
+      }
+      .modal {
+          position: fixed;
+          inset: 0;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          background: rgba(2, 6, 15, .65);
+          backdrop-filter: blur(6px);
+          z-index: 40;
+      }
+      .modal.show {
+          display: flex;
+      }
+      .modal .box {
+          width: min(560px, 92vw);
+      }
+  </style>
 </head>
 <body>
+  <div class="hero">
+    <div class="logo-wrap">
+      <img class="logo" src="/src/imagen/icon.png" alt="Icon"
+           onerror="this.onerror=null;this.src='/logo.png';this.style.opacity='0.95'">
+    </div>
 
-    <!-- Formulario de registro -->
-    <div id="registro" class="container">
-        <h2>Registro</h2>
-        <form id="registro-form">
-            <input type="text" id="registro-usuario" placeholder="Nombre de usuario">
-            <input type="email" id="registro-correo" placeholder="Correo electrónico">
-            <input type="password" id="registro-clave" placeholder="Contraseña">
-            <button type="submit">Registrarse</button>
+    <h1 class="title">API Stellar Wa</h1>
+    <p class="subtitle">Accede a tu panel y usa tu API con seguridad y velocidad ⚡</p>
+
+    <div id="messageBox" class="message-box" style="display: none;"></div>
+
+    <form class="card card-lg" id="loginForm" method="POST" action="/login" autocomplete="off" style="max-width:520px;margin:0 auto;">
+      <h2>Iniciar sesión</h2>
+      <div class="grid">
+        <div class="input-wrap">
+          <label>Correo Electrónico</label>
+          <input class="input" type="email" name="email" placeholder="correo electrónico" required>
+        </div>
+        <div class="input-wrap">
+          <label>Contraseña</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input class="input" id="pw" type="password" name="password" placeholder="••••••••" required style="flex:1">
+            <button type="button" class="pw-toggle" aria-label="Mostrar contraseña" data-target="pw">👁</button>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="row">
+          <button class="btn" id="loginBtn" type="submit"><span class="txt">Entrar</span></button>
+          <a class="btn ghost" href="/register">Crear cuenta</a>
+        </div>
+        <div class="row">
+          <button type="button" class="btn linklike" onclick="openModal('resendModal')">¿No recibiste el correo?</button>
+          <a class="btn alt" href="/reset">Olvidé mi contraseña</a>
+        </div>
+      </div>
+    </form>
+
+    <div class="modal" id="resendModal" aria-hidden="true" role="dialog" aria-label="Reenviar verificación">
+      <div class="box card card-lg">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <h3>Reenviar verificación</h3>
+          <button class="btn ghost" type="button" onclick="closeModal('resendModal')">✕</button>
+        </div>
+        <form id="resendForm" method="post" autocomplete="off">
+          <div class="input-wrap">
+            <label>Tu correo</label>
+            <input class="input" type="email" name="email" id="resendEmail" required placeholder="tucorreo@dominio.com">
+          </div>
+          <div class="actions">
+            <button class="btn" type="submit">Reenviar</button>
+          </div>
         </form>
+      </div>
     </div>
 
-    <!-- Formulario de inicio de sesión -->
-    <div id="login" class="container">
-        <h2>Iniciar sesión</h2>
-        <form id="login-form">
-            <input type="email" id="login-correo" placeholder="Correo electrónico">
-            <input type="password" id="login-clave" placeholder="Contraseña">
-            <button type="submit">Iniciar sesión</button>
-        </form>
-        <p id="mensaje-suspendido" style="color: red; display: none;">Tu cuenta está suspendida.</p>
+    <p class="subtitle">¿No puedes registrarte o iniciar sesión? Habla con soporte:</p>
+    <a class="btn mail" href="/cdn-cgi/l/email-protection#02666774787b7a6e687142656f636b6e2c616d6f3d717760686761763f4c6d273032727767666d2730326b6c6b616b63702730326d2730327067656b71767063706f67273032676c2730326e6327303263726b2730325176676e6e637024606d667b3f4a6d6e632730326773776b726d2730325176676e6e63702730412732432732434771766d7b27303276676c6b676c666d27303272706d606e676f6371273032726370632730326b6c6b616b63702730326d2730327067656b71767063706f67273032676c2730326e6327303263726b2c2730324a672730326b6c76676c7663666d2730327463706b637127303274676167712730412730327267706d2730326c6d2730326a67273032726d666b666d273032636161676667702c27324327324327374046677161706b6067273032637377274131274346273032716b27303263726370676167273032636e652741312740436c2730326f676c7163686727303266672730326770706d702730412730326d273032676c273032737727413127433b2730327263716d27303271672730327377676663273746273243273243457063616b6371273032726d702730327177273032637b7766632730327b2730326376676c616b2741312740316c2c273243">Soporte por correo</a>
+      <a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/5219921062586?text=Hola+DevZyxlJs,+no+puedo+acceder+a+mi+cuenta+de+la+API.">WhatsApp</a>
     </div>
+  </div>
 
-    <!-- Panel de administración -->
-    <div id="admin" class="container">
-        <h2>Panel de administración</h2>
-        <p>Correo: sparts.wuaze@gmail.com</p>
-        <p>Contraseña: MANTIS MDD1</p>
-        <h3>Usuarios</h3>
-        <ul id="lista-usuarios">
-        </ul>
-    </div>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Ver/ocultar contraseña
+    const toggle = (btn) => {
+      const id = btn.getAttribute('data-target');
+      const el = document.getElementById(id);
+      el.type = el.type === 'password' ? 'text' : 'password';
+    };
+    document.querySelectorAll('.pw-toggle').forEach(b => b.addEventListener('click', () => toggle(b)));
 
-    <!-- Contenido principal (Hola World) -->
-    <div id="contenido" class="container">
-        <h2>Hola World</h2>
-    </div>
+    // Login con mensaje JSON
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(loginForm);
+      const data = {};
+      formData.forEach((value, key) => { data[key] = value; });
 
-    <script>
-        const usuarios = [
-            { id: 1, usuario: "admin", correo: "sparts.wuaze@gmail.com", clave: "MANTIS MDD1", activo: true, rol: "admin" },
-            { id: 2, usuario: "usuario1", correo: "usuario1@example.com", clave: "clave1", activo: false, rol: "usuario" }
-        ];
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
 
-        const registroForm = document.getElementById('registro-form');
-        const loginForm = document.getElementById('login-form');
-        const adminDiv = document.getElementById('admin');
-        const contenidoDiv = document.getElementById('contenido');
-        const loginDiv = document.getElementById('login');
-        const registroDiv = document.getElementById('registro');
-        const listaUsuarios = document.getElementById('lista-usuarios');
-        const mensajeSuspendido = document.getElementById('mensaje-suspendido');
+      const result = await response.json();
+      const messageBox = document.getElementById('messageBox');
+      messageBox.style.display = 'block';
+      messageBox.className = 'message-box ' + (result.status ? 'success' : 'error');
+      messageBox.textContent = result.message;
 
-        function mostrarUsuarios() {
-            listaUsuarios.innerHTML = '';
-            usuarios.forEach(usuario => {
-                const li = document.createElement('li');
-                li.textContent = `${usuario.usuario} - ${usuario.activo ? 'Activo' : 'Inactivo'} `;
-                const btnActivar = document.createElement('button');
-                btnActivar.textContent = 'Activar';
-                btnActivar.addEventListener('click', () => {
-                    usuario.activo = true;
-                    mostrarUsuarios();
-                });
-                const btnDesactivar = document.createElement('button');
-                btnDesactivar.textContent = 'Desactivar';
-                btnDesactivar.addEventListener('click', () => {
-                    usuario.activo = false;
-                    mostrarUsuarios();
-                });
+      if (result.status) {
+        setTimeout(() => { window.location.href = '/'; }, 1200); // Redireccionamiento al inicio
+      }
+    });
 
-                li.appendChild(btnActivar);
-                li.appendChild(btnDesactivar);
-                listaUsuarios.appendChild(li);
-            });
-        }
+    // Reenviar verificación
+    const resendForm = document.getElementById('resendForm');
+    resendForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(resendForm);
+      const data = {};
+      formData.forEach((value, key) => { data[key] = value; });
 
-        registroForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const usuario = document.getElementById('registro-usuario').value;
-            const correo = document.getElementById('registro-correo').value;
-            const clave = document.getElementById('registro-clave').value;
+      const response = await fetch('/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
 
-            const nuevoUsuario = {
-                id: usuarios.length + 1,
-                usuario: usuario,
-                correo: correo,
-                clave: clave,
-                activo: false,
-                rol: "usuario"
-            };
-            usuarios.push(nuevoUsuario);
-            alert('Usuario registrado. Espera la aprobación del administrador.');
-        });
+      const result = await response.json();
+      const messageBox = document.getElementById('messageBox');
+      messageBox.style.display = 'block';
+      messageBox.className = 'message-box ' + (result.status ? 'success' : 'error');
+      messageBox.textContent = result.message;
+      closeModal('resendModal');
+    });
 
-        loginForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const correo = document.getElementById('login-correo').value;
-            const clave = document.getElementById('login-clave').value;
+    // Modal helpers
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (!m) return;
+      m.classList.add('show');
+      m.setAttribute('aria-hidden', 'false');
+      setTimeout(() => {
+        const em = document.getElementById('resendEmail');
+        if (em) em.focus();
+      }, 10);
+    }
 
-            const usuario = usuarios.find(u => u.correo === correo && u.clave === clave);
-
-            if (usuario) {
-                if (usuario.activo) {
-                    loginDiv.style.display = 'none';
-                    registroDiv.style.display = 'none';
-                    contenidoDiv.style.display = 'block';
-                    if (usuario.rol === 'admin' && usuario.correo === 'sparts.wuaze@gmail.com' && usuario.clave === 'MANTIS MDD1') {
-                        adminDiv.style.display = 'block';
-                        mostrarUsuarios();
-                    } else {
-                        adminDiv.style.display = 'none';
-                    }
-                } else {
-                    mensajeSuspendido.style.display = 'block';
-                }
-            } else {
-                alert('Credenciales incorrectas');
-            }
-        });
-
-        // Inicialmente ocultar todo y mostrar solo login y registro
-        adminDiv.style.display = 'none';
-        contenidoDiv.style.display = 'none';
-    </script>
-
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (!m) return;
+      m.classList.remove('show');
+      m.setAttribute('aria-hidden', 'true');
+    }
+  </script>
 </body>
 </html>
